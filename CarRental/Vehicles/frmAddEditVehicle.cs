@@ -1,0 +1,359 @@
+﻿using CarRental.Properties;
+using CarRental_Business;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Xml.Linq;
+using TheArtOfDevHtmlRenderer.Adapters;
+
+namespace CarRental.Vehicles
+{
+    public partial class frmAddEditVehicle : Form
+    {
+        public Action<int?> GetVehicleIDByDelegate;
+
+        public enum enMode { AddNew, Update };
+        private enMode _Mode = enMode.AddNew;
+
+        private int? _VehicleID = null;
+        private clsVehicle _Vehicle;
+
+        public frmAddEditVehicle()
+        {
+            InitializeComponent();
+
+            _Mode = enMode.AddNew;
+        }
+
+        public frmAddEditVehicle(int? VehicleID)
+        {
+            InitializeComponent();
+
+            _VehicleID = VehicleID;
+            _Mode = enMode.Update;
+        }
+
+        private async Task _FillMakesComboBoxAsync()
+        {
+            await Task.Delay(100);
+            DataTable dtMakes = clsMake.GetAllMakesName();
+
+            foreach (DataRow Make in dtMakes.Rows)
+            {
+                cbMake.Items.Add(Make["Make"].ToString());
+            }
+        }
+
+        private async Task _FillModelsComboBoxAsync()
+        {
+            await Task.Delay(100);
+            DataTable dtModels = clsModel.GetAllModelsNameAsync();
+
+            foreach (DataRow Model in dtModels.Rows)
+            {
+                cbModel.Items.Add(Model["ModelName"].ToString());
+            }
+        }
+
+        private async Task _FillSubModelsComboBoxAsync()
+        {
+            await Task.Delay(100);
+            DataTable dtSubModels = clsSubModel.GetAllSubModelsName();
+
+            foreach (DataRow SubModel in dtSubModels.Rows)
+            {
+                cbSubModel.Items.Add(SubModel["SubModelName"].ToString());
+            }
+        }
+
+        private async Task _FillBodiesComboBoxAsync()
+        {
+            await Task.Delay(100);
+            DataTable dtBodies = clsBody.GetAllBodiesName();
+
+            foreach (DataRow Body in dtBodies.Rows)
+            {
+                cbBody.Items.Add(Body["BodyName"].ToString());
+            }
+        }
+
+        private async Task _FillDriveTypesComboBoxAsync()
+        {
+            await Task.Delay(100);
+            DataTable dtDriveTypes = clsDriveType.GetAllDriveTypesNameAsync();
+
+            foreach (DataRow DriveType in dtDriveTypes.Rows)
+            {
+                cbDriverType.Items.Add(DriveType["DriveTypeName"].ToString());
+            }
+        }
+
+        private async Task _FillFuelTypesComboBoxAsync()
+        {
+            await Task.Delay(100);
+            DataTable dtFuelTypes = clsFuelType.GetAllFuelTypesName();
+
+            foreach (DataRow FuelType in dtFuelTypes.Rows)
+            {
+                cbFuelType.Items.Add(FuelType["FuelTypeName"].ToString());
+            }
+        }
+
+        private void _ResetFields()
+        {
+            foreach (Control control in Controls)
+            {
+                if (control is TextBox textBox)
+                {
+                    textBox.Text = "";
+                }
+
+                if (control is ComboBox comboBox)
+                {
+                    comboBox.SelectedIndex = 0;
+                }
+            }
+
+            numaricNumberDoors.Value = 1;
+        }
+
+        private async Task _ResetDefaultValues()
+        {
+            Task[] arrTasks = new Task[6];
+
+            arrTasks[0] = _FillMakesComboBoxAsync();
+            arrTasks[1] = _FillModelsComboBoxAsync();
+            arrTasks[2] = _FillSubModelsComboBoxAsync();
+            arrTasks[3] = _FillBodiesComboBoxAsync();
+            arrTasks[4] = _FillDriveTypesComboBoxAsync();
+            arrTasks[5] = _FillFuelTypesComboBoxAsync();          
+
+            if (_Mode == enMode.AddNew)
+            {
+                lblTitle.Text = "Thêm xe mới";
+                this.Text = lblTitle.Text;
+                _Vehicle = new clsVehicle();
+
+                await Task.WhenAll(arrTasks);
+
+                _ResetFields();
+            }
+            else
+            {
+                lblTitle.Text = "Cập nhật xe";
+                this.Text = lblTitle.Text;
+
+                await Task.WhenAll(arrTasks);
+            }            
+        }
+
+        private void _FillFieldsWithCustomerInfo()
+        {
+            lblVehicleID.Text = _Vehicle.VehicleID.ToString();
+            txtVehicleName.Text = _Vehicle.VehicleName;
+            cbMake.SelectedIndex = cbMake.FindString(_Vehicle.MakeInfo.Make);
+            cbModel.SelectedIndex = cbModel.FindString(_Vehicle.ModelInfo.ModelName);
+            cbDriverType.SelectedIndex = cbDriverType.FindString(_Vehicle.DriverTypeInfo.DriveTypeName);
+            cbSubModel.SelectedIndex = cbSubModel.FindString(_Vehicle.SubModelInfo.SubModelName);
+            cbBody.SelectedIndex = cbBody.FindString(_Vehicle.BodyInfo.BodyName);
+            txtPlateNumber.Text = _Vehicle.PlateNumber;
+            txtMileage.Text = _Vehicle.Mileage.ToString();
+            txtRentalPricePerDay.Text = _Vehicle.RentalPricePerDay.ToString();
+            cbFuelType.SelectedIndex = cbFuelType.FindString(_Vehicle.FuelTypeInfo.FuelTypeName);
+            txtEngine.Text = _Vehicle.Engine;
+            numaricNumberDoors.Value = _Vehicle.NumberDoors;
+            txtYear.Text = _Vehicle.Year.ToString();
+            chkIsAvailable.Checked = _Vehicle.IsAvailableForRent;
+            pbIsAvailable.Image = _Vehicle.IsAvailableForRent ? Resources.available_car32 : Resources.unavailable_car32;
+        }
+
+        private void _LoadData()
+        {
+            _Vehicle = clsVehicle.Find(_VehicleID);
+
+            if (_Vehicle == null)
+            {
+                MessageBox.Show("Không tìm thấy xe với ID = " + _VehicleID, "Không tìm thấy",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                this.Close();
+                return;
+            }
+
+            _FillFieldsWithCustomerInfo();
+
+        }
+
+        private void _FillVehicleObjectWithFieldsData()
+        {
+            _Vehicle.VehicleName = txtVehicleName.Text.Trim();
+            _Vehicle.MakeID = clsMake.Find(cbMake.Text).MakeID ?? -1;
+            _Vehicle.ModelID = clsModel.Find(cbModel.Text).ModelID ?? -1;
+            _Vehicle.SubModelID = clsSubModel.Find(cbSubModel.Text).SubModelID ?? -1;
+            _Vehicle.BodyID = clsBody.Find(cbBody.Text).BodyID ?? -1;
+            _Vehicle.DriveTypeID = clsDriveType.Find(cbDriverType.Text).DriveTypeID ?? -1;
+            _Vehicle.FuelTypeID = clsFuelType.Find(cbFuelType.Text).FuelTypeID ?? -1;
+            _Vehicle.Engine = txtEngine.Text.Trim();
+            _Vehicle.RentalPricePerDay = Convert.ToSingle(txtRentalPricePerDay.Text.Trim());
+            _Vehicle.NumberDoors = (byte)numaricNumberDoors.Value;
+            _Vehicle.PlateNumber = txtPlateNumber.Text.Trim();
+            _Vehicle.Mileage = int.Parse(txtMileage.Text.Trim());
+            _Vehicle.Year = short.Parse(txtYear.Text.Trim());
+            _Vehicle.IsAvailableForRent = chkIsAvailable.Checked;
+        }
+
+        private void _SaveCustomer()
+        {
+            _FillVehicleObjectWithFieldsData();
+
+            if (_Vehicle.Save())
+            {
+                lblTitle.Text = "Cập nhật xe";
+                lblVehicleID.Text = _Vehicle.VehicleID.ToString();
+                this.Text = lblTitle.Text;
+
+                // change form mode to update
+                _Mode = enMode.Update;
+
+                MessageBox.Show("Lưu dữ liệu thành công", "Thành công",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Trigger the event to send data back to the caller form
+                GetVehicleIDByDelegate?.Invoke(_Vehicle.VehicleID);
+            }
+            else
+            {
+                MessageBox.Show("Lưu dữ liệu thất bại", "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnlyNumberInTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+        }
+
+        private void ValidateEmptyTextBox(object sender, CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(((TextBox)sender).Text.Trim()))
+            {
+                e.Cancel = true;
+                errorProvider1.SetError(((TextBox)sender), "Vui lòng không để trống trường này!");
+            }
+            else
+            {
+                errorProvider1.SetError(((TextBox)sender), null);
+            }
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (!this.ValidateChildren())
+            {
+                MessageBox.Show("Một số trường chưa hợp lệ, hãy di chuột lên biểu tượng màu đỏ để xem chi tiết lỗi.",
+                    "Lỗi xác thực", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            _SaveCustomer();
+        }
+
+        private async void frmAddEditVehicle_Load(object sender, EventArgs e)
+        {
+           Task Task1 = _ResetDefaultValues();
+
+           await Task1;
+
+            if (_Mode == enMode.Update)
+            {
+                _LoadData();
+            }
+        }
+
+        private void txtPlateNumber_Validating(object sender, CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtPlateNumber.Text.Trim()))
+            {
+                e.Cancel = true;
+                errorProvider1.SetError(txtPlateNumber, "Vui lòng không để trống trường này!");
+                return;
+            }
+            else
+            {
+                errorProvider1.SetError(txtPlateNumber, null);
+            }
+
+            //Make sure the plate number is not used by another vehicle
+            if (_Vehicle.PlateNumber.ToLower() != txtPlateNumber.Text.ToLower() &&
+                clsVehicle.DoesPlateNumberExist(txtPlateNumber.Text.Trim()))
+            {
+                e.Cancel = true;
+                errorProvider1.SetError(txtPlateNumber, "Biển số đã được sử dụng cho xe khác!");
+            }
+            else
+            {
+                errorProvider1.SetError(txtPlateNumber, null);
+            }
+        }
+
+        private void txtYear_Validating(object sender, CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtYear.Text.Trim()))
+            {
+                e.Cancel = true;
+                errorProvider1.SetError(txtYear, "Vui lòng không để trống trường này!");
+                return;
+            }
+            else
+            {
+                errorProvider1.SetError(txtYear, null);
+            }
+
+            //Make sure the year is less than current year and greater than 1900
+            int Year = int.Parse(txtYear.Text.Trim());
+            if (Year > DateTime.Now.Year)
+            {
+                e.Cancel = true;
+                errorProvider1.SetError(txtYear, "Năm phải nhỏ hơn hoặc bằng năm hiện tại!");
+                return;
+            }
+            else
+            {
+                errorProvider1.SetError(txtYear, null);
+            }
+
+            if (Year < 1900)
+            {
+                e.Cancel = true;
+                errorProvider1.SetError(txtYear, "Năm phải lớn hơn 1900!");
+            }
+            else
+            {
+                errorProvider1.SetError(txtYear, null);
+            }
+        }
+
+        private void chkIsAvailable_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkIsAvailable.Checked)
+            {
+                pbIsAvailable.Image = Resources.available_car32;
+            }
+            else
+            {
+                pbIsAvailable.Image = Resources.unavailable_car32;
+            }
+        }
+    }
+}
