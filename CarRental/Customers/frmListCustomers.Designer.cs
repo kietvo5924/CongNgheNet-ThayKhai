@@ -46,13 +46,11 @@
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cbGender = new System.Windows.Forms.ComboBox();
-            this.pbImage = new System.Windows.Forms.PictureBox();
             this.btnAddNewCustomer = new System.Windows.Forms.Button();
             this.dgvCustomersList = new Guna.UI2.WinForms.Guna2DataGridView();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.cmsEditProfile.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCustomersList)).BeginInit();
             this.SuspendLayout();
             // 
@@ -83,48 +81,38 @@
             // ShowCustomerDetailsToolStripMenuItem1
             // 
             this.ShowCustomerDetailsToolStripMenuItem1.ForeColor = System.Drawing.Color.Black;
-            this.ShowCustomerDetailsToolStripMenuItem1.Image = global::CarRental.Properties.Resources.person_details32;
-            this.ShowCustomerDetailsToolStripMenuItem1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ShowCustomerDetailsToolStripMenuItem1.Name = "ShowCustomerDetailsToolStripMenuItem1";
             this.ShowCustomerDetailsToolStripMenuItem1.Size = new System.Drawing.Size(339, 38);
-            this.ShowCustomerDetailsToolStripMenuItem1.Text = "   Xem chi tiết khách hàng";
+            this.ShowCustomerDetailsToolStripMenuItem1.Text = "Xem chi tiết khách hàng";
             this.ShowCustomerDetailsToolStripMenuItem1.Click += new System.EventHandler(this.ShowCustomerDetailsToolStripMenuItem1_Click);
             // 
             // EditCustomerToolStripMenuItem
             // 
             this.EditCustomerToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
-            this.EditCustomerToolStripMenuItem.Image = global::CarRental.Properties.Resources.edit_32;
-            this.EditCustomerToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.EditCustomerToolStripMenuItem.Name = "EditCustomerToolStripMenuItem";
             this.EditCustomerToolStripMenuItem.Size = new System.Drawing.Size(339, 38);
-            this.EditCustomerToolStripMenuItem.Text = "   Chỉnh sửa";
+            this.EditCustomerToolStripMenuItem.Text = "Chỉnh sửa";
             this.EditCustomerToolStripMenuItem.Click += new System.EventHandler(this.EditCustomerToolStripMenuItem_Click);
             // 
             // DeleteToolStripMenuItem
             // 
-            this.DeleteToolStripMenuItem.Image = global::CarRental.Properties.Resources.Delete_32;
-            this.DeleteToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.DeleteToolStripMenuItem.Name = "DeleteToolStripMenuItem";
             this.DeleteToolStripMenuItem.Size = new System.Drawing.Size(339, 38);
-            this.DeleteToolStripMenuItem.Text = "   Xóa";
+            this.DeleteToolStripMenuItem.Text = "Xóa";
             this.DeleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteToolStripMenuItem_Click);
             // 
             // ShowCustomerBookingHistoryToolStripMenuItem
             // 
-            this.ShowCustomerBookingHistoryToolStripMenuItem.Image = global::CarRental.Properties.Resources.Calendar_32;
-            this.ShowCustomerBookingHistoryToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ShowCustomerBookingHistoryToolStripMenuItem.Name = "ShowCustomerBookingHistoryToolStripMenuItem";
             this.ShowCustomerBookingHistoryToolStripMenuItem.Size = new System.Drawing.Size(339, 38);
-            this.ShowCustomerBookingHistoryToolStripMenuItem.Text = "   Xem lịch sử đặt xe";
+            this.ShowCustomerBookingHistoryToolStripMenuItem.Text = "Xem lịch sử đặt xe";
             this.ShowCustomerBookingHistoryToolStripMenuItem.Click += new System.EventHandler(this.ShowCustomerBookingHistoryToolStripMenuItem_Click);
             // 
             // ShowCustomerTransactionHistoryToolStripMenuItem
             // 
-            this.ShowCustomerTransactionHistoryToolStripMenuItem.Image = global::CarRental.Properties.Resources.Calendar_32;
-            this.ShowCustomerTransactionHistoryToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ShowCustomerTransactionHistoryToolStripMenuItem.Name = "ShowCustomerTransactionHistoryToolStripMenuItem";
             this.ShowCustomerTransactionHistoryToolStripMenuItem.Size = new System.Drawing.Size(339, 38);
-            this.ShowCustomerTransactionHistoryToolStripMenuItem.Text = "   Xem lịch sử giao dịch";
+            this.ShowCustomerTransactionHistoryToolStripMenuItem.Text = "Xem lịch sử giao dịch";
             this.ShowCustomerTransactionHistoryToolStripMenuItem.Click += new System.EventHandler(this.ShowCustomerTransactionHistoryToolStripMenuItem_Click);
             // 
             // cbCountry
@@ -215,28 +203,19 @@
             this.cbGender.TabIndex = 163;
             this.cbGender.SelectedIndexChanged += new System.EventHandler(this.cbGender_SelectedIndexChanged);
             // 
-            // pbImage
-            // 
-            this.pbImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pbImage.Image = global::CarRental.Properties.Resources.customerList;
-            this.pbImage.InitialImage = null;
-            this.pbImage.Location = new System.Drawing.Point(507, 14);
-            this.pbImage.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.pbImage.Name = "pbImage";
-            this.pbImage.Size = new System.Drawing.Size(306, 189);
-            this.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pbImage.TabIndex = 166;
-            this.pbImage.TabStop = false;
-            // 
             // btnAddNewCustomer
             // 
+            this.btnAddNewCustomer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
+            this.btnAddNewCustomer.FlatAppearance.BorderSize = 0;
             this.btnAddNewCustomer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddNewCustomer.Image = global::CarRental.Properties.Resources.Add_Person_40;
-            this.btnAddNewCustomer.Location = new System.Drawing.Point(1284, 199);
+            this.btnAddNewCustomer.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddNewCustomer.ForeColor = System.Drawing.Color.White;
+            this.btnAddNewCustomer.Location = new System.Drawing.Point(1136, 204);
             this.btnAddNewCustomer.Name = "btnAddNewCustomer";
-            this.btnAddNewCustomer.Size = new System.Drawing.Size(70, 55);
+            this.btnAddNewCustomer.Size = new System.Drawing.Size(218, 44);
             this.btnAddNewCustomer.TabIndex = 171;
-            this.btnAddNewCustomer.UseVisualStyleBackColor = true;
+            this.btnAddNewCustomer.Text = "Thêm khách hàng";
+            this.btnAddNewCustomer.UseVisualStyleBackColor = false;
             this.btnAddNewCustomer.Click += new System.EventHandler(this.btnAddNewCustomer_Click);
             // 
             // dgvCustomersList
@@ -328,7 +307,6 @@
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1366, 800);
             this.Controls.Add(this.dgvCustomersList);
-            this.Controls.Add(this.pbImage);
             this.Controls.Add(this.btnAddNewCustomer);
             this.Controls.Add(this.cbCountry);
             this.Controls.Add(this.lblNumberOfRecords);
@@ -345,7 +323,6 @@
             this.Text = "Danh sách khách hàng";
             this.Load += new System.EventHandler(this.frmListCustomers_Load);
             this.cmsEditProfile.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCustomersList)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -353,7 +330,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.PictureBox pbImage;
         private System.Windows.Forms.Button btnAddNewCustomer;
         private System.Windows.Forms.ComboBox cbCountry;
         private System.Windows.Forms.Label lblNumberOfRecords;

@@ -39,9 +39,7 @@
             this.btnReturn = new Guna.UI2.WinForms.Guna2Button();
             this.btnBooking = new Guna.UI2.WinForms.Guna2Button();
             this.btnDashboard = new Guna.UI2.WinForms.Guna2Button();
-            this.pbUserImage = new Guna.UI2.WinForms.Guna2CirclePictureBox();
             this.panelLogo = new System.Windows.Forms.Panel();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.cmsEditProfile = new Guna.UI2.WinForms.Guna2ContextMenuStrip();
@@ -60,9 +58,7 @@
             this.guna2Elipse1 = new Guna.UI2.WinForms.Guna2Elipse(this.components);
             this.guna2Elipse2 = new Guna.UI2.WinForms.Guna2Elipse(this.components);
             this.panelMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbUserImage)).BeginInit();
             this.panelLogo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.cmsEditProfile.SuspendLayout();
             this.guna2Panel1.SuspendLayout();
             this.panelTitle.SuspendLayout();
@@ -71,14 +67,15 @@
             // lblUsername
             // 
             this.lblUsername.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblUsername.AutoSize = true;
-            this.lblUsername.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUsername.AutoSize = false;
+            this.lblUsername.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUsername.ForeColor = System.Drawing.Color.White;
-            this.lblUsername.Location = new System.Drawing.Point(78, 846);
+            this.lblUsername.Location = new System.Drawing.Point(15, 834);
             this.lblUsername.Name = "lblUsername";
-            this.lblUsername.Size = new System.Drawing.Size(41, 16);
+            this.lblUsername.Size = new System.Drawing.Size(150, 24);
             this.lblUsername.TabIndex = 13;
             this.lblUsername.Text = "[Tên đăng nhập]";
+            this.lblUsername.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panelMenu
             // 
@@ -91,7 +88,6 @@
             this.panelMenu.Controls.Add(this.btnReturn);
             this.panelMenu.Controls.Add(this.btnBooking);
             this.panelMenu.Controls.Add(this.btnDashboard);
-            this.panelMenu.Controls.Add(this.pbUserImage);
             this.panelMenu.Controls.Add(this.panelLogo);
             this.panelMenu.Controls.Add(this.lblUsername);
             this.panelMenu.Dock = System.Windows.Forms.DockStyle.Left;
@@ -103,7 +99,8 @@
             // btnUsers
             // 
             this.btnUsers.BackColor = System.Drawing.Color.Transparent;
-            this.btnUsers.BorderRadius = 22;
+            this.btnUsers.AutoRoundedCorners = true;
+            this.btnUsers.BorderRadius = 20;
             this.btnUsers.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton;
             this.btnUsers.CheckedState.FillColor = System.Drawing.Color.White;
             this.btnUsers.CheckedState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
@@ -112,7 +109,7 @@
             this.btnUsers.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnUsers.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnUsers.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
-            this.btnUsers.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUsers.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnUsers.ForeColor = System.Drawing.Color.White;
             this.btnUsers.Location = new System.Drawing.Point(14, 622);
             this.btnUsers.Name = "btnUsers";
@@ -124,7 +121,8 @@
             // btnCustomers
             // 
             this.btnCustomers.BackColor = System.Drawing.Color.Transparent;
-            this.btnCustomers.BorderRadius = 22;
+            this.btnCustomers.AutoRoundedCorners = true;
+            this.btnCustomers.BorderRadius = 20;
             this.btnCustomers.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton;
             this.btnCustomers.CheckedState.FillColor = System.Drawing.Color.White;
             this.btnCustomers.CheckedState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
@@ -133,7 +131,7 @@
             this.btnCustomers.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnCustomers.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnCustomers.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
-            this.btnCustomers.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCustomers.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCustomers.ForeColor = System.Drawing.Color.White;
             this.btnCustomers.Location = new System.Drawing.Point(14, 549);
             this.btnCustomers.Name = "btnCustomers";
@@ -145,7 +143,8 @@
             // btnLogOut
             // 
             this.btnLogOut.BackColor = System.Drawing.Color.Transparent;
-            this.btnLogOut.BorderRadius = 22;
+            this.btnLogOut.AutoRoundedCorners = true;
+            this.btnLogOut.BorderRadius = 20;
             this.btnLogOut.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton;
             this.btnLogOut.CheckedState.FillColor = System.Drawing.Color.White;
             this.btnLogOut.CheckedState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
@@ -154,7 +153,7 @@
             this.btnLogOut.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnLogOut.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnLogOut.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
-            this.btnLogOut.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLogOut.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLogOut.ForeColor = System.Drawing.Color.White;
             this.btnLogOut.Location = new System.Drawing.Point(14, 695);
             this.btnLogOut.Name = "btnLogOut";
@@ -166,7 +165,8 @@
             // btnTransactions
             // 
             this.btnTransactions.BackColor = System.Drawing.Color.Transparent;
-            this.btnTransactions.BorderRadius = 22;
+            this.btnTransactions.AutoRoundedCorners = true;
+            this.btnTransactions.BorderRadius = 20;
             this.btnTransactions.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton;
             this.btnTransactions.CheckedState.FillColor = System.Drawing.Color.White;
             this.btnTransactions.CheckedState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
@@ -175,7 +175,7 @@
             this.btnTransactions.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnTransactions.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnTransactions.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
-            this.btnTransactions.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTransactions.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnTransactions.ForeColor = System.Drawing.Color.White;
             this.btnTransactions.Location = new System.Drawing.Point(14, 403);
             this.btnTransactions.Name = "btnTransactions";
@@ -187,7 +187,8 @@
             // btnVehicles
             // 
             this.btnVehicles.BackColor = System.Drawing.Color.Transparent;
-            this.btnVehicles.BorderRadius = 22;
+            this.btnVehicles.AutoRoundedCorners = true;
+            this.btnVehicles.BorderRadius = 20;
             this.btnVehicles.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton;
             this.btnVehicles.CheckedState.FillColor = System.Drawing.Color.White;
             this.btnVehicles.CheckedState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
@@ -196,7 +197,7 @@
             this.btnVehicles.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnVehicles.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnVehicles.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
-            this.btnVehicles.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVehicles.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnVehicles.ForeColor = System.Drawing.Color.White;
             this.btnVehicles.Location = new System.Drawing.Point(14, 476);
             this.btnVehicles.Name = "btnVehicles";
@@ -208,7 +209,8 @@
             // btnReturn
             // 
             this.btnReturn.BackColor = System.Drawing.Color.Transparent;
-            this.btnReturn.BorderRadius = 22;
+            this.btnReturn.AutoRoundedCorners = true;
+            this.btnReturn.BorderRadius = 20;
             this.btnReturn.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton;
             this.btnReturn.CheckedState.FillColor = System.Drawing.Color.White;
             this.btnReturn.CheckedState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
@@ -217,7 +219,7 @@
             this.btnReturn.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnReturn.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnReturn.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
-            this.btnReturn.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReturn.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReturn.ForeColor = System.Drawing.Color.White;
             this.btnReturn.Location = new System.Drawing.Point(14, 330);
             this.btnReturn.Name = "btnReturn";
@@ -229,7 +231,8 @@
             // btnBooking
             // 
             this.btnBooking.BackColor = System.Drawing.Color.Transparent;
-            this.btnBooking.BorderRadius = 22;
+            this.btnBooking.AutoRoundedCorners = true;
+            this.btnBooking.BorderRadius = 20;
             this.btnBooking.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton;
             this.btnBooking.CheckedState.FillColor = System.Drawing.Color.White;
             this.btnBooking.CheckedState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
@@ -238,7 +241,7 @@
             this.btnBooking.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnBooking.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnBooking.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
-            this.btnBooking.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBooking.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnBooking.ForeColor = System.Drawing.Color.White;
             this.btnBooking.Location = new System.Drawing.Point(14, 257);
             this.btnBooking.Name = "btnBooking";
@@ -250,7 +253,8 @@
             // btnDashboard
             // 
             this.btnDashboard.BackColor = System.Drawing.Color.Transparent;
-            this.btnDashboard.BorderRadius = 22;
+            this.btnDashboard.AutoRoundedCorners = true;
+            this.btnDashboard.BorderRadius = 20;
             this.btnDashboard.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton;
             this.btnDashboard.Checked = true;
             this.btnDashboard.CheckedState.FillColor = System.Drawing.Color.White;
@@ -260,7 +264,7 @@
             this.btnDashboard.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnDashboard.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnDashboard.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
-            this.btnDashboard.Font = new System.Drawing.Font("Century Gothic", 12F);
+            this.btnDashboard.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDashboard.ForeColor = System.Drawing.Color.White;
             this.btnDashboard.Location = new System.Drawing.Point(14, 184);
             this.btnDashboard.Name = "btnDashboard";
@@ -269,22 +273,9 @@
             this.btnDashboard.Text = "Bảng điều khiển";
             this.btnDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
             // 
-            // pbUserImage
-            // 
-            this.pbUserImage.BackColor = System.Drawing.Color.Transparent;
-            this.pbUserImage.FillColor = System.Drawing.Color.Transparent;
-            this.pbUserImage.ImageRotate = 0F;
-            this.pbUserImage.Location = new System.Drawing.Point(3, 816);
-            this.pbUserImage.Name = "pbUserImage";
-            this.pbUserImage.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
-            this.pbUserImage.Size = new System.Drawing.Size(64, 63);
-            this.pbUserImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pbUserImage.TabIndex = 3;
-            this.pbUserImage.TabStop = false;
-            // 
             // panelLogo
             // 
-            this.panelLogo.Controls.Add(this.pictureBox2);
+            this.panelLogo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
             this.panelLogo.Controls.Add(this.label2);
             this.panelLogo.Controls.Add(this.label1);
             this.panelLogo.Dock = System.Windows.Forms.DockStyle.Top;
@@ -293,39 +284,29 @@
             this.panelLogo.Size = new System.Drawing.Size(180, 124);
             this.panelLogo.TabIndex = 16;
             // 
-            // pictureBox2
-            // 
-            this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.pictureBox2.Image = global::CarRental.Properties.Resources.Logo2;
-            this.pictureBox2.Location = new System.Drawing.Point(5, 3);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(57, 118);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 9;
-            this.pictureBox2.TabStop = false;
-            // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Arial", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label2.Location = new System.Drawing.Point(94, 65);
+            this.label2.AutoSize = false;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.label2.Location = new System.Drawing.Point(16, 72);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(82, 27);
+            this.label2.Size = new System.Drawing.Size(147, 24);
             this.label2.TabIndex = 8;
-            this.label2.Text = "Thuê xe";
+            this.label2.Text = "Quản lý đội xe";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Arial", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.AutoSize = false;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(63, 33);
+            this.label1.Location = new System.Drawing.Point(14, 32);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 33);
+            this.label1.Size = new System.Drawing.Size(152, 36);
             this.label1.TabIndex = 7;
-            this.label1.Text = "Xe";
+            this.label1.Text = "CarRental";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // 
             // cmsEditProfile
@@ -339,34 +320,30 @@
             this.signOutToolStripMenuItem});
             this.cmsEditProfile.Name = "guna2ContextMenuStrip1";
             this.cmsEditProfile.RenderStyle.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(151)))), ((int)(((byte)(143)))), ((int)(((byte)(255)))));
-            this.cmsEditProfile.RenderStyle.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
+            this.cmsEditProfile.RenderStyle.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.cmsEditProfile.RenderStyle.ColorTable = null;
             this.cmsEditProfile.RenderStyle.RoundedEdges = true;
             this.cmsEditProfile.RenderStyle.SelectionArrowColor = System.Drawing.Color.White;
             this.cmsEditProfile.RenderStyle.SelectionBackColor = System.Drawing.Color.Gray;
             this.cmsEditProfile.RenderStyle.SelectionForeColor = System.Drawing.Color.White;
-            this.cmsEditProfile.RenderStyle.SeparatorColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
+            this.cmsEditProfile.RenderStyle.SeparatorColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
             this.cmsEditProfile.RenderStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
             this.cmsEditProfile.Size = new System.Drawing.Size(222, 124);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.ForeColor = System.Drawing.Color.Black;
-            this.toolStripMenuItem1.Image = global::CarRental.Properties.Resources.person_details32;
-            this.toolStripMenuItem1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(221, 38);
-            this.toolStripMenuItem1.Text = "   Thông tin người dùng";
+            this.toolStripMenuItem1.Text = "Thông tin người dùng";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // changePasswordToolStripMenuItem
             // 
             this.changePasswordToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
-            this.changePasswordToolStripMenuItem.Image = global::CarRental.Properties.Resources.password32;
-            this.changePasswordToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.changePasswordToolStripMenuItem.Name = "changePasswordToolStripMenuItem";
             this.changePasswordToolStripMenuItem.Size = new System.Drawing.Size(221, 38);
-            this.changePasswordToolStripMenuItem.Text = "   Đổi mật khẩu";
+            this.changePasswordToolStripMenuItem.Text = "Đổi mật khẩu";
             this.changePasswordToolStripMenuItem.Click += new System.EventHandler(this.changePasswordToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
@@ -377,11 +354,9 @@
             // signOutToolStripMenuItem
             // 
             this.signOutToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
-            this.signOutToolStripMenuItem.Image = global::CarRental.Properties.Resources.Sign_Out_32;
-            this.signOutToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.signOutToolStripMenuItem.Name = "signOutToolStripMenuItem";
             this.signOutToolStripMenuItem.Size = new System.Drawing.Size(221, 38);
-            this.signOutToolStripMenuItem.Text = "   Đăng xuất";
+            this.signOutToolStripMenuItem.Text = "Đăng xuất";
             this.signOutToolStripMenuItem.Click += new System.EventHandler(this.signOutToolStripMenuItem_Click);
             // 
             // panel2
@@ -431,7 +406,7 @@
             // 
             // panelTitle
             // 
-            this.panelTitle.BackColor = System.Drawing.Color.White;
+            this.panelTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
             this.panelTitle.Controls.Add(this.btnSubMenu);
             this.panelTitle.Controls.Add(this.lblTitle);
             this.panelTitle.Location = new System.Drawing.Point(5, 15);
@@ -441,15 +416,15 @@
             // 
             // btnSubMenu
             // 
-            this.btnSubMenu.BackColor = System.Drawing.Color.White;
+            this.btnSubMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
             this.btnSubMenu.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSubMenu.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnSubMenu.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.btnSubMenu.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
             this.btnSubMenu.FlatAppearance.BorderSize = 0;
-            this.btnSubMenu.FlatAppearance.MouseDownBackColor = System.Drawing.Color.White;
-            this.btnSubMenu.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
+            this.btnSubMenu.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
+            this.btnSubMenu.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
             this.btnSubMenu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSubMenu.ForeColor = System.Drawing.Color.Black;
+            this.btnSubMenu.ForeColor = System.Drawing.Color.White;
             this.btnSubMenu.IconChar = FontAwesome.Sharp.IconChar.None;
             this.btnSubMenu.IconColor = System.Drawing.Color.Black;
             this.btnSubMenu.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -466,7 +441,7 @@
             // 
             this.lblTitle.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblTitle.Font = new System.Drawing.Font("Tahoma", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitle.ForeColor = System.Drawing.Color.Black;
+            this.lblTitle.ForeColor = System.Drawing.Color.White;
             this.lblTitle.Location = new System.Drawing.Point(-5, 4);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(1382, 37);
@@ -502,10 +477,8 @@
             this.Load += new System.EventHandler(this.frmMainMenu_Load);
             this.panelMenu.ResumeLayout(false);
             this.panelMenu.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbUserImage)).EndInit();
             this.panelLogo.ResumeLayout(false);
             this.panelLogo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.cmsEditProfile.ResumeLayout(false);
             this.guna2Panel1.ResumeLayout(false);
             this.panelTitle.ResumeLayout(false);
@@ -518,14 +491,12 @@
         private System.Windows.Forms.Panel panelMenu;
         private System.Windows.Forms.Panel panelLogo;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label label2;
         private Guna.UI2.WinForms.Guna2ContextMenuStrip cmsEditProfile;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem changePasswordToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem signOutToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private Guna.UI2.WinForms.Guna2CirclePictureBox pbUserImage;
         private Guna.UI2.WinForms.Guna2Button btnDashboard;
         private Guna.UI2.WinForms.Guna2Button btnLogOut;
         private Guna.UI2.WinForms.Guna2Button btnTransactions;

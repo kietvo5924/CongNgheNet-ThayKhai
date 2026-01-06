@@ -1,4 +1,4 @@
-﻿namespace CarRental.Dashboard
+namespace CarRental.Dashboard
 {
     partial class frmDashboard
     {
@@ -60,6 +60,10 @@
             this.guna2CustomGradientPanel7 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             this.lblHiUsername = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.guna2CustomGradientPanelHeader = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
+            this.lblDashboardSubtitle = new System.Windows.Forms.Label();
+            this.cboQuickRange = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.btnQuickActions = new Guna.UI2.WinForms.Guna2Button();
             this.guna2CustomGradientPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.guna2CustomGradientPanel2.SuspendLayout();
@@ -74,21 +78,23 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartVehiclesStatus)).BeginInit();
             this.guna2CustomGradientPanel7.SuspendLayout();
+            this.guna2CustomGradientPanelHeader.SuspendLayout();
             this.SuspendLayout();
             // 
             // guna2CustomGradientPanel1
             // 
-            this.guna2CustomGradientPanel1.BorderRadius = 22;
+            this.guna2CustomGradientPanel1.BorderRadius = 26;
             this.guna2CustomGradientPanel1.Controls.Add(this.pictureBox4);
             this.guna2CustomGradientPanel1.Controls.Add(this.lblNumberOfCustomers);
             this.guna2CustomGradientPanel1.Controls.Add(this.label6);
-            this.guna2CustomGradientPanel1.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.guna2CustomGradientPanel1.FillColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.guna2CustomGradientPanel1.FillColor3 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.guna2CustomGradientPanel1.FillColor4 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.guna2CustomGradientPanel1.Location = new System.Drawing.Point(29, 262);
+            this.guna2CustomGradientPanel1.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(189)))), ((int)(((byte)(248)))));
+            this.guna2CustomGradientPanel1.FillColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(165)))), ((int)(((byte)(233)))));
+            this.guna2CustomGradientPanel1.FillColor3 = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(130)))), ((int)(((byte)(246)))));
+            this.guna2CustomGradientPanel1.FillColor4 = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(99)))), ((int)(((byte)(235)))));
+            this.guna2CustomGradientPanel1.Location = new System.Drawing.Point(29, 248);
             this.guna2CustomGradientPanel1.Name = "guna2CustomGradientPanel1";
-            this.guna2CustomGradientPanel1.Size = new System.Drawing.Size(225, 216);
+            this.guna2CustomGradientPanel1.Padding = new System.Windows.Forms.Padding(20, 18, 20, 20);
+            this.guna2CustomGradientPanel1.Size = new System.Drawing.Size(260, 200);
             this.guna2CustomGradientPanel1.TabIndex = 17;
             // 
             // pictureBox4
@@ -525,5 +531,9 @@
         private Guna.UI2.WinForms.Guna2CustomGradientPanel guna2CustomGradientPanel7;
         private System.Windows.Forms.Label lblHiUsername;
         private System.Windows.Forms.Label label1;
+        private Guna.UI2.WinForms.Guna2CustomGradientPanel guna2CustomGradientPanelHeader;
+        private System.Windows.Forms.Label lblDashboardSubtitle;
+        private Guna.UI2.WinForms.Guna2ComboBox cboQuickRange;
+        private Guna.UI2.WinForms.Guna2Button btnQuickActions;
     }
 }

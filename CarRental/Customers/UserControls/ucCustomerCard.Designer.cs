@@ -32,14 +32,10 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.llEditCustomerInfo = new System.Windows.Forms.LinkLabel();
             this.lblDriverLicenseNumber = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label22 = new System.Windows.Forms.Label();
             this.lblCustomerID = new System.Windows.Forms.Label();
-            this.pictureBox8 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
             this.SuspendLayout();
             // 
             // ucPersonCard1
@@ -56,10 +52,8 @@
             this.groupBox1.BackColor = System.Drawing.Color.White;
             this.groupBox1.Controls.Add(this.llEditCustomerInfo);
             this.groupBox1.Controls.Add(this.lblDriverLicenseNumber);
-            this.groupBox1.Controls.Add(this.pictureBox1);
             this.groupBox1.Controls.Add(this.label22);
             this.groupBox1.Controls.Add(this.lblCustomerID);
-            this.groupBox1.Controls.Add(this.pictureBox8);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(8, 295);
@@ -94,16 +88,6 @@
             this.lblDriverLicenseNumber.TabIndex = 148;
             this.lblDriverLicenseNumber.Text = "[????]";
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::CarRental.Properties.Resources.id;
-            this.pictureBox1.Location = new System.Drawing.Point(129, 37);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 147;
-            this.pictureBox1.TabStop = false;
-            // 
             // label22
             // 
             this.label22.AutoSize = true;
@@ -125,16 +109,6 @@
             this.lblCustomerID.Size = new System.Drawing.Size(53, 20);
             this.lblCustomerID.TabIndex = 127;
             this.lblCustomerID.Text = "[????]";
-            // 
-            // pictureBox8
-            // 
-            this.pictureBox8.Image = global::CarRental.Properties.Resources.IssueDrivingLicense_32;
-            this.pictureBox8.Location = new System.Drawing.Point(522, 37);
-            this.pictureBox8.Name = "pictureBox8";
-            this.pictureBox8.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox8.TabIndex = 128;
-            this.pictureBox8.TabStop = false;
             // 
             // label1
             // 
@@ -159,8 +133,6 @@
             this.Size = new System.Drawing.Size(723, 397);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -170,10 +142,8 @@
         private People.UserControls.ucPersonCard ucPersonCard1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lblDriverLicenseNumber;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label lblCustomerID;
-        private System.Windows.Forms.PictureBox pictureBox8;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel llEditCustomerInfo;
     }
