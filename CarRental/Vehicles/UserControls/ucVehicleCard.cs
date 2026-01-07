@@ -28,7 +28,7 @@ namespace CarRental.Vehicles.UserControls
 
         private void _FillVehicleInfo()
         {
-            llEditVehicleInfo.Enabled = true;
+            btnEditVehicleInfo.Enabled = true;
             _VehicleID = _Vehicle.VehicleID;
             lblVehicleID.Text = _Vehicle.VehicleID.ToString();
             lblVehicleName.Text = _Vehicle.VehicleName;
@@ -53,7 +53,7 @@ namespace CarRental.Vehicles.UserControls
             _VehicleID = null;
             _Vehicle = null;
 
-            llEditVehicleInfo.Enabled = false;
+            btnEditVehicleInfo.Enabled = false;
 
             lblVehicleID.Text = "[????]";
             lblVehicleName.Text = "[????]";
@@ -108,6 +108,11 @@ namespace CarRental.Vehicles.UserControls
             frmAddEditVehicle EditVehicle = new frmAddEditVehicle(_VehicleID);
             EditVehicle.GetVehicleIDByDelegate += LoadVehicleInfo;
             EditVehicle.ShowDialog();
+        }
+
+        private void btnEditVehicleInfo_Click(object sender, EventArgs e)
+        {
+            llEditVehicleInfo_LinkClicked(sender, null);
         }
     }
 }

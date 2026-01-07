@@ -1,14 +1,8 @@
 ﻿using CarRental.Properties;
 using CarRental_Business;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CarRental.Users.UserControls
@@ -21,16 +15,15 @@ namespace CarRental.Users.UserControls
         public int? UserID => _UserID;
         public clsUser User => _User;
 
-        private bool _EditEnabled = false;
+        private bool _EditEnabled = true; // Mặc định cho phép sửa
 
         public bool EditEnabled
         {
             get => _EditEnabled;
-
             set
             {
                 _EditEnabled = value;
-                llEditUserInfo.Enabled = value;
+                btnEditUserInfo.Visible = value; // Hiển thị nút dựa trên cấu hình
             }
         }
 
@@ -43,47 +36,38 @@ namespace CarRental.Users.UserControls
         {
             _UserID = null;
             _User = null;
-
             ucPersonCard1.Reset();
-
             lblUserID.Text = "[????]";
             lblUsername.Text = "[????]";
             lblIsActive.Text = "[????]";
-
-            pbIsActive.Image = Resources.Question_32;
-
-            llEditUserInfo.Enabled = false;
+            btnEditUserInfo.Visible = false;
         }
 
         private void _LoadUserImage()
         {
-            if (_User.ImagePath != null)
+            if (_User.ImagePath != null && File.Exists(_User.ImagePath))
             {
-                if (File.Exists(_User.ImagePath))
-                    pbUserImage.ImageLocation = _User.ImagePath;
-                else
-                    MessageBox.Show("Không tìm thấy hình: " + _User.ImagePath,
-                        "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                pbUserImage.ImageLocation = _User.ImagePath;
             }
             else
             {
-                if (_User.Gender == (byte)clsPerson.enGender.Male)
-                    pbUserImage.Image = Resources.DefaultMale;
-                else
-                    pbUserImage.Image = Resources.DefaultFemale;
+                pbUserImage.Image = (_User.Gender == (byte)clsPerson.enGender.Male)
+                                    ? Resources.DefaultMale
+                                    : Resources.DefaultFemale;
             }
         }
 
         private void _FillUserInfo()
         {
-            llEditUserInfo.Enabled = true;
+            // Quan trọng: Phải gán Visible theo trạng thái _EditEnabled
+            btnEditUserInfo.Visible = _EditEnabled;
 
             ucPersonCard1.LoadPersonInfo(_User.PersonID);
-
             lblUserID.Text = _User.UserID?.ToString();
             lblUsername.Text = _User.Username;
-            lblIsActive.Text = _User.IsActive ? "Kích hoạt" : "Ngưng";
-            pbIsActive.Image = _User.IsActive ? Resources.active_user : Resources.inactive_user;
+
+            lblIsActive.Text = _User.IsActive ? "Đang hoạt động" : "Ngưng hoạt động";
+            lblIsActive.ForeColor = _User.IsActive ? Color.Green : Color.Red;
 
             _LoadUserImage();
         }
@@ -91,33 +75,15 @@ namespace CarRental.Users.UserControls
         public void LoadUserInfo(int? UserID)
         {
             _UserID = UserID;
-
-            if (!_UserID.HasValue)
-            {
-                MessageBox.Show("Không có thông tin người dùng.", "Thiếu dữ liệu",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                Reset();
-
-                return;
-            }
+            if (!_UserID.HasValue) { Reset(); return; }
 
             _User = clsUser.Find(_UserID);
-
-            if (_User == null)
-            {
-                MessageBox.Show($"Không tìm thấy người dùng với ID = {UserID}", "Thiếu dữ liệu",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                Reset();
-
-                return;
-            }
+            if (_User == null) { Reset(); return; }
 
             _FillUserInfo();
         }
 
-        private void llEditUserInfo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void btnEditUserInfo_Click(object sender, EventArgs e)
         {
             frmAddEditUser EditUser = new frmAddEditUser(_UserID);
             EditUser.GetUserIDByDelegate += LoadUserInfo;

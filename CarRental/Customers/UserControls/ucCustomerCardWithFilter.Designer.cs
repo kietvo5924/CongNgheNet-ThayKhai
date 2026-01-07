@@ -46,10 +46,10 @@
             this.gbFilters.Controls.Add(this.btnAddNew);
             this.gbFilters.Controls.Add(this.btnFind);
             this.gbFilters.Controls.Add(this.txtFilterValue);
-            this.gbFilters.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbFilters.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbFilters.Location = new System.Drawing.Point(10, 3);
             this.gbFilters.Name = "gbFilters";
-            this.gbFilters.Size = new System.Drawing.Size(707, 77);
+            this.gbFilters.Size = new System.Drawing.Size(707, 96);
             this.gbFilters.TabIndex = 18;
             this.gbFilters.TabStop = false;
             this.gbFilters.Text = "Bộ lọc";
@@ -57,11 +57,12 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(20, 31);
+            this.label22.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
+            this.label22.Location = new System.Drawing.Point(6, 40);
             this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(115, 20);
+            this.label22.Size = new System.Drawing.Size(105, 19);
             this.label22.TabIndex = 114;
             this.label22.Text = "Mã khách hàng:";
             // 
@@ -72,7 +73,7 @@
             this.btnAddNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddNew.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAddNew.ForeColor = System.Drawing.Color.White;
-            this.btnAddNew.Location = new System.Drawing.Point(470, 23);
+            this.btnAddNew.Location = new System.Drawing.Point(487, 31);
             this.btnAddNew.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnAddNew.Name = "btnAddNew";
             this.btnAddNew.Size = new System.Drawing.Size(200, 37);
@@ -88,7 +89,7 @@
             this.btnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFind.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFind.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(41)))), ((int)(((byte)(59)))));
-            this.btnFind.Location = new System.Drawing.Point(372, 23);
+            this.btnFind.Location = new System.Drawing.Point(389, 31);
             this.btnFind.Name = "btnFind";
             this.btnFind.Size = new System.Drawing.Size(90, 37);
             this.btnFind.TabIndex = 18;
@@ -99,7 +100,7 @@
             // txtFilterValue
             // 
             this.txtFilterValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtFilterValue.Location = new System.Drawing.Point(141, 29);
+            this.txtFilterValue.Location = new System.Drawing.Point(141, 37);
             this.txtFilterValue.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtFilterValue.Name = "txtFilterValue";
             this.txtFilterValue.Size = new System.Drawing.Size(214, 26);
@@ -111,7 +112,7 @@
             // 
             this.ucCustomerCard1.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.ucCustomerCard1.BackColor = System.Drawing.Color.White;
-            this.ucCustomerCard1.Location = new System.Drawing.Point(2, 86);
+            this.ucCustomerCard1.Location = new System.Drawing.Point(2, 110);
             this.ucCustomerCard1.Name = "ucCustomerCard1";
             this.ucCustomerCard1.Size = new System.Drawing.Size(723, 397);
             this.ucCustomerCard1.TabIndex = 19;
@@ -129,7 +130,7 @@
             this.Controls.Add(this.ucCustomerCard1);
             this.Controls.Add(this.gbFilters);
             this.Name = "ucCustomerCardWithFilter";
-            this.Size = new System.Drawing.Size(726, 483);
+            this.Size = new System.Drawing.Size(726, 515);
             this.Load += new System.EventHandler(this.ucCustomerCardWithFilter_Load);
             this.gbFilters.ResumeLayout(false);
             this.gbFilters.PerformLayout();

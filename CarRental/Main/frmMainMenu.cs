@@ -12,7 +12,7 @@ using FontAwesome.Sharp;
 using Guna.UI2.WinForms;
 using System;
 using System.Drawing;
-using System.Threading;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -21,31 +21,44 @@ namespace CarRental.Main
     public partial class frmMainMenu : Form
     {
         private Guna2Button _CurrentButton;
-
         private Form _ActiveForm;
-
         private Form _frmLoginForm;
-
         public Form frmDeniedMassage = new frmAccessDeniedMessage();
 
         public frmMainMenu(Form frmLoginForm)
         {
             InitializeComponent();
-
             this._frmLoginForm = frmLoginForm;
+            this.DoubleBuffered = true;
+            _EnableDoubleBuffer(panelHeader);
+        }
+
+        private void _EnableDoubleBuffer(Control control)
+        {
+            if (control == null)
+                return;
+
+            PropertyInfo doubleBufferedProperty = control.GetType().GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
+            doubleBufferedProperty?.SetValue(control, true, null);
+
+            foreach (Control child in control.Controls)
+            {
+                _EnableDoubleBuffer(child);
+            }
         }
 
         private void _ActivateButton(object btnSender)
         {
             if (btnSender != null)
             {
-                if (_CurrentButton != (Guna2Button)btnSender)
+                Guna2Button clickedBtn = (Guna2Button)btnSender;
+                if (_CurrentButton != clickedBtn)
                 {
                     _DisableMenuButton();
-                    _CurrentButton = (Guna2Button)btnSender;
-                    _CurrentButton.FillColor = Color.White;
-                    _CurrentButton.ForeColor = Color.FromArgb(0, 118, 212);
-                    _CurrentButton.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+                    _CurrentButton = clickedBtn;
+
+                    // Hiệu ứng khi được chọn (Đã đồng bộ với Designer mới)
+                    _CurrentButton.Checked = true;
                 }
             }
         }
@@ -56,16 +69,15 @@ namespace CarRental.Main
             {
                 if (previousBtn is Guna2Button button)
                 {
-                    button.FillColor = Color.FromArgb(0, 118, 212);
-                    button.ForeColor = Color.White;
-                    button.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+                    button.Checked = false;
                 }
             }
         }
 
         private async void _OpenChildForm(Form childForm, object btnSender)
         {
-            await Task.Delay(100);
+            // Tạo hiệu ứng chuyển trang mượt mà
+            await Task.Delay(50);
 
             if (_ActiveForm != null)
                 _ActiveForm.Close();
@@ -75,18 +87,20 @@ namespace CarRental.Main
             childForm.TopLevel = false;
             childForm.FormBorderStyle = FormBorderStyle.None;
             childForm.Dock = DockStyle.Fill;
+
             this.panelDesktop.Controls.Add(childForm);
             this.panelDesktop.Tag = childForm;
             childForm.BringToFront();
             childForm.Show();
 
+            // Cập nhật tiêu đề trên Header
             if (childForm.Tag != null)
             {
-                lblTitle.Text = childForm.Tag.ToString();
+                lblTitle.Text = childForm.Tag.ToString().ToUpper();
             }
             else
             {
-                lblTitle.Text = childForm.Text;
+                lblTitle.Text = childForm.Text.ToUpper();
             }
         }
 
@@ -102,7 +116,6 @@ namespace CarRental.Main
                 frmDeniedMassage.ShowDialog();
                 return;
             }
-
             _OpenChildForm(new frmListCustomers(), sender);
         }
 
@@ -113,7 +126,6 @@ namespace CarRental.Main
                 frmDeniedMassage.ShowDialog();
                 return;
             }
-
             _OpenChildForm(new frmListUsers(), sender);
         }
 
@@ -124,7 +136,6 @@ namespace CarRental.Main
                 frmDeniedMassage.ShowDialog();
                 return;
             }
-
             _OpenChildForm(new frmListVehicles(), sender);
         }
 
@@ -135,7 +146,6 @@ namespace CarRental.Main
                 frmDeniedMassage.ShowDialog();
                 return;
             }
-
             _OpenChildForm(new frmListBooking(), sender);
         }
 
@@ -146,7 +156,6 @@ namespace CarRental.Main
                 frmDeniedMassage.ShowDialog();
                 return;
             }
-
             _OpenChildForm(new frmListReturn(), sender);
         }
 
@@ -157,7 +166,6 @@ namespace CarRental.Main
                 frmDeniedMassage.ShowDialog();
                 return;
             }
-
             _OpenChildForm(new frmListTransaction(), sender);
         }
 
@@ -170,19 +178,18 @@ namespace CarRental.Main
 
         private void btnSubMenu_Click(object sender, EventArgs e)
         {
-            // this method will show the context menu by clicking on the left click instead of the right click
-
-            // Get the location of the button on the screen
+            // Hiển thị menu tùy chọn tại vị trí nút Tài khoản
             Point location = btnSubMenu.PointToScreen(new Point(0, btnSubMenu.Height));
-
-            // Show the context menu at the calculated location
             cmsEditProfile.Show(location);
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            frmShowUserDetails ShowUserDetails = new frmShowUserDetails(clsGlobal.CurrentUser.UserID, false);
+            // Đổi false thành true ở đây để cho phép chỉnh sửa thông tin cá nhân
+            frmShowUserDetails ShowUserDetails = new frmShowUserDetails(clsGlobal.CurrentUser.UserID, true);
             ShowUserDetails.ShowDialog();
+            // Sau khi đóng form, có thể cập nhật lại tên trên Header nếu có thay đổi
+            btnSubMenu.Text = clsGlobal.CurrentUser.Username;
         }
 
         private void changePasswordToolStripMenuItem_Click(object sender, EventArgs e)
@@ -193,9 +200,11 @@ namespace CarRental.Main
 
         private void frmMainMenu_Load(object sender, EventArgs e)
         {
+            // Mặc định mở Dashboard khi load
             btnDashboard.PerformClick();
 
-            lblUsername.Text = clsGlobal.CurrentUser.Username;
+            // Gán tên người dùng vào nút Tài khoản trên Header thay vì Label cũ
+            btnSubMenu.Text = clsGlobal.CurrentUser.Username;
         }
 
         private void signOutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -204,6 +213,5 @@ namespace CarRental.Main
             _frmLoginForm.Show();
             this.Close();
         }
-
     }
 }

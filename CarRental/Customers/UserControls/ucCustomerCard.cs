@@ -36,12 +36,12 @@ namespace CarRental.Customers.UserControls
             lblCustomerID.Text = "[????]";
             lblDriverLicenseNumber.Text = "[????]";
 
-            llEditCustomerInfo.Enabled = false;
+            btnEditCustomerInfo.Enabled = false;
         }
 
         private void _FillCustomerInfo()
         {
-            llEditCustomerInfo.Enabled = true;
+            btnEditCustomerInfo.Enabled = true;
 
             ucPersonCard1.LoadPersonInfo(_Customer.PersonID);
 
@@ -83,6 +83,11 @@ namespace CarRental.Customers.UserControls
             frmAddEditCustomer EditCustomer = new frmAddEditCustomer(_CustomerID);
             EditCustomer.GetCustomerIDByDelegate += LoadCustomerInfo;
             EditCustomer.ShowDialog();
+        }
+
+        private void btnEditCustomerInfo_Click(object sender, EventArgs e)
+        {
+            llEditCustomerInfo_LinkClicked(sender, null);
         }
     }
 }

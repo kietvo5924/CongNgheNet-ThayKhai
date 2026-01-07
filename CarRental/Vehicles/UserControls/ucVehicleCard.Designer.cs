@@ -28,8 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.llEditVehicleInfo = new System.Windows.Forms.LinkLabel();
+            this.guna2PanelVehicleInfo = new Guna.UI2.WinForms.Guna2Panel();
+            this.btnEditVehicleInfo = new Guna.UI2.WinForms.Guna2Button();
+            this.lblHeaderVehicleInfo = new System.Windows.Forms.Label();
             this.lblEngine = new System.Windows.Forms.Label();
             this.pictureBox14 = new System.Windows.Forms.PictureBox();
             this.label19 = new System.Windows.Forms.Label();
@@ -75,7 +76,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox1.SuspendLayout();
+            this.guna2PanelVehicleInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).BeginInit();
@@ -93,76 +94,94 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
-            // groupBox1
+            // guna2PanelVehicleInfo
             // 
-            this.groupBox1.BackColor = System.Drawing.Color.White;
-            this.groupBox1.Controls.Add(this.llEditVehicleInfo);
-            this.groupBox1.Controls.Add(this.lblEngine);
-            this.groupBox1.Controls.Add(this.pictureBox14);
-            this.groupBox1.Controls.Add(this.label19);
-            this.groupBox1.Controls.Add(this.lblYear);
-            this.groupBox1.Controls.Add(this.lblFuelType);
-            this.groupBox1.Controls.Add(this.lblNumberDoors);
-            this.groupBox1.Controls.Add(this.lblIsAvailable);
-            this.groupBox1.Controls.Add(this.label13);
-            this.groupBox1.Controls.Add(this.pictureBox10);
-            this.groupBox1.Controls.Add(this.pictureBox11);
-            this.groupBox1.Controls.Add(this.pbIsAvailable);
-            this.groupBox1.Controls.Add(this.pictureBox13);
-            this.groupBox1.Controls.Add(this.label14);
-            this.groupBox1.Controls.Add(this.label16);
-            this.groupBox1.Controls.Add(this.label17);
-            this.groupBox1.Controls.Add(this.lblRentalPricePerDay);
-            this.groupBox1.Controls.Add(this.pictureBox9);
-            this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.lblMileage);
-            this.groupBox1.Controls.Add(this.pictureBox4);
-            this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.lblPlateNumber);
-            this.groupBox1.Controls.Add(this.pictureBox6);
-            this.groupBox1.Controls.Add(this.label15);
-            this.groupBox1.Controls.Add(this.pictureBox1);
-            this.groupBox1.Controls.Add(this.lblBody);
-            this.groupBox1.Controls.Add(this.lblModel);
-            this.groupBox1.Controls.Add(this.lblDriverType);
-            this.groupBox1.Controls.Add(this.lblSubModelName);
-            this.groupBox1.Controls.Add(this.lblMake);
-            this.groupBox1.Controls.Add(this.lblVehicleName);
-            this.groupBox1.Controls.Add(this.label22);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.lblVehicleID);
-            this.groupBox1.Controls.Add(this.pbGender);
-            this.groupBox1.Controls.Add(this.pictureBox8);
-            this.groupBox1.Controls.Add(this.pictureBox7);
-            this.groupBox1.Controls.Add(this.pictureBox5);
-            this.groupBox1.Controls.Add(this.pictureBox3);
-            this.groupBox1.Controls.Add(this.pictureBox2);
-            this.groupBox1.Controls.Add(this.label12);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(4, 5);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox1.Size = new System.Drawing.Size(761, 349);
-            this.groupBox1.TabIndex = 8;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Thông tin xe";
+            this.guna2PanelVehicleInfo.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(231)))), ((int)(((byte)(235)))));
+            this.guna2PanelVehicleInfo.BorderRadius = 14;
+            this.guna2PanelVehicleInfo.BorderThickness = 1;
+            this.guna2PanelVehicleInfo.Controls.Add(this.btnEditVehicleInfo);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblHeaderVehicleInfo);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblEngine);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pictureBox14);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label19);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblYear);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblFuelType);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblNumberDoors);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblIsAvailable);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label13);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pictureBox10);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pictureBox11);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pbIsAvailable);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pictureBox13);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label14);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label16);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label17);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblRentalPricePerDay);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pictureBox9);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label9);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblMileage);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pictureBox4);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label7);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblPlateNumber);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pictureBox6);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label15);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pictureBox1);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblBody);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblModel);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblDriverType);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblSubModelName);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblMake);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblVehicleName);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label22);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label5);
+            this.guna2PanelVehicleInfo.Controls.Add(this.lblVehicleID);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pbGender);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pictureBox8);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pictureBox7);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pictureBox5);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pictureBox3);
+            this.guna2PanelVehicleInfo.Controls.Add(this.pictureBox2);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label12);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label6);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label4);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label2);
+            this.guna2PanelVehicleInfo.Controls.Add(this.label1);
+            this.guna2PanelVehicleInfo.FillColor = System.Drawing.Color.White;
+            this.guna2PanelVehicleInfo.Location = new System.Drawing.Point(4, 5);
+            this.guna2PanelVehicleInfo.Name = "guna2PanelVehicleInfo";
+            this.guna2PanelVehicleInfo.Size = new System.Drawing.Size(761, 349);
+            this.guna2PanelVehicleInfo.TabIndex = 8;
             // 
-            // llEditVehicleInfo
+            // btnEditVehicleInfo
             // 
-            this.llEditVehicleInfo.AutoSize = true;
-            this.llEditVehicleInfo.Enabled = false;
-            this.llEditVehicleInfo.Location = new System.Drawing.Point(632, 325);
-            this.llEditVehicleInfo.Name = "llEditVehicleInfo";
-            this.llEditVehicleInfo.Size = new System.Drawing.Size(125, 20);
-            this.llEditVehicleInfo.TabIndex = 172;
-            this.llEditVehicleInfo.TabStop = true;
-            this.llEditVehicleInfo.Text = "Chỉnh sửa thông tin xe";
-            this.llEditVehicleInfo.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llEditVehicleInfo_LinkClicked);
+            this.btnEditVehicleInfo.BorderRadius = 8;
+            this.btnEditVehicleInfo.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnEditVehicleInfo.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.btnEditVehicleInfo.DisabledState.CustomBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.btnEditVehicleInfo.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(232)))), ((int)(((byte)(240)))));
+            this.btnEditVehicleInfo.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));
+            this.btnEditVehicleInfo.Enabled = false;
+            this.btnEditVehicleInfo.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(249)))), ((int)(((byte)(255)))));
+            this.btnEditVehicleInfo.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
+            this.btnEditVehicleInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
+            this.btnEditVehicleInfo.Location = new System.Drawing.Point(586, 10);
+            this.btnEditVehicleInfo.Name = "btnEditVehicleInfo";
+            this.btnEditVehicleInfo.Size = new System.Drawing.Size(160, 32);
+            this.btnEditVehicleInfo.TabIndex = 173;
+            this.btnEditVehicleInfo.Text = "Chỉnh sửa";
+            this.btnEditVehicleInfo.Click += new System.EventHandler(this.btnEditVehicleInfo_Click);
+            // 
+            // lblHeaderVehicleInfo
+            // 
+            this.lblHeaderVehicleInfo.AutoSize = true;
+            this.lblHeaderVehicleInfo.BackColor = System.Drawing.Color.Transparent;
+            this.lblHeaderVehicleInfo.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.lblHeaderVehicleInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(41)))), ((int)(((byte)(55)))));
+            this.lblHeaderVehicleInfo.Location = new System.Drawing.Point(12, 10);
+            this.lblHeaderVehicleInfo.Name = "lblHeaderVehicleInfo";
+            this.lblHeaderVehicleInfo.Size = new System.Drawing.Size(96, 20);
+            this.lblHeaderVehicleInfo.TabIndex = 174;
+            this.lblHeaderVehicleInfo.Text = "Thông tin xe";
             // 
             // lblEngine
             // 
@@ -651,11 +670,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.guna2PanelVehicleInfo);
             this.Name = "ucVehicleCard";
             this.Size = new System.Drawing.Size(772, 359);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.guna2PanelVehicleInfo.ResumeLayout(false);
+            this.guna2PanelVehicleInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).EndInit();
@@ -677,7 +696,9 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
+        private Guna.UI2.WinForms.Guna2Panel guna2PanelVehicleInfo;
+        private Guna.UI2.WinForms.Guna2Button btnEditVehicleInfo;
+        private System.Windows.Forms.Label lblHeaderVehicleInfo;
         private System.Windows.Forms.Label lblRentalPricePerDay;
         private System.Windows.Forms.PictureBox pictureBox9;
         private System.Windows.Forms.Label label9;
@@ -723,6 +744,5 @@
         private System.Windows.Forms.Label lblEngine;
         private System.Windows.Forms.PictureBox pictureBox14;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.LinkLabel llEditVehicleInfo;
     }
 }

@@ -30,7 +30,7 @@
         {
             this.tcSelectCustomerVehicle = new Guna.UI2.WinForms.Guna2TabControl();
             this.tpSelectCustomer = new System.Windows.Forms.TabPage();
-            this.btnNext = new System.Windows.Forms.Button();
+            this.btnNext = new Guna.UI2.WinForms.Guna2Button();
             this.ucCustomerCardWithFilter1 = new CarRental.Customers.UserControls.ucCustomerCardWithFilter();
             this.tpSelectVehicle = new System.Windows.Forms.TabPage();
             this.ucVehicleCardWithFilter1 = new CarRental.Vehicles.UserControls.ucVehicleCardWithFilter();
@@ -86,19 +86,22 @@
             // 
             // btnNext
             // 
-            this.btnNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnNext.BorderRadius = 8;
+            this.btnNext.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnNext.Enabled = false;
-            this.btnNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNext.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
+            this.btnNext.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
+            this.btnNext.ForeColor = System.Drawing.Color.White;
             this.btnNext.Image = global::CarRental.Properties.Resources.Next_32;
-            this.btnNext.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNext.Location = new System.Drawing.Point(621, 484);
-            this.btnNext.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnNext.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.btnNext.ImageOffset = new System.Drawing.Point(6, 0);
+            this.btnNext.Location = new System.Drawing.Point(560, 473);
             this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(156, 37);
+            this.btnNext.Size = new System.Drawing.Size(155, 32);
             this.btnNext.TabIndex = 119;
-            this.btnNext.Text = "   Tiếp tục";
-            this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Text = "Tiếp tục";
+            this.btnNext.TextOffset = new System.Drawing.Point(6, 0);
             this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
             // ucCustomerCardWithFilter1
@@ -109,7 +112,7 @@
             this.ucCustomerCardWithFilter1.Location = new System.Drawing.Point(18, 4);
             this.ucCustomerCardWithFilter1.Name = "ucCustomerCardWithFilter1";
             this.ucCustomerCardWithFilter1.ShowAddMemberButton = true;
-            this.ucCustomerCardWithFilter1.Size = new System.Drawing.Size(725, 483);
+            this.ucCustomerCardWithFilter1.Size = new System.Drawing.Size(725, 462);
             this.ucCustomerCardWithFilter1.TabIndex = 0;
             this.ucCustomerCardWithFilter1.OnCustomerSelected += new System.EventHandler<CarRental.Customers.UserControls.ucCustomerCardWithFilter.CustomerSelectedEventArgs>(this.ucCustomerCardWithFilter1_OnCustomerSelected);
             // 
@@ -161,6 +164,6 @@
         private Customers.UserControls.ucCustomerCardWithFilter ucCustomerCardWithFilter1;
         private System.Windows.Forms.TabPage tpSelectVehicle;
         private Vehicles.UserControls.ucVehicleCardWithFilter ucVehicleCardWithFilter1;
-        private System.Windows.Forms.Button btnNext;
+        private Guna.UI2.WinForms.Guna2Button btnNext;
     }
 }
