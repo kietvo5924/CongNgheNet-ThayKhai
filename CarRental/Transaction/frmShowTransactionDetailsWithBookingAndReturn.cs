@@ -20,6 +20,11 @@ namespace CarRental.Transaction
                 LoadTransactionWithBookingAndReturnInfo(TransactionID);
         }
 
+        private void frmShowTransactionDetailsWithBookingAndReturn_Load(object sender, EventArgs e)
+        {
+            // Designer is wired to this event; initialization is already done in constructor.
+        }
+
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();

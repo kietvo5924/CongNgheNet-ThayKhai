@@ -2,6 +2,7 @@
 using CarRental.GlobalClasses;
 using CarRental.Transaction;
 using CarRental_Business;
+using Guna.UI2.WinForms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +11,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Util;
 using System.Windows.Forms;
 using static CarRental.Booking.UserControls.ucBookingCardWithFilter;
 
@@ -21,7 +21,6 @@ namespace CarRental.Return
         public Action<int?> GetReturnByDelegate;
 
         private int? _SelectedBookingID = null;
-
         private int? _ReturnID = null;
         private clsReturn _Return;
 
@@ -33,15 +32,80 @@ namespace CarRental.Return
         public frmReturnVehicle(int? BookingID)
         {
             InitializeComponent();
-
             ucBookingCardWithFilter1.LoadBookingInfo(BookingID);
             ucBookingCardWithFilter1.FilterEnabled = false;
         }
 
+        private void _ApplyModernUiNoIcons()
+        {
+            // Keep it minimal and consistent with other modern screens.
+            this.Font = new Font("Segoe UI", 10F);
+
+            // Buttons
+            btnReturn.Image = null;
+            btnReturn.ImageAlign = HorizontalAlignment.Center;
+            btnReturn.TextOffset = new Point(0, 0);
+            btnReturn.BorderRadius = 8;
+            btnReturn.FillColor = Color.FromArgb(0, 118, 212);
+            btnReturn.ForeColor = Color.White;
+            btnReturn.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+
+            btnClose.Image = null;
+            btnClose.ImageAlign = HorizontalAlignment.Center;
+            btnClose.TextOffset = new Point(0, 0);
+            btnClose.BorderRadius = 8;
+            btnClose.FillColor = Color.FromArgb(243, 244, 246);
+            btnClose.ForeColor = Color.FromArgb(75, 85, 99);
+            btnClose.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+
+            // Inputs
+            _StyleTextBox(txtMileage, "Nhập số KM hiện tại...");
+            _StyleTextBox(txtAdditionalCharges, "Nhập phí phát sinh (nếu có)...");
+            _StyleTextBox(txtFinalCheckNotes, "Ghi chú kiểm tra xe...");
+
+            dtpActualReturnDate.BorderRadius = 8;
+            dtpActualReturnDate.FillColor = Color.White;
+            dtpActualReturnDate.Font = new Font("Segoe UI", 10F);
+
+            // Links
+            _StyleLink(llShowReturnDetails);
+            _StyleLink(llShowUpdatedTransactionDetails);
+        }
+
+        private void _StyleTextBox(Guna2TextBox txt, string placeholder)
+        {
+            if (txt == null) return;
+
+            txt.BorderRadius = 8;
+            txt.PlaceholderText = placeholder;
+            txt.PlaceholderForeColor = Color.FromArgb(156, 163, 175);
+            txt.Font = new Font("Segoe UI", 10F);
+            txt.ForeColor = Color.FromArgb(31, 41, 55);
+            txt.FillColor = Color.White;
+
+            txt.BorderColor = Color.FromArgb(229, 231, 235);
+            txt.FocusedState.BorderColor = Color.FromArgb(0, 118, 212);
+            txt.HoverState.BorderColor = Color.FromArgb(0, 118, 212);
+        }
+
+        private void _StyleLink(LinkLabel ll)
+        {
+            if (ll == null) return;
+
+            ll.LinkColor = Color.FromArgb(0, 118, 212);
+            ll.ActiveLinkColor = Color.FromArgb(0, 118, 212);
+            ll.VisitedLinkColor = Color.FromArgb(0, 118, 212);
+            ll.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
+        }
+
         private bool _UpdateMileageOfTheVehicleInDB()
         {
-            return ucBookingCardWithFilter1.SelectedBookingInfo?.VehicleInfo?.
-                   UpdateMileage((int)double.Parse(txtMileage.Text.Trim())) ?? false;
+            if (double.TryParse(txtMileage.Text.Trim(), out double mileage))
+            {
+                return ucBookingCardWithFilter1.SelectedBookingInfo?.VehicleInfo?.
+                       UpdateMileage((int)mileage) ?? false;
+            }
+            return false;
         }
 
         private bool _SetVehicleAvailableForRent()
@@ -52,24 +116,37 @@ namespace CarRental.Return
 
         private int _CalculateActualRentalDays()
         {
+            if (ucBookingCardWithFilter1.SelectedBookingInfo == null) return 0;
+
             int DiffDays = (dtpActualReturnDate.Value.Date - ucBookingCardWithFilter1.SelectedBookingInfo.RentalStartDate.Date).Days;
 
-            return DiffDays;
+            // Nếu trả sớm hoặc cùng ngày, tối thiểu tính 1 ngày
+            return DiffDays < 1 ? 1 : DiffDays;
         }
 
         private double _CalculateConsumedMileage()
         {
-            double InitialMileage = ucBookingCardWithFilter1.SelectedBookingInfo?.VehicleInfo?.Mileage ?? 0;
-            double FinalMileage = double.Parse(txtMileage.Text.Trim());
+            if (string.IsNullOrEmpty(txtMileage.Text.Trim())) return 0;
 
-            return (FinalMileage) - (InitialMileage);
+            double InitialMileage = ucBookingCardWithFilter1.SelectedBookingInfo?.VehicleInfo?.Mileage ?? 0;
+            double FinalMileage = 0;
+
+            if (double.TryParse(txtMileage.Text.Trim(), out FinalMileage))
+            {
+                return (FinalMileage) - (InitialMileage);
+            }
+            return 0;
         }
 
         private float _CalculateActualTotalDueAmount()
         {
-            float RentalPricePerDay = ucBookingCardWithFilter1.SelectedBookingInfo?.RentalPricePerDay ?? 0;
+            if (ucBookingCardWithFilter1.SelectedBookingInfo == null) return 0;
+
+            float RentalPricePerDay = ucBookingCardWithFilter1.SelectedBookingInfo.RentalPricePerDay;
             int ActualRentalDays = _CalculateActualRentalDays();
-            float AdditionalCharges = Convert.ToSingle(txtAdditionalCharges.Text.Trim());
+            float AdditionalCharges = 0;
+
+            float.TryParse(txtAdditionalCharges.Text.Trim(), out AdditionalCharges);
 
             return (ActualRentalDays * RentalPricePerDay) + AdditionalCharges;
         }
@@ -77,13 +154,10 @@ namespace CarRental.Return
         private void _Reset()
         {
             ucBookingCardWithFilter1.FilterEnabled = false;
-
             txtAdditionalCharges.Enabled = false;
             txtFinalCheckNotes.Enabled = false;
             txtMileage.Enabled = false;
-
             btnReturn.Enabled = false;
-
             dtpActualReturnDate.Enabled = false;
         }
 
@@ -92,48 +166,53 @@ namespace CarRental.Return
             _Return = new clsReturn();
 
             _Return.ActualReturnDate = dtpActualReturnDate.Value;
-            _Return.Mileage = int.Parse(txtMileage.Text.Trim());
+
+            if (int.TryParse(txtMileage.Text.Trim(), out int mileage))
+                _Return.Mileage = mileage;
+            else
+                _Return.Mileage = 0;
+
             _Return.FinalCheckNotes = txtFinalCheckNotes.Text.Trim();
-            _Return.AdditionalCharges = Convert.ToSingle(txtAdditionalCharges.Text.Trim());
+
+            float additionalCharges = 0;
+            if (float.TryParse(txtAdditionalCharges.Text.Trim(), out additionalCharges))
+                _Return.AdditionalCharges = additionalCharges;
+            else
+                _Return.AdditionalCharges = 0;
+
             _Return.ConsumedMileage = (int)_CalculateConsumedMileage();
             _Return.ActualRentalDays = _CalculateActualRentalDays();
             _Return.ActualTotalDueAmount = _CalculateActualTotalDueAmount();
 
             if (!_Return.Save())
             {
-                MessageBox.Show("Vehicle Returned Failed", "Failed",
+                MessageBox.Show("Lỗi hệ thống: Không thể lưu thông tin trả xe.", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 return;
             }
 
             if (!_Return.UpdateTransaction(ucBookingCardWithFilter1.SelectedBookingInfo?
                 .TransactionInfo?.TransactionID))
             {
-                MessageBox.Show("Vehicle Returned Failed", "Failed",
+                MessageBox.Show("Lỗi hệ thống: Không thể cập nhật giao dịch.", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 return;
             }
-
 
             lblReturnID.Text = _Return.ReturnID?.ToString();
             lblActualRentalDays.Text = _Return.ActualRentalDays.ToString();
             lblConsumedMileage.Text = _Return.ConsumedMileage.ToString();
             lblActualTotalDueAmount.Text = _Return.ActualTotalDueAmount.ToString("N");
 
-
-            MessageBox.Show($"Vehicle Returned Successfully", "Returned",
+            MessageBox.Show("Trả xe thành công!", "Hoàn tất",
                    MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             _ReturnID = _Return.ReturnID;
 
             llShowReturnDetails.Enabled = true;
             llShowUpdatedTransactionDetails.Enabled = true;
-            
 
             _Reset();
-
             _UpdateMileageOfTheVehicleInDB();
             _SetVehicleAvailableForRent();
 
@@ -142,22 +221,24 @@ namespace CarRental.Return
 
         private void txtFinalCheckNotes_Validating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtFinalCheckNotes.Text.Trim()))
+            Guna2TextBox temp = (Guna2TextBox)sender;
+
+            if (string.IsNullOrWhiteSpace(temp.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtFinalCheckNotes, "This field cannot be empty!");
+                errorProvider1.SetError(temp, "Vui lòng nhập ghi chú kiểm tra xe!");
                 return;
             }
             else
             {
-                errorProvider1.SetError(txtFinalCheckNotes, null);
-
+                errorProvider1.SetError(temp, null);
             }
         }
 
         private void frmReturnVehicle_Load(object sender, EventArgs e)
         {
             dtpActualReturnDate.MinDate = DateTime.Now;
+            _ApplyModernUiNoIcons();
         }
 
         private void ucBookingCardWithFilter1_OnBookingSelected(object sender, BookingSelectedEventArgs e)
@@ -167,110 +248,105 @@ namespace CarRental.Return
             if (!_SelectedBookingID.HasValue)
             {
                 btnReturn.Enabled = false;
-
                 return;
             }
 
             if (ucBookingCardWithFilter1.SelectedBookingInfo.IsBookingReturned)
             {
-                MessageBox.Show("This booking has finished and the vehicle is already returned!", "Not Allow",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Đơn đặt hàng này đã hoàn tất và xe đã được trả!", "Không hợp lệ",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 btnReturn.Enabled = false;
-
                 return;
             }
 
             btnReturn.Enabled = true;
 
             lblActualRentalDays.Text = _CalculateActualRentalDays().ToString();
+
+            // Reset fields
+            txtMileage.Text = "";
+            txtAdditionalCharges.Text = "";
+            txtFinalCheckNotes.Text = "";
+            lblActualTotalDueAmount.Text = "N/A";
+            lblConsumedMileage.Text = "N/A";
         }
 
         private void txtAdditionalCharges_Validating(object sender, CancelEventArgs e)
         {
+            Guna2TextBox temp = (Guna2TextBox)sender;
 
-            if (string.IsNullOrWhiteSpace(txtAdditionalCharges.Text.Trim()))
+            if (string.IsNullOrWhiteSpace(temp.Text.Trim()))
+            {
+                errorProvider1.SetError(temp, null);
+            }
+            else if (!clsValidation.IsNumber(temp.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtAdditionalCharges, "This field cannot be empty!");
-                return;
+                errorProvider1.SetError(temp, "Vui lòng nhập số hợp lệ.");
             }
             else
             {
-                errorProvider1.SetError(txtAdditionalCharges, null);
-
+                errorProvider1.SetError(temp, null);
             }
 
-
-            if (!clsValidation.IsNumber(txtAdditionalCharges.Text.Trim()))
+            if (!e.Cancel)
             {
-                e.Cancel = true;
-                errorProvider1.SetError(txtAdditionalCharges, "Invalid Number.");
-            }
-            else
-            {
-                errorProvider1.SetError(txtAdditionalCharges, null);
+                lblActualTotalDueAmount.Text = _CalculateActualTotalDueAmount().ToString("N");
             }
         }
 
         private void txtMileage_Validating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtMileage.Text.Trim()))
+            Guna2TextBox temp = (Guna2TextBox)sender;
+
+            if (string.IsNullOrWhiteSpace(temp.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtMileage, "This field cannot be empty!");
+                errorProvider1.SetError(temp, "Vui lòng nhập số KM hiện tại!");
                 return;
             }
-            else
-            {
-                errorProvider1.SetError(txtMileage, null);
 
-            }
-
-
-            if (!clsValidation.IsNumber(txtMileage.Text.Trim()))
+            if (!clsValidation.IsNumber(temp.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtMileage, "Invalid Number.");
+                errorProvider1.SetError(temp, "Số không hợp lệ.");
                 return;
             }
-            else
-            {
-                errorProvider1.SetError(txtMileage, null);
-            }
-
 
             if (_SelectedBookingID.HasValue &&
-                double.Parse(txtMileage.Text.Trim()) < ucBookingCardWithFilter1.SelectedBookingInfo?.VehicleInfo?.Mileage)
+                double.Parse(temp.Text.Trim()) < ucBookingCardWithFilter1.SelectedBookingInfo?.VehicleInfo?.Mileage)
             {
                 e.Cancel = true;
-
-                errorProvider1.SetError(txtMileage, $"The initial mileage of this car was" +
-                    $" {ucBookingCardWithFilter1.SelectedBookingInfo?.VehicleInfo?.Mileage}" +
-                    $" \nso you cannot enter the mileage is less that it!");
+                errorProvider1.SetError(temp, $"Số KM ban đầu là: " +
+                    $" {ucBookingCardWithFilter1.SelectedBookingInfo?.VehicleInfo?.Mileage}." +
+                    $" \nSố KM trả xe không được nhỏ hơn số KM ban đầu!");
             }
             else
             {
-                errorProvider1.SetError(txtMileage, null);
+                errorProvider1.SetError(temp, null);
+            }
+
+            if (!e.Cancel)
+            {
+                lblConsumedMileage.Text = _CalculateConsumedMileage().ToString();
             }
         }
 
         private void dtpActualReturnDate_ValueChanged(object sender, EventArgs e)
         {
-            if (!_SelectedBookingID.HasValue)
-            {
-                return;
-            }
+            if (!_SelectedBookingID.HasValue) return;
 
             lblActualRentalDays.Text = _CalculateActualRentalDays().ToString();
+            lblActualTotalDueAmount.Text = _CalculateActualTotalDueAmount().ToString("N");
         }
 
         private void btnReturn_Click(object sender, EventArgs e)
         {
             if (!this.ValidateChildren())
             {
-                MessageBox.Show("Some fields are not valid!, put the mouse over the red icon(s) to see the error",
-                    "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Dữ liệu nhập vào chưa hợp lệ. Vui lòng kiểm tra lại các trường báo đỏ!",
+                    "Lỗi xác thực", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -292,6 +368,11 @@ namespace CarRental.Return
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void ucBookingCardWithFilter1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

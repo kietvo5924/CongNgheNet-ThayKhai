@@ -79,7 +79,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
             this.label3.Location = new System.Drawing.Point(15, 12);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(150, 21);
@@ -118,7 +118,7 @@
             // lblFullName
             // 
             this.lblFullName.AutoSize = true;
-            this.lblFullName.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblFullName.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.lblFullName.ForeColor = System.Drawing.Color.Black;
             this.lblFullName.Location = new System.Drawing.Point(140, 95);
             this.lblFullName.Name = "lblFullName";

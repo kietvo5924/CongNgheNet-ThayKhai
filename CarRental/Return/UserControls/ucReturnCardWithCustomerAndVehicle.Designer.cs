@@ -36,7 +36,7 @@
             // 
             this.ucReturnCard1.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.ucReturnCard1.BackColor = System.Drawing.Color.White;
-            this.ucReturnCard1.Location = new System.Drawing.Point(7, 457);
+            this.ucReturnCard1.Location = new System.Drawing.Point(7, 680);
             this.ucReturnCard1.Name = "ucReturnCard1";
             this.ucReturnCard1.Size = new System.Drawing.Size(784, 224);
             this.ucReturnCard1.TabIndex = 1;
@@ -47,7 +47,7 @@
             this.ucSelectedCustomerAndVehicleCard1.BackColor = System.Drawing.Color.White;
             this.ucSelectedCustomerAndVehicleCard1.Location = new System.Drawing.Point(0, 0);
             this.ucSelectedCustomerAndVehicleCard1.Name = "ucSelectedCustomerAndVehicleCard1";
-            this.ucSelectedCustomerAndVehicleCard1.Size = new System.Drawing.Size(796, 456);
+            this.ucSelectedCustomerAndVehicleCard1.Size = new System.Drawing.Size(796, 675);
             this.ucSelectedCustomerAndVehicleCard1.TabIndex = 0;
             // 
             // ucReturnCardWithCustomerAndVehicle
@@ -59,7 +59,7 @@
             this.Controls.Add(this.ucReturnCard1);
             this.Controls.Add(this.ucSelectedCustomerAndVehicleCard1);
             this.Name = "ucReturnCardWithCustomerAndVehicle";
-            this.Size = new System.Drawing.Size(797, 681);
+            this.Size = new System.Drawing.Size(797, 910);
             this.ResumeLayout(false);
 
         }

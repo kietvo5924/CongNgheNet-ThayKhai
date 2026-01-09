@@ -14,7 +14,7 @@ namespace CarRental_DataAccess
             ref int SubModelID, ref int BodyID, ref string VehicleName, ref string PlateNumber,
             ref short Year, ref int DriveTypeID, ref string Engine, ref int FuelTypeID,
             ref byte NumberDoors, ref int Mileage, ref float RentalPricePerDay,
-            ref bool IsAvailableForRent)
+            ref bool IsAvailableForRent, ref string Image)
         {
             bool IsFound = false;
 
@@ -51,6 +51,19 @@ namespace CarRental_DataAccess
                                 Mileage = (int)reader["Mileage"];
                                 RentalPricePerDay = Convert.ToSingle(reader["RentalPricePerDay"]);
                                 IsAvailableForRent = (bool)reader["IsAvailableForRent"];
+
+                                // Handle Image path safely (in case column doesn't exist)
+                                try
+                                {
+                                    if (reader["Image"] != DBNull.Value)
+                                        Image = (string)reader["Image"];
+                                    else
+                                        Image = null;
+                                }
+                                catch
+                                {
+                                    Image = null; // Column likely missing or other error
+                                }
                             }
                             else
                             {
@@ -80,7 +93,7 @@ namespace CarRental_DataAccess
         public static int? AddNewVehicle(int MakeID, int ModelID, int SubModelID, int BodyID,
             string VehicleName, string PlateNumber, short Year, int DriveTypeID, string Engine,
             int FuelTypeID, byte NumberDoors, int Mileage, float RentalPricePerDay,
-            bool IsAvailableForRent)
+            bool IsAvailableForRent, string Image)
         {
             // This function will return the new person id if succeeded and null if not
             int? VehicleID = null;
@@ -91,8 +104,8 @@ namespace CarRental_DataAccess
                 {
                     connection.Open();
 
-                    string query = @"insert into Vehicles (MakeID, ModelID, SubModelID, BodyID, VehicleName, PlateNumber, Year, DriveTypeID, Engine, FuelTypeID, NumberDoors, Mileage, RentalPricePerDay, IsAvailableForRent)
-values (@MakeID, @ModelID, @SubModelID, @BodyID, @VehicleName, @PlateNumber, @Year, @DriveTypeID, @Engine, @FuelTypeID, @NumberDoors, @Mileage, @RentalPricePerDay, @IsAvailableForRent)
+                    string query = @"insert into Vehicles (MakeID, ModelID, SubModelID, BodyID, VehicleName, PlateNumber, Year, DriveTypeID, Engine, FuelTypeID, NumberDoors, Mileage, RentalPricePerDay, IsAvailableForRent, Image)
+values (@MakeID, @ModelID, @SubModelID, @BodyID, @VehicleName, @PlateNumber, @Year, @DriveTypeID, @Engine, @FuelTypeID, @NumberDoors, @Mileage, @RentalPricePerDay, @IsAvailableForRent, @Image)
 select scope_identity()";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
@@ -111,6 +124,11 @@ select scope_identity()";
                         command.Parameters.AddWithValue("@Mileage", Mileage);
                         command.Parameters.AddWithValue("@RentalPricePerDay", RentalPricePerDay);
                         command.Parameters.AddWithValue("@IsAvailableForRent", IsAvailableForRent);
+
+                        if (Image != null)
+                            command.Parameters.AddWithValue("@Image", Image);
+                        else
+                            command.Parameters.AddWithValue("@Image", DBNull.Value);
 
                         object result = command.ExecuteScalar();
 
@@ -136,7 +154,7 @@ select scope_identity()";
         public static bool UpdateVehicle(int? VehicleID, int MakeID, int ModelID, int SubModelID,
             int BodyID, string VehicleName, string PlateNumber, short Year, int DriveTypeID,
             string Engine, int FuelTypeID, byte NumberDoors, int Mileage, float RentalPricePerDay,
-            bool IsAvailableForRent)
+            bool IsAvailableForRent, string Image)
         {
             int RowAffected = 0;
 
@@ -160,7 +178,8 @@ FuelTypeID = @FuelTypeID,
 NumberDoors = @NumberDoors,
 Mileage = @Mileage,
 RentalPricePerDay = @RentalPricePerDay,
-IsAvailableForRent = @IsAvailableForRent
+IsAvailableForRent = @IsAvailableForRent,
+Image = @Image
 where VehicleID = @VehicleID";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
@@ -180,6 +199,11 @@ where VehicleID = @VehicleID";
                         command.Parameters.AddWithValue("@Mileage", Mileage);
                         command.Parameters.AddWithValue("@RentalPricePerDay", RentalPricePerDay);
                         command.Parameters.AddWithValue("@IsAvailableForRent", IsAvailableForRent);
+
+                        if (Image != null)
+                            command.Parameters.AddWithValue("@Image", Image);
+                        else
+                            command.Parameters.AddWithValue("@Image", DBNull.Value);
 
                         RowAffected = command.ExecuteNonQuery();
                     }

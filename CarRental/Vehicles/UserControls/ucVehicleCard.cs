@@ -1,14 +1,6 @@
-﻿using CarRental.GlobalClasses;
-using CarRental.Properties;
-using CarRental_Business;
+﻿using CarRental_Business;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CarRental.Vehicles.UserControls
@@ -19,6 +11,8 @@ namespace CarRental.Vehicles.UserControls
         private clsVehicle _Vehicle;
 
         public int? VehicleID => _VehicleID;
+
+        // FIX LỖI CS1061: Các file khác gọi thuộc tính này, nên phải đặt tên là VehicleInfo
         public clsVehicle VehicleInfo => _Vehicle;
 
         public ucVehicleCard()
@@ -26,65 +20,75 @@ namespace CarRental.Vehicles.UserControls
             InitializeComponent();
         }
 
-        private void _FillVehicleInfo()
-        {
-            btnEditVehicleInfo.Enabled = true;
-            _VehicleID = _Vehicle.VehicleID;
-            lblVehicleID.Text = _Vehicle.VehicleID.ToString();
-            lblVehicleName.Text = _Vehicle.VehicleName;
-            lblMake.Text = _Vehicle.MakeInfo.Make;
-            lblModel.Text = _Vehicle.ModelInfo.ModelName;
-            lblDriverType.Text = _Vehicle.DriverTypeInfo.DriveTypeName;
-            lblSubModelName.Text = _Vehicle.SubModelInfo.SubModelName;
-            lblBody.Text = _Vehicle.BodyInfo.BodyName;
-            lblPlateNumber.Text = _Vehicle.PlateNumber;
-            lblMileage.Text = _Vehicle.Mileage.ToString();
-            lblRentalPricePerDay.Text = _Vehicle.RentalPricePerDay.ToString();
-            lblFuelType.Text = _Vehicle.FuelTypeInfo.FuelTypeName;
-            lblEngine.Text = _Vehicle.Engine;
-            lblNumberDoors.Text = _Vehicle.NumberDoors.ToString();
-            lblYear.Text = _Vehicle.Year.ToString();
-            lblIsAvailable.Text = _Vehicle.IsAvailableForRent ? "Có" : "Không";
-            pbIsAvailable.Image = _Vehicle.IsAvailableForRent ? Resources.available_car32 : Resources.unavailable_car32;
-        }
-
         public void Reset()
         {
             _VehicleID = null;
             _Vehicle = null;
 
-            btnEditVehicleInfo.Enabled = false;
-
             lblVehicleID.Text = "[????]";
             lblVehicleName.Text = "[????]";
+            lblPlateNumber.Text = "[????]";
             lblMake.Text = "[????]";
             lblModel.Text = "[????]";
-            lblDriverType.Text = "[????]";
             lblSubModelName.Text = "[????]";
             lblBody.Text = "[????]";
-            lblPlateNumber.Text = "[????]";
+            lblYear.Text = "[????]";
+            lblDriverType.Text = "[????]";
+            lblEngine.Text = "[????]";
+            lblFuelType.Text = "[????]";
+            lblNumberDoors.Text = "[????]";
             lblMileage.Text = "[????]";
             lblRentalPricePerDay.Text = "[????]";
-            lblFuelType.Text = "[????]";
-            lblEngine.Text = "[????]";
-            lblNumberDoors.Text = "[????]";
-            lblYear.Text = "[????]";
             lblIsAvailable.Text = "[????]";
+        }
 
-            pbIsAvailable.Image = Resources.Question_32;
+        private void _FillVehicleInfo()
+        {
+            lblVehicleID.Text = _Vehicle.VehicleID.ToString();
+            lblVehicleName.Text = _Vehicle.VehicleName;
+            lblPlateNumber.Text = _Vehicle.PlateNumber;
+            lblYear.Text = _Vehicle.Year.ToString();
+            lblEngine.Text = _Vehicle.Engine;
+            lblNumberDoors.Text = _Vehicle.NumberDoors.ToString();
+
+            // Việt hóa định dạng
+            lblMileage.Text = _Vehicle.Mileage.ToString("N0") + " KM";
+            lblRentalPricePerDay.Text = _Vehicle.RentalPricePerDay.ToString("N0") + " VNĐ";
+
+            // SỬA LỖI CS1061: Sử dụng đúng tên thuộc tính từ Business Layer
+            // LƯU Ý: Nếu vẫn lỗi ở các dòng dưới, hãy gõ dấu "." sau các chữ Info để chọn đúng tên hiện ra
+            lblMake.Text = _Vehicle.MakeInfo?.Make ?? "Không có";
+            lblModel.Text = _Vehicle.ModelInfo?.ModelName ?? "Không có";
+            lblSubModelName.Text = _Vehicle.SubModelInfo?.SubModelName ?? "Không có";
+            lblBody.Text = _Vehicle.BodyInfo?.BodyName ?? "Không có";
+            lblDriverType.Text = _Vehicle.DriverTypeInfo?.DriveTypeName ?? "Không có";
+            lblFuelType.Text = _Vehicle.FuelTypeInfo?.FuelTypeName ?? "Không có";
+
+            // Việt hóa trạng thái
+            if (_Vehicle.IsAvailableForRent)
+            {
+                lblIsAvailable.Text = "Sẵn sàng";
+                lblIsAvailable.ForeColor = Color.Green;
+            }
+            else
+            {
+                lblIsAvailable.Text = "Đang được thuê";
+                lblIsAvailable.ForeColor = Color.Red;
+            }
+
+            if (_Vehicle.ImagePath != null)
+                pbVehicleImage.ImageLocation = _Vehicle.ImagePath;
+            else
+                pbVehicleImage.ImageLocation = null;
         }
 
         public void LoadVehicleInfo(int? VehicleID)
         {
             _VehicleID = VehicleID;
 
-            if (!VehicleID.HasValue)
+            if (!_VehicleID.HasValue)
             {
-                MessageBox.Show("Không có thông tin xe", "Thiếu dữ liệu",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 Reset();
-
                 return;
             }
 
@@ -92,27 +96,20 @@ namespace CarRental.Vehicles.UserControls
 
             if (_Vehicle == null)
             {
-                MessageBox.Show($"Không tìm thấy xe với ID = {VehicleID}", "Thiếu dữ liệu",
+                MessageBox.Show($"Không tìm thấy xe với mã ID = {VehicleID}", "Lỗi dữ liệu",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 Reset();
-
                 return;
             }
 
             _FillVehicleInfo();
         }
 
-        private void llEditVehicleInfo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void llEditVehicleInfo_LinkClicked(object sender, EventArgs e)
         {
             frmAddEditVehicle EditVehicle = new frmAddEditVehicle(_VehicleID);
-            EditVehicle.GetVehicleIDByDelegate += LoadVehicleInfo;
             EditVehicle.ShowDialog();
-        }
-
-        private void btnEditVehicleInfo_Click(object sender, EventArgs e)
-        {
-            llEditVehicleInfo_LinkClicked(sender, null);
+            LoadVehicleInfo(_VehicleID);
         }
     }
 }

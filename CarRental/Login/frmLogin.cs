@@ -105,6 +105,7 @@ namespace CarRental.Login
             this.Hide();
             frmMainMenu OpenMainMenu = new frmMainMenu(this);
             OpenMainMenu.ShowDialog();
+            this.Close();
         }
 
         private void frmLogin_Load(object sender, EventArgs e)
@@ -121,14 +122,10 @@ namespace CarRental.Login
                 chkRememberMe.Checked = false;
         }
 
+
         private void btnClose_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        private void lblSignUp_Click(object sender, EventArgs e)
-        {
-                MessageBox.Show("Tính năng này đang được phát triển, vui lòng thử lại sau!");
         }
 
         private void lblForgotPassword_Click(object sender, EventArgs e)

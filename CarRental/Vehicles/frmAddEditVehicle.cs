@@ -1,16 +1,12 @@
-﻿using CarRental.Properties;
+﻿using CarRental.GlobalClasses;
+using CarRental.Properties;
 using CarRental_Business;
+using Guna.UI2.WinForms;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using TheArtOfDevHtmlRenderer.Adapters;
 
 namespace CarRental.Vehicles
 {
@@ -20,157 +16,63 @@ namespace CarRental.Vehicles
 
         public enum enMode { AddNew, Update };
         private enMode _Mode = enMode.AddNew;
-
         private int? _VehicleID = null;
         private clsVehicle _Vehicle;
 
         public frmAddEditVehicle()
         {
             InitializeComponent();
-
             _Mode = enMode.AddNew;
         }
 
         public frmAddEditVehicle(int? VehicleID)
         {
             InitializeComponent();
-
             _VehicleID = VehicleID;
             _Mode = enMode.Update;
         }
 
-        private async Task _FillMakesComboBoxAsync()
+        private void _FillComboBoxes()
         {
-            await Task.Delay(100);
-            DataTable dtMakes = clsMake.GetAllMakesName();
+            // Tải Hãng xe
+            DataTable dtMakes = clsMake.GetAllMakes();
+            cbMake.Items.Clear();
+            foreach (DataRow row in dtMakes.Rows) cbMake.Items.Add(row["Make"].ToString());
 
-            foreach (DataRow Make in dtMakes.Rows)
-            {
-                cbMake.Items.Add(Make["Make"].ToString());
-            }
+            // Tải Kiểu dáng
+            DataTable dtBodies = clsBody.GetAllBodies();
+            cbBody.Items.Clear();
+            foreach (DataRow row in dtBodies.Rows) cbBody.Items.Add(row["BodyName"].ToString());
+
+            // Tải Nhiên liệu
+            DataTable dtFuels = clsFuelType.GetAllFuelTypes();
+            cbFuelType.Items.Clear();
+            foreach (DataRow row in dtFuels.Rows) cbFuelType.Items.Add(row["FuelTypeName"].ToString());
+
+            // Tải Truyền động
+            DataTable dtDrives = clsDriveType.GetAllDriveTypes();
+            cbDriveType.Items.Clear();
+            foreach (DataRow row in dtDrives.Rows) cbDriveType.Items.Add(row["DriveTypeName"].ToString());
         }
 
-        private async Task _FillModelsComboBoxAsync()
+        private void _ResetDefaultValues()
         {
-            await Task.Delay(100);
-            DataTable dtModels = clsModel.GetAllModelsNameAsync();
-
-            foreach (DataRow Model in dtModels.Rows)
-            {
-                cbModel.Items.Add(Model["ModelName"].ToString());
-            }
-        }
-
-        private async Task _FillSubModelsComboBoxAsync()
-        {
-            await Task.Delay(100);
-            DataTable dtSubModels = clsSubModel.GetAllSubModelsName();
-
-            foreach (DataRow SubModel in dtSubModels.Rows)
-            {
-                cbSubModel.Items.Add(SubModel["SubModelName"].ToString());
-            }
-        }
-
-        private async Task _FillBodiesComboBoxAsync()
-        {
-            await Task.Delay(100);
-            DataTable dtBodies = clsBody.GetAllBodiesName();
-
-            foreach (DataRow Body in dtBodies.Rows)
-            {
-                cbBody.Items.Add(Body["BodyName"].ToString());
-            }
-        }
-
-        private async Task _FillDriveTypesComboBoxAsync()
-        {
-            await Task.Delay(100);
-            DataTable dtDriveTypes = clsDriveType.GetAllDriveTypesNameAsync();
-
-            foreach (DataRow DriveType in dtDriveTypes.Rows)
-            {
-                cbDriverType.Items.Add(DriveType["DriveTypeName"].ToString());
-            }
-        }
-
-        private async Task _FillFuelTypesComboBoxAsync()
-        {
-            await Task.Delay(100);
-            DataTable dtFuelTypes = clsFuelType.GetAllFuelTypesName();
-
-            foreach (DataRow FuelType in dtFuelTypes.Rows)
-            {
-                cbFuelType.Items.Add(FuelType["FuelTypeName"].ToString());
-            }
-        }
-
-        private void _ResetFields()
-        {
-            foreach (Control control in Controls)
-            {
-                if (control is TextBox textBox)
-                {
-                    textBox.Text = "";
-                }
-
-                if (control is ComboBox comboBox)
-                {
-                    comboBox.SelectedIndex = 0;
-                }
-            }
-
-            numaricNumberDoors.Value = 1;
-        }
-
-        private async Task _ResetDefaultValues()
-        {
-            Task[] arrTasks = new Task[6];
-
-            arrTasks[0] = _FillMakesComboBoxAsync();
-            arrTasks[1] = _FillModelsComboBoxAsync();
-            arrTasks[2] = _FillSubModelsComboBoxAsync();
-            arrTasks[3] = _FillBodiesComboBoxAsync();
-            arrTasks[4] = _FillDriveTypesComboBoxAsync();
-            arrTasks[5] = _FillFuelTypesComboBoxAsync();          
+            _FillComboBoxes();
 
             if (_Mode == enMode.AddNew)
             {
-                lblTitle.Text = "Thêm xe mới";
-                this.Text = lblTitle.Text;
+                lblTitle.Text = "THÊM XE MỚI";
                 _Vehicle = new clsVehicle();
-
-                await Task.WhenAll(arrTasks);
-
-                _ResetFields();
+                chkIsAvailableForRent.Checked = true;
             }
             else
             {
-                lblTitle.Text = "Cập nhật xe";
-                this.Text = lblTitle.Text;
+                lblTitle.Text = "CẬP NHẬT THÔNG TIN XE";
+            }
 
-                await Task.WhenAll(arrTasks);
-            }            
-        }
-
-        private void _FillFieldsWithCustomerInfo()
-        {
-            lblVehicleID.Text = _Vehicle.VehicleID.ToString();
-            txtVehicleName.Text = _Vehicle.VehicleName;
-            cbMake.SelectedIndex = cbMake.FindString(_Vehicle.MakeInfo.Make);
-            cbModel.SelectedIndex = cbModel.FindString(_Vehicle.ModelInfo.ModelName);
-            cbDriverType.SelectedIndex = cbDriverType.FindString(_Vehicle.DriverTypeInfo.DriveTypeName);
-            cbSubModel.SelectedIndex = cbSubModel.FindString(_Vehicle.SubModelInfo.SubModelName);
-            cbBody.SelectedIndex = cbBody.FindString(_Vehicle.BodyInfo.BodyName);
-            txtPlateNumber.Text = _Vehicle.PlateNumber;
-            txtMileage.Text = _Vehicle.Mileage.ToString();
-            txtRentalPricePerDay.Text = _Vehicle.RentalPricePerDay.ToString();
-            cbFuelType.SelectedIndex = cbFuelType.FindString(_Vehicle.FuelTypeInfo.FuelTypeName);
-            txtEngine.Text = _Vehicle.Engine;
-            numaricNumberDoors.Value = _Vehicle.NumberDoors;
-            txtYear.Text = _Vehicle.Year.ToString();
-            chkIsAvailable.Checked = _Vehicle.IsAvailableForRent;
-            pbIsAvailable.Image = _Vehicle.IsAvailableForRent ? Resources.available_car32 : Resources.unavailable_car32;
+            pbVehicleImage.Image = null;
+            pbVehicleImage.ImageLocation = null;
+            llRemoveImage.Visible = false;
         }
 
         private void _LoadData()
@@ -179,181 +81,179 @@ namespace CarRental.Vehicles
 
             if (_Vehicle == null)
             {
-                MessageBox.Show("Không tìm thấy xe với ID = " + _VehicleID, "Không tìm thấy",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
+                MessageBox.Show("Không tìm thấy xe!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.Close();
                 return;
             }
 
-            _FillFieldsWithCustomerInfo();
+            lblVehicleID.Text = _Vehicle.VehicleID.ToString();
+            txtVehicleName.Text = _Vehicle.VehicleName;
+            txtPlateNumber.Text = _Vehicle.PlateNumber;
+            txtYear.Text = _Vehicle.Year.ToString();
+            txtEngine.Text = _Vehicle.Engine;
+            txtMileage.Text = _Vehicle.Mileage.ToString();
+            txtRentalPricePerDay.Text = _Vehicle.RentalPricePerDay.ToString();
+            chkIsAvailableForRent.Checked = _Vehicle.IsAvailableForRent;
 
-        }
+            cbMake.SelectedIndex = cbMake.FindString(_Vehicle.MakeInfo.Make);
+            cbBody.SelectedIndex = cbBody.FindString(_Vehicle.BodyInfo.BodyName);
+            cbFuelType.SelectedIndex = cbFuelType.FindString(_Vehicle.FuelTypeInfo.FuelTypeName);
+            cbDriveType.SelectedIndex = cbDriveType.FindString(_Vehicle.DriverTypeInfo.DriveTypeName);
 
-        private void _FillVehicleObjectWithFieldsData()
-        {
-            _Vehicle.VehicleName = txtVehicleName.Text.Trim();
-            _Vehicle.MakeID = clsMake.Find(cbMake.Text).MakeID ?? -1;
-            _Vehicle.ModelID = clsModel.Find(cbModel.Text).ModelID ?? -1;
-            _Vehicle.SubModelID = clsSubModel.Find(cbSubModel.Text).SubModelID ?? -1;
-            _Vehicle.BodyID = clsBody.Find(cbBody.Text).BodyID ?? -1;
-            _Vehicle.DriveTypeID = clsDriveType.Find(cbDriverType.Text).DriveTypeID ?? -1;
-            _Vehicle.FuelTypeID = clsFuelType.Find(cbFuelType.Text).FuelTypeID ?? -1;
-            _Vehicle.Engine = txtEngine.Text.Trim();
-            _Vehicle.RentalPricePerDay = Convert.ToSingle(txtRentalPricePerDay.Text.Trim());
-            _Vehicle.NumberDoors = (byte)numaricNumberDoors.Value;
-            _Vehicle.PlateNumber = txtPlateNumber.Text.Trim();
-            _Vehicle.Mileage = int.Parse(txtMileage.Text.Trim());
-            _Vehicle.Year = short.Parse(txtYear.Text.Trim());
-            _Vehicle.IsAvailableForRent = chkIsAvailable.Checked;
-        }
-
-        private void _SaveCustomer()
-        {
-            _FillVehicleObjectWithFieldsData();
-
-            if (_Vehicle.Save())
+            if (_Vehicle.ImagePath != null)
             {
-                lblTitle.Text = "Cập nhật xe";
-                lblVehicleID.Text = _Vehicle.VehicleID.ToString();
-                this.Text = lblTitle.Text;
-
-                // change form mode to update
-                _Mode = enMode.Update;
-
-                MessageBox.Show("Lưu dữ liệu thành công", "Thành công",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // Trigger the event to send data back to the caller form
-                GetVehicleIDByDelegate?.Invoke(_Vehicle.VehicleID);
+                pbVehicleImage.ImageLocation = _Vehicle.ImagePath;
+                llRemoveImage.Visible = true;
             }
             else
             {
-                MessageBox.Show("Lưu dữ liệu thất bại", "Lỗi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                pbVehicleImage.ImageLocation = null;
+                llRemoveImage.Visible = false;
             }
         }
 
-        private void OnlyNumberInTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        private void cbMake_SelectedIndexChanged(object sender, EventArgs e)
         {
-            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
-        }
+            cbModel.Items.Clear();
+            cbSubModel.Items.Clear();
 
-        private void ValidateEmptyTextBox(object sender, CancelEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(((TextBox)sender).Text.Trim()))
+            clsMake make = clsMake.Find(cbMake.Text);
+            if (make == null || !make.MakeID.HasValue)
+                return;
+
+            DataTable dtModels = clsModel.GetAllModels();
+            foreach (DataRow row in dtModels.Rows)
             {
-                e.Cancel = true;
-                errorProvider1.SetError(((TextBox)sender), "Vui lòng không để trống trường này!");
+                if (row["MakeID"] != DBNull.Value && (int)row["MakeID"] == make.MakeID.Value)
+                    cbModel.Items.Add(row["ModelName"].ToString());
             }
-            else
-            {
-                errorProvider1.SetError(((TextBox)sender), null);
-            }
+
+            if (_Mode == enMode.Update && _Vehicle != null)
+                cbModel.SelectedIndex = cbModel.FindString(_Vehicle.ModelInfo.ModelName);
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void cbModel_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.Close();
+            cbSubModel.Items.Clear();
+
+            clsModel model = clsModel.Find(cbModel.Text);
+            if (model == null || !model.ModelID.HasValue)
+                return;
+
+            DataTable dtSubModels = clsSubModel.GetAllSubModels();
+            foreach (DataRow row in dtSubModels.Rows)
+            {
+                if (row["ModelID"] != DBNull.Value && (int)row["ModelID"] == model.ModelID.Value)
+                    cbSubModel.Items.Add(row["SubModelName"].ToString());
+            }
+
+            if (_Mode == enMode.Update && _Vehicle != null)
+                cbSubModel.SelectedIndex = cbSubModel.FindString(_Vehicle.SubModelInfo.SubModelName);
+        }
+
+        private bool _HandleVehicleImage()
+        {
+            // clsVehicle hiện không có ImagePath nên chỉ copy image vào thư mục project (nếu chọn)
+            if (pbVehicleImage.ImageLocation != null)
+            {
+                string SourceImageFile = pbVehicleImage.ImageLocation;
+                if (clsUtil.CopyImageToProjectImagesFolder(ref SourceImageFile))
+                {
+                    pbVehicleImage.ImageLocation = SourceImageFile;
+                    _Vehicle.ImagePath = SourceImageFile;
+                    return true;
+                }
+                return false;
+            }
+
+            return true;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (!this.ValidateChildren())
+            if (!this.ValidateChildren()) return;
+
+            if (!_HandleVehicleImage()) return;
+
+            _Vehicle.VehicleName = txtVehicleName.Text.Trim();
+            _Vehicle.PlateNumber = txtPlateNumber.Text.Trim();
+            _Vehicle.Year = Convert.ToInt16(txtYear.Text.Trim());
+            _Vehicle.Mileage = Convert.ToInt32(txtMileage.Text.Trim());
+            _Vehicle.RentalPricePerDay = Convert.ToSingle(txtRentalPricePerDay.Text.Trim());
+            _Vehicle.Engine = txtEngine.Text.Trim();
+            _Vehicle.IsAvailableForRent = chkIsAvailableForRent.Checked;
+
+            // Gán ID từ các ComboBox
+            clsMake make = clsMake.Find(cbMake.Text);
+            clsModel model = clsModel.Find(cbModel.Text);
+            clsSubModel subModel = clsSubModel.Find(cbSubModel.Text);
+            clsBody body = clsBody.Find(cbBody.Text);
+            clsFuelType fuel = clsFuelType.Find(cbFuelType.Text);
+            clsDriveType drive = clsDriveType.Find(cbDriveType.Text);
+
+            if (make == null || !make.MakeID.HasValue ||
+                model == null || !model.ModelID.HasValue ||
+                subModel == null || !subModel.SubModelID.HasValue ||
+                body == null || !body.BodyID.HasValue ||
+                fuel == null || !fuel.FuelTypeID.HasValue ||
+                drive == null || !drive.DriveTypeID.HasValue)
             {
-                MessageBox.Show("Một số trường chưa hợp lệ, hãy di chuột lên biểu tượng màu đỏ để xem chi tiết lỗi.",
-                    "Lỗi xác thực", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Vui lòng chọn đầy đủ thông tin (hãng, dòng, phiên bản, kiểu dáng, nhiên liệu, truyền động).",
+                    "Thiếu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            _SaveCustomer();
+            _Vehicle.MakeID = make.MakeID.Value;
+            _Vehicle.ModelID = model.ModelID.Value;
+            _Vehicle.SubModelID = subModel.SubModelID.Value;
+            _Vehicle.BodyID = body.BodyID.Value;
+            _Vehicle.FuelTypeID = fuel.FuelTypeID.Value;
+            _Vehicle.DriveTypeID = drive.DriveTypeID.Value;
+
+            if (_Vehicle.Save())
+            {
+                MessageBox.Show("Lưu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                GetVehicleIDByDelegate?.Invoke(_Vehicle.VehicleID);
+                this.Close();
+            }
+            else MessageBox.Show("Lưu thất bại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private async void frmAddEditVehicle_Load(object sender, EventArgs e)
+        private void ValidateEmptyTextBox(object sender, System.ComponentModel.CancelEventArgs e)
         {
-           Task Task1 = _ResetDefaultValues();
-
-           await Task1;
-
-            if (_Mode == enMode.Update)
+            Guna2TextBox temp = (Guna2TextBox)sender;
+            if (string.IsNullOrWhiteSpace(temp.Text))
             {
-                _LoadData();
+                e.Cancel = true;
+                errorProvider1.SetError(temp, "Không được để trống!");
             }
+            else errorProvider1.SetError(temp, null);
         }
 
-        private void txtPlateNumber_Validating(object sender, CancelEventArgs e)
+        private void frmAddEditVehicle_Load(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtPlateNumber.Text.Trim()))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(txtPlateNumber, "Vui lòng không để trống trường này!");
-                return;
-            }
-            else
-            {
-                errorProvider1.SetError(txtPlateNumber, null);
-            }
-
-            //Make sure the plate number is not used by another vehicle
-            if (_Vehicle.PlateNumber.ToLower() != txtPlateNumber.Text.ToLower() &&
-                clsVehicle.DoesPlateNumberExist(txtPlateNumber.Text.Trim()))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(txtPlateNumber, "Biển số đã được sử dụng cho xe khác!");
-            }
-            else
-            {
-                errorProvider1.SetError(txtPlateNumber, null);
-            }
+            _ResetDefaultValues();
+            if (_Mode == enMode.Update) _LoadData();
         }
 
-        private void txtYear_Validating(object sender, CancelEventArgs e)
+        private void btnClose_Click(object sender, EventArgs e) => this.Close();
+
+        private void llSetImage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtYear.Text.Trim()))
+            openFileDialog1.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp";
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                e.Cancel = true;
-                errorProvider1.SetError(txtYear, "Vui lòng không để trống trường này!");
-                return;
-            }
-            else
-            {
-                errorProvider1.SetError(txtYear, null);
-            }
-
-            //Make sure the year is less than current year and greater than 1900
-            int Year = int.Parse(txtYear.Text.Trim());
-            if (Year > DateTime.Now.Year)
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(txtYear, "Năm phải nhỏ hơn hoặc bằng năm hiện tại!");
-                return;
-            }
-            else
-            {
-                errorProvider1.SetError(txtYear, null);
-            }
-
-            if (Year < 1900)
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(txtYear, "Năm phải lớn hơn 1900!");
-            }
-            else
-            {
-                errorProvider1.SetError(txtYear, null);
+                pbVehicleImage.ImageLocation = openFileDialog1.FileName;
+                llRemoveImage.Visible = true;
             }
         }
 
-        private void chkIsAvailable_CheckedChanged(object sender, EventArgs e)
+        private void llRemoveImage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (chkIsAvailable.Checked)
-            {
-                pbIsAvailable.Image = Resources.available_car32;
-            }
-            else
-            {
-                pbIsAvailable.Image = Resources.unavailable_car32;
-            }
+            pbVehicleImage.ImageLocation = null;
+            pbVehicleImage.Image = null;
+            llRemoveImage.Visible = false;
+            _Vehicle.ImagePath = null;
         }
     }
 }

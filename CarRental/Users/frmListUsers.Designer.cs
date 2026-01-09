@@ -122,7 +122,7 @@
             this.btnAddNewUser.Name = "btnAddNewUser";
             this.btnAddNewUser.Size = new System.Drawing.Size(165, 40);
             this.btnAddNewUser.TabIndex = 181;
-            this.btnAddNewUser.Text = "Thêm người dùng";
+            this.btnAddNewUser.Text = "Thêm người";
             this.btnAddNewUser.Click += new System.EventHandler(this.btnAddNewUser_Click);
             // 
             // dgvUsersList
@@ -245,7 +245,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmListUsers";
             this.Tag = "Người dùng";
-            this.Text = "Danh sách người dùng";
+            this.Text = "Quản lý người dùng";
             this.Load += new System.EventHandler(this.frmListUsers_Load);
             this.cmsEditProfile.ResumeLayout(false);
             this.guna2Panel1.ResumeLayout(false);

@@ -43,11 +43,11 @@
             this.tcSelectCustomerVehicle.Controls.Add(this.tpBooking);
             this.tcSelectCustomerVehicle.Controls.Add(this.tpReturn);
             this.tcSelectCustomerVehicle.ItemSize = new System.Drawing.Size(180, 40);
-            this.tcSelectCustomerVehicle.Location = new System.Drawing.Point(2, 2);
+            this.tcSelectCustomerVehicle.Location = new System.Drawing.Point(0, 0);
             this.tcSelectCustomerVehicle.Margin = new System.Windows.Forms.Padding(2);
             this.tcSelectCustomerVehicle.Name = "tcSelectCustomerVehicle";
             this.tcSelectCustomerVehicle.SelectedIndex = 0;
-            this.tcSelectCustomerVehicle.Size = new System.Drawing.Size(793, 298);
+            this.tcSelectCustomerVehicle.Size = new System.Drawing.Size(799, 360);
             this.tcSelectCustomerVehicle.TabButtonHoverState.BorderColor = System.Drawing.Color.Empty;
             this.tcSelectCustomerVehicle.TabButtonHoverState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(52)))), ((int)(((byte)(70)))));
             this.tcSelectCustomerVehicle.TabButtonHoverState.Font = new System.Drawing.Font("Segoe UI Semibold", 10F);
@@ -67,6 +67,7 @@
             this.tcSelectCustomerVehicle.TabIndex = 2;
             this.tcSelectCustomerVehicle.TabMenuBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
             this.tcSelectCustomerVehicle.TabMenuOrientation = Guna.UI2.WinForms.TabMenuOrientation.HorizontalTop;
+            this.tcSelectCustomerVehicle.Dock = System.Windows.Forms.DockStyle.Fill;
             // 
             // tpBooking
             // 
@@ -77,17 +78,17 @@
             this.tpBooking.Margin = new System.Windows.Forms.Padding(2);
             this.tpBooking.Name = "tpBooking";
             this.tpBooking.Padding = new System.Windows.Forms.Padding(2);
-            this.tpBooking.Size = new System.Drawing.Size(785, 250);
+            this.tpBooking.Size = new System.Drawing.Size(791, 312);
             this.tpBooking.TabIndex = 0;
-            this.tpBooking.Text = "Booking Info";
+            this.tpBooking.Text = "Thông tin đặt xe";
             // 
             // ucBookingCard1
             // 
             this.ucBookingCard1.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.ucBookingCard1.BackColor = System.Drawing.Color.White;
-            this.ucBookingCard1.Location = new System.Drawing.Point(0, 0);
+            this.ucBookingCard1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ucBookingCard1.Name = "ucBookingCard1";
-            this.ucBookingCard1.Size = new System.Drawing.Size(785, 249);
+            this.ucBookingCard1.Size = new System.Drawing.Size(787, 304);
             this.ucBookingCard1.TabIndex = 0;
             // 
             // tpReturn
@@ -99,17 +100,17 @@
             this.tpReturn.Margin = new System.Windows.Forms.Padding(2);
             this.tpReturn.Name = "tpReturn";
             this.tpReturn.Padding = new System.Windows.Forms.Padding(2);
-            this.tpReturn.Size = new System.Drawing.Size(785, 250);
+            this.tpReturn.Size = new System.Drawing.Size(791, 312);
             this.tpReturn.TabIndex = 1;
-            this.tpReturn.Text = "Return Info";
+            this.tpReturn.Text = "Thông tin trả xe";
             // 
             // ucReturnCard1
             // 
             this.ucReturnCard1.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.ucReturnCard1.BackColor = System.Drawing.Color.White;
-            this.ucReturnCard1.Location = new System.Drawing.Point(0, 0);
+            this.ucReturnCard1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ucReturnCard1.Name = "ucReturnCard1";
-            this.ucReturnCard1.Size = new System.Drawing.Size(784, 230);
+            this.ucReturnCard1.Size = new System.Drawing.Size(787, 304);
             this.ucReturnCard1.TabIndex = 0;
             // 
             // ucBookingAndReturnCard
@@ -120,7 +121,7 @@
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.tcSelectCustomerVehicle);
             this.Name = "ucBookingAndReturnCard";
-            this.Size = new System.Drawing.Size(799, 300);
+            this.Size = new System.Drawing.Size(799, 360);
             this.tcSelectCustomerVehicle.ResumeLayout(false);
             this.tpBooking.ResumeLayout(false);
             this.tpReturn.ResumeLayout(false);

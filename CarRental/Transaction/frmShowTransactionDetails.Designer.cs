@@ -41,7 +41,7 @@
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(796, 48);
             this.lblTitle.TabIndex = 178;
-            this.lblTitle.Text = "Transaction Details";
+            this.lblTitle.Text = "CHI TIẾT GIAO DỊCH";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnClose
@@ -50,12 +50,12 @@
             this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.Image = global::CarRental.Properties.Resources.Close_32;
             this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(627, 340);
+            this.btnClose.Location = new System.Drawing.Point(627, 420);
             this.btnClose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(156, 37);
             this.btnClose.TabIndex = 200;
-            this.btnClose.Text = "   Close";
+            this.btnClose.Text = "   Đóng";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -65,7 +65,7 @@
             this.ucTransactionCard1.BackColor = System.Drawing.Color.White;
             this.ucTransactionCard1.Location = new System.Drawing.Point(3, 74);
             this.ucTransactionCard1.Name = "ucTransactionCard1";
-            this.ucTransactionCard1.Size = new System.Drawing.Size(785, 260);
+            this.ucTransactionCard1.Size = new System.Drawing.Size(785, 370);
             this.ucTransactionCard1.TabIndex = 179;
             // 
             // frmShowTransactionDetails
@@ -74,14 +74,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(789, 382);
+            this.ClientSize = new System.Drawing.Size(789, 470);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.ucTransactionCard1);
             this.Controls.Add(this.lblTitle);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
             this.Name = "frmShowTransactionDetails";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Show Transaction Details";
+            this.Text = "Thông tin chi tiết giao dịch";
             this.ResumeLayout(false);
 
         }

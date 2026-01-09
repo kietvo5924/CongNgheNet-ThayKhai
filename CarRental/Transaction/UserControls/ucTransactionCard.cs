@@ -1,13 +1,5 @@
-﻿using CarRental.GlobalClasses;
-using CarRental_Business;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using CarRental_Business;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CarRental.Transaction.UserControls
@@ -18,6 +10,7 @@ namespace CarRental.Transaction.UserControls
         private clsTransaction _Transaction;
 
         public int? TransactionID => _TransactionID;
+        public clsTransaction Transaction => _Transaction;
         public clsTransaction TransactionInfo => _Transaction;
 
         public ucTransactionCard()
@@ -25,37 +18,65 @@ namespace CarRental.Transaction.UserControls
             InitializeComponent();
         }
 
-        private void _FillTransactionInfo()
-        {
-            lblTransactionID.Text = _Transaction.TransactionID?.ToString();
-            lblBookingID.Text = _Transaction.BookingID?.ToString();
-            lblReturnID.Text = _Transaction.ReturnID?.ToString() ?? "Not returned yet";
-            lblPaymentDetails.Text = _Transaction.PaymentDetails;
-            lblTransactionDate.Text = clsFormat.DateToShort(_Transaction.TransactionDate);
-            lblInitialTotalDueAmount.Text = _Transaction.InitialTotalDueAmount?.ToString("N") ?? "N/A";
-            lblActualTotalDueAmount.Text = _Transaction.ActualTotalDueAmount?.ToString("N") ?? "N/A";
-            lblTotalRemaining.Text = _Transaction.TotalRemaining?.ToString("N") ?? "N/A";
-            lblTotalRefundedAmount.Text = _Transaction.TotalRefundedAmount?.ToString("N") ?? "N/A";
-            lblUpdatedTransactionDate.Text = (_Transaction.UpdatedTransactionDate.HasValue) ? clsFormat.DateToShort((DateTime)_Transaction.UpdatedTransactionDate) : "N/A";
-            lblTransactionType.Text = _Transaction.TransactionTypeName;
-        }
-
         public void Reset()
         {
-            _Transaction = null;
             _TransactionID = null;
+            _Transaction = null;
 
             lblTransactionID.Text = "[????]";
             lblBookingID.Text = "[????]";
             lblReturnID.Text = "[????]";
-            lblPaymentDetails.Text = "[????]";
-            lblTransactionDate.Text = "[????]";
-            lblInitialTotalDueAmount.Text = "[????]";
+            lblPaymentDetails.Text = "Không có dữ liệu";
+            lblPaidInitialTotalDueAmount.Text = "[????]";
             lblActualTotalDueAmount.Text = "[????]";
             lblTotalRemaining.Text = "[????]";
             lblTotalRefundedAmount.Text = "[????]";
-            lblUpdatedTransactionDate.Text = "[????]";
+            lblTransactionDate.Text = "[????]";
             lblTransactionType.Text = "[????]";
+        }
+
+        private string _GetTransactionTypeText(clsTransaction.enTransactionType type)
+        {
+            // VIỆT HÓA CÁC TRẠNG THÁI GIAO DỊCH
+            switch (type)
+            {
+                case clsTransaction.enTransactionType.Pending: return "Đang chờ";
+                case clsTransaction.enTransactionType.PaymentReceived: return "Đã nhận tiền";
+                case clsTransaction.enTransactionType.RefundIssued: return "Đã hoàn tiền";
+                case clsTransaction.enTransactionType.NoActionTaken: return "Không xử lý";
+                default: return "Không xác định";
+            }
+        }
+
+        private void _FillTransactionInfo()
+        {
+            lblTransactionID.Text = _Transaction.TransactionID.ToString();
+            lblBookingID.Text = _Transaction.BookingID.ToString();
+            lblReturnID.Text = _Transaction.ReturnID?.ToString() ?? "Không có";
+            lblPaymentDetails.Text = string.IsNullOrWhiteSpace(_Transaction.PaymentDetails) ? "Không có" : _Transaction.PaymentDetails;
+
+            lblPaidInitialTotalDueAmount.Text = _Transaction.PaidInitialTotalDueAmount.ToString("N") + " VNĐ";
+            lblActualTotalDueAmount.Text = _Transaction.ActualTotalDueAmount.HasValue
+                ? _Transaction.ActualTotalDueAmount.Value.ToString("N") + " VNĐ"
+                : "Không có";
+            lblTotalRemaining.Text = _Transaction.TotalRemaining.HasValue
+                ? _Transaction.TotalRemaining.Value.ToString("N") + " VNĐ"
+                : "Không có";
+            lblTotalRefundedAmount.Text = _Transaction.TotalRefundedAmount.HasValue
+                ? _Transaction.TotalRefundedAmount.Value.ToString("N") + " VNĐ"
+                : "Không có";
+
+            lblTransactionDate.Text = _Transaction.TransactionDate.ToString("dd/MM/yyyy HH:mm");
+
+            lblTransactionType.Text = _GetTransactionTypeText(_Transaction.TransactionType);
+
+            // Đổi màu trạng thái để dễ nhận biết
+            if (_Transaction.TransactionType == clsTransaction.enTransactionType.PaymentReceived)
+                lblTransactionType.ForeColor = Color.Green;
+            else if (_Transaction.TransactionType == clsTransaction.enTransactionType.RefundIssued)
+                lblTransactionType.ForeColor = Color.Blue;
+            else
+                lblTransactionType.ForeColor = Color.Orange;
         }
 
         public void LoadTransactionInfo(int? TransactionID)
@@ -64,9 +85,7 @@ namespace CarRental.Transaction.UserControls
 
             if (!_TransactionID.HasValue)
             {
-                MessageBox.Show("There is no Transaction", "Missing Transaction",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+                Reset();
                 return;
             }
 
@@ -74,11 +93,8 @@ namespace CarRental.Transaction.UserControls
 
             if (_Transaction == null)
             {
-                MessageBox.Show($"There is no Transaction with ID = {TransactionID}", "Missing Transaction",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                _TransactionID = null;
-
+                MessageBox.Show($"Không tìm thấy giao dịch với mã = {TransactionID}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Reset();
                 return;
             }
 

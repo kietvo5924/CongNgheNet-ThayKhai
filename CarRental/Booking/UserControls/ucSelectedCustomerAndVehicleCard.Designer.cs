@@ -47,7 +47,7 @@
             this.tcSelectCustomerVehicle.Margin = new System.Windows.Forms.Padding(2);
             this.tcSelectCustomerVehicle.Name = "tcSelectCustomerVehicle";
             this.tcSelectCustomerVehicle.SelectedIndex = 0;
-            this.tcSelectCustomerVehicle.Size = new System.Drawing.Size(793, 452);
+            this.tcSelectCustomerVehicle.Size = new System.Drawing.Size(793, 670);
             this.tcSelectCustomerVehicle.TabButtonHoverState.BorderColor = System.Drawing.Color.Empty;
             this.tcSelectCustomerVehicle.TabButtonHoverState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(52)))), ((int)(((byte)(70)))));
             this.tcSelectCustomerVehicle.TabButtonHoverState.Font = new System.Drawing.Font("Segoe UI Semibold", 10F);
@@ -99,7 +99,7 @@
             this.tpSelectVehicle.Margin = new System.Windows.Forms.Padding(2);
             this.tpSelectVehicle.Name = "tpSelectVehicle";
             this.tpSelectVehicle.Padding = new System.Windows.Forms.Padding(2);
-            this.tpSelectVehicle.Size = new System.Drawing.Size(785, 404);
+            this.tpSelectVehicle.Size = new System.Drawing.Size(785, 622);
             this.tpSelectVehicle.TabIndex = 1;
             this.tpSelectVehicle.Text = "Thông tin xe";
             // 
@@ -109,7 +109,7 @@
             this.ucVehicleCard1.BackColor = System.Drawing.Color.White;
             this.ucVehicleCard1.Location = new System.Drawing.Point(10, 5);
             this.ucVehicleCard1.Name = "ucVehicleCard1";
-            this.ucVehicleCard1.Size = new System.Drawing.Size(772, 359);
+            this.ucVehicleCard1.Size = new System.Drawing.Size(772, 610);
             this.ucVehicleCard1.TabIndex = 0;
             // 
             // ucSelectedCustomerAndVehicleCard
@@ -120,7 +120,7 @@
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.tcSelectCustomerVehicle);
             this.Name = "ucSelectedCustomerAndVehicleCard";
-            this.Size = new System.Drawing.Size(796, 456);
+            this.Size = new System.Drawing.Size(796, 675);
             this.tcSelectCustomerVehicle.ResumeLayout(false);
             this.tpSelectCustomer.ResumeLayout(false);
             this.tpSelectVehicle.ResumeLayout(false);

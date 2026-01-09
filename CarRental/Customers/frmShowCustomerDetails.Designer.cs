@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.ucCustomerCard1 = new CarRental.Customers.UserControls.ucCustomerCard();
-            this.btnClose = new System.Windows.Forms.Button();
+            this.btnClose = new Guna.UI2.WinForms.Guna2Button();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -45,27 +45,24 @@
             // btnClose
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(231)))), ((int)(((byte)(235)))));
-            this.btnClose.FlatAppearance.BorderSize = 0;
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.BorderRadius = 8;
+            this.btnClose.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(231)))), ((int)(((byte)(235)))));
+            this.btnClose.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
-            this.btnClose.Location = new System.Drawing.Point(522, 467);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnClose.Location = new System.Drawing.Point(522, 455);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(195, 37);
+            this.btnClose.Size = new System.Drawing.Size(195, 45);
             this.btnClose.TabIndex = 118;
             this.btnClose.Text = "Đóng";
-            this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // label1
             // 
-            this.label1.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Firebrick;
-            this.label1.Location = new System.Drawing.Point(0, 14);
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 26F, System.Drawing.FontStyle.Bold);
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(41)))), ((int)(((byte)(55)))));
+            this.label1.Location = new System.Drawing.Point(0, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(725, 48);
+            this.label1.Size = new System.Drawing.Size(725, 50);
             this.label1.TabIndex = 119;
             this.label1.Text = "Thông tin khách hàng";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -91,7 +88,7 @@
         #endregion
 
         private UserControls.ucCustomerCard ucCustomerCard1;
-        private System.Windows.Forms.Button btnClose;
+        private Guna.UI2.WinForms.Guna2Button btnClose;
         private System.Windows.Forms.Label label1;
     }
 }

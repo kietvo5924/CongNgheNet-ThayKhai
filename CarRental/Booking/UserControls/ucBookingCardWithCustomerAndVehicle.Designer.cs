@@ -38,16 +38,16 @@
             this.ucSelectedCustomerAndVehicleCard1.BackColor = System.Drawing.Color.White;
             this.ucSelectedCustomerAndVehicleCard1.Location = new System.Drawing.Point(0, 0);
             this.ucSelectedCustomerAndVehicleCard1.Name = "ucSelectedCustomerAndVehicleCard1";
-            this.ucSelectedCustomerAndVehicleCard1.Size = new System.Drawing.Size(796, 456);
+            this.ucSelectedCustomerAndVehicleCard1.Size = new System.Drawing.Size(796, 675);
             this.ucSelectedCustomerAndVehicleCard1.TabIndex = 0;
             // 
             // ucBookingCard1
             // 
             this.ucBookingCard1.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.ucBookingCard1.BackColor = System.Drawing.Color.White;
-            this.ucBookingCard1.Location = new System.Drawing.Point(5, 454);
+            this.ucBookingCard1.Location = new System.Drawing.Point(5, 680);
             this.ucBookingCard1.Name = "ucBookingCard1";
-            this.ucBookingCard1.Size = new System.Drawing.Size(785, 248);
+            this.ucBookingCard1.Size = new System.Drawing.Size(785, 275);
             this.ucBookingCard1.TabIndex = 1;
             // 
             // ucBookingCardWithCustomerAndVehicle
@@ -59,7 +59,7 @@
             this.Controls.Add(this.ucBookingCard1);
             this.Controls.Add(this.ucSelectedCustomerAndVehicleCard1);
             this.Name = "ucBookingCardWithCustomerAndVehicle";
-            this.Size = new System.Drawing.Size(794, 702);
+            this.Size = new System.Drawing.Size(794, 960);
             this.ResumeLayout(false);
 
         }

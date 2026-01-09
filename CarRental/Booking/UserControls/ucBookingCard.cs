@@ -28,7 +28,7 @@ namespace CarRental.Booking.UserControls
 
         private void _FillBookingInfo()
         {
-            llTransactionInfo.Enabled = true;
+            btnTransactionInfo.Enabled = true;
 
             lblBookingID.Text = _Booking.BookingID?.ToString();
             lblCustomerID.Text = _Booking.CustomerID?.ToString();
@@ -58,7 +58,7 @@ namespace CarRental.Booking.UserControls
             lblDropOffLocation.Text = "[????]";
             lblInitialCheckNotes.Text = "[????]";
 
-            llTransactionInfo.Enabled = false;
+            btnTransactionInfo.Enabled = false;
         }
 
         public void LoadBookingInfo(int? BookingID)
@@ -88,7 +88,7 @@ namespace CarRental.Booking.UserControls
             _FillBookingInfo();
         }
 
-        private void llTransactionInfo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void btnTransactionInfo_Click(object sender, EventArgs e)
         {
             frmShowTransactionDetails ShowTransactionDetails = new frmShowTransactionDetails(BookingInfo.TransactionInfo.TransactionID);
             ShowTransactionDetails.ShowDialog();

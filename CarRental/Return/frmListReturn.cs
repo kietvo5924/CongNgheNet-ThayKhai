@@ -62,34 +62,37 @@ namespace CarRental.Return
             if (dgvReturnList.Rows.Count > 0)
             {
                 dgvReturnList.Columns[0].HeaderText = "Mã trả xe";
-                dgvReturnList.Columns[0].Width = 135;
+                dgvReturnList.Columns[0].Width = 100;
 
                 dgvReturnList.Columns[1].HeaderText = "Tên khách hàng";
-                dgvReturnList.Columns[1].Width = 190;
+                dgvReturnList.Columns[1].Width = 180;
 
-                dgvReturnList.Columns[2].HeaderText = "Mã khách hàng";
-                dgvReturnList.Columns[2].Width = 150;
+                dgvReturnList.Columns[2].HeaderText = "Mã KH";
+                dgvReturnList.Columns[2].Width = 100;
 
                 dgvReturnList.Columns[3].HeaderText = "Mã xe";
-                dgvReturnList.Columns[3].Width = 140;
+                dgvReturnList.Columns[3].Width = 100;
 
                 dgvReturnList.Columns[4].HeaderText = "Mã lịch đặt";
-                dgvReturnList.Columns[4].Width = 150;
+                dgvReturnList.Columns[4].Width = 120;
 
                 dgvReturnList.Columns[5].HeaderText = "Mã giao dịch";
-                dgvReturnList.Columns[5].Width = 160;
+                dgvReturnList.Columns[5].Width = 120;
 
                 dgvReturnList.Columns[6].HeaderText = "Ngày trả";
-                dgvReturnList.Columns[6].Width = 130;
+                dgvReturnList.Columns[6].Width = 120;
+                dgvReturnList.Columns[6].DefaultCellStyle.Format = "dd/MM/yyyy";
 
-                dgvReturnList.Columns[7].HeaderText = "Số ngày thuê";
-                dgvReturnList.Columns[7].Width = 130;
+                dgvReturnList.Columns[7].HeaderText = "Số ngày";
+                dgvReturnList.Columns[7].Width = 100;
 
                 dgvReturnList.Columns[8].HeaderText = "Phụ phí";
-                dgvReturnList.Columns[8].Width = 150;
+                dgvReturnList.Columns[8].Width = 120;
+                dgvReturnList.Columns[8].DefaultCellStyle.Format = "N0";
 
-                dgvReturnList.Columns[9].HeaderText = "Tổng tiền thực tế";
-                dgvReturnList.Columns[9].Width = 220;
+                dgvReturnList.Columns[9].HeaderText = "Tổng tiền TT";
+                dgvReturnList.Columns[9].Width = 150;
+                dgvReturnList.Columns[9].DefaultCellStyle.Format = "N0";
             }
         }
 
@@ -101,7 +104,6 @@ namespace CarRental.Return
         private void frmListReturn_Load(object sender, EventArgs e)
         {
             _RefreshReturnList();
-
             cbFilter.SelectedIndex = 0;
         }
 
@@ -123,7 +125,7 @@ namespace CarRental.Return
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
-            if (_dtAllReturn.Rows.Count == 0)
+            if (_dtAllReturn == null || _dtAllReturn.Rows.Count == 0)
             {
                 return;
             }
@@ -134,20 +136,27 @@ namespace CarRental.Return
             {
                 _dtAllReturn.DefaultView.RowFilter = "";
                 lblNumberOfRecords.Text = dgvReturnList.Rows.Count.ToString();
-
                 return;
             }
 
-            if (cbFilter.Text != "Ngày trả thực tế" &&
-                cbFilter.Text != "Tên khách hàng")
+            try
             {
-                // search with numbers
-                _dtAllReturn.DefaultView.RowFilter = string.Format("[{0}] = {1}", ColumnName, txtSearch.Text.Trim());
+                if (cbFilter.Text != "Ngày trả thực tế" &&
+                    cbFilter.Text != "Tên khách hàng")
+                {
+                    // search with numbers
+                    if (int.TryParse(txtSearch.Text.Trim(), out int id))
+                        _dtAllReturn.DefaultView.RowFilter = string.Format("[{0}] = {1}", ColumnName, id);
+                }
+                else
+                {
+                    // search with string
+                    _dtAllReturn.DefaultView.RowFilter = string.Format("[{0}] like '{1}%'", ColumnName, txtSearch.Text.Trim());
+                }
             }
-            else
+            catch (Exception)
             {
-                // search with string
-                _dtAllReturn.DefaultView.RowFilter = string.Format("[{0}] like '{1}%'", ColumnName, txtSearch.Text.Trim());
+                // Bỏ qua lỗi nếu filter không hợp lệ
             }
 
             lblNumberOfRecords.Text = dgvReturnList.Rows.Count.ToString();
@@ -158,21 +167,21 @@ namespace CarRental.Return
             if (cbFilter.Text != "Ngày trả thực tế" &&
                 cbFilter.Text != "Tên khách hàng")
             {
-                // make sure that the user can only enter the numbers
+                // Chỉ cho nhập số
                 e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
             }
         }
 
         private void dtpDate_ValueChanged(object sender, EventArgs e)
         {
-            if (_dtAllReturn.Rows.Count == 0)
+            if (_dtAllReturn == null || _dtAllReturn.Rows.Count == 0)
             {
                 return;
             }
 
             _dtAllReturn.DefaultView.RowFilter =
                     string.Format("[{0}] = #{1}#", "ActualReturnDate",
-                    dtpActualReturnDate.Value.ToString("yyyy-MM-dd")); // Including # around a date value is a way to inform the DataView that the value being compared is a date
+                    dtpActualReturnDate.Value.ToString("yyyy-MM-dd"));
 
             lblNumberOfRecords.Text = dgvReturnList.Rows.Count.ToString();
         }
@@ -181,12 +190,13 @@ namespace CarRental.Return
         {
             frmReturnVehicle ReturnVehicle = new frmReturnVehicle();
             ReturnVehicle.ShowDialog();
-
             _RefreshReturnList();
         }
 
         private void ShowReturnDetailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (dgvReturnList.CurrentRow == null) return;
+
             frmShowReturnDetailsWithCustomerAndVehicle ShowReturnDetails = new frmShowReturnDetailsWithCustomerAndVehicle(_GetReturnIDFromDGV());
             ShowReturnDetails.ShowDialog();
 
@@ -196,6 +206,8 @@ namespace CarRental.Return
 
         private void ShowBookingDetailsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            if (dgvReturnList.CurrentRow == null) return;
+
             frmShowBookingDetailsWithCustomerAndVehicle ShowBookingDetails = new frmShowBookingDetailsWithCustomerAndVehicle((int)dgvReturnList.CurrentRow.Cells["BookingID"].Value);
             ShowBookingDetails.ShowDialog();
 
@@ -204,6 +216,8 @@ namespace CarRental.Return
 
         private void ShowCustomerDetailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (dgvReturnList.CurrentRow == null) return;
+
             frmShowCustomerDetails ShowCustomerDetails = new frmShowCustomerDetails((int)dgvReturnList.CurrentRow.Cells["CustomerID"].Value);
             ShowCustomerDetails.ShowDialog();
 
@@ -212,6 +226,8 @@ namespace CarRental.Return
 
         private void ShowVehicleDetailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (dgvReturnList.CurrentRow == null) return;
+
             frmShowVehicleDetails ShowVehicleDetails = new frmShowVehicleDetails((int)dgvReturnList.CurrentRow.Cells["VehicleID"].Value);
             ShowVehicleDetails.ShowDialog();
 
@@ -220,6 +236,8 @@ namespace CarRental.Return
 
         private void dgvReturnList_DoubleClick(object sender, EventArgs e)
         {
+            if (dgvReturnList.CurrentRow == null) return;
+
             frmShowReturnDetailsWithCustomerAndVehicle ShowReturnDetails = new frmShowReturnDetailsWithCustomerAndVehicle(_GetReturnIDFromDGV());
             ShowReturnDetails.ShowDialog();
 

@@ -93,19 +93,19 @@ namespace CarRental_Business
             switch (TransactionType)
             {
                 case enTransactionType.Pending:
-                    return "Pending";
+                    return "Đang chờ";
 
                 case enTransactionType.PaymentReceived:
-                    return "Payment Received";
+                    return "Đã nhận tiền";
 
                 case enTransactionType.RefundIssued:
-                    return "Refund Issued";
+                    return "Đã hoàn tiền";
 
                 case enTransactionType.NoActionTaken:
-                    return "No Action Taken";
+                    return "Không xử lý";
 
                 default:
-                    return "Unknown";
+                    return "Không xác định";
             }
         }
 

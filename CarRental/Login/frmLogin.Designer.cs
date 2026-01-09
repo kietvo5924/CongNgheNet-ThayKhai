@@ -37,12 +37,10 @@
             this.guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             this.btnClose = new System.Windows.Forms.Button();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.guna2HtmlLabel1 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.guna2GradientPanel1 = new Guna.UI2.WinForms.Guna2GradientPanel();
-            this.lblSignUp = new System.Windows.Forms.Label();
             this.guna2Elipse1 = new Guna.UI2.WinForms.Guna2Elipse(this.components);
             this.guna2Elipse2 = new Guna.UI2.WinForms.Guna2Elipse(this.components);
             this.guna2CustomGradientPanel1.SuspendLayout();
@@ -189,16 +187,6 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI Variable Display", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(438, 607);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(239, 28);
-            this.label4.TabIndex = 142;
-            this.label4.Text = "Chưa có tài khoản sao?";
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -234,19 +222,6 @@
             this.guna2HtmlLabel1.TabIndex = 2;
             this.guna2HtmlLabel1.Text = "Khởi động hành trình của bạn ngay hôm nay.";
             // 
-            // lblSignUp
-            // 
-            this.lblSignUp.AutoSize = true;
-            this.lblSignUp.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblSignUp.Font = new System.Drawing.Font("Segoe UI Variable Text", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSignUp.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
-            this.lblSignUp.Location = new System.Drawing.Point(721, 607);
-            this.lblSignUp.Name = "lblSignUp";
-            this.lblSignUp.Size = new System.Drawing.Size(82, 26);
-            this.lblSignUp.TabIndex = 143;
-            this.lblSignUp.Text = "Đăng ký";
-            this.lblSignUp.Click += new System.EventHandler(this.lblSignUp_Click);
-            // 
             // guna2GradientPanel1
             // 
             this.guna2GradientPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
@@ -277,9 +252,7 @@
             this.ClientSize = new System.Drawing.Size(866, 651);
             this.Controls.Add(this.guna2CustomGradientPanel1);
             this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.lblSignUp);
             this.Controls.Add(this.guna2GradientPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
             this.MaximizeBox = true;
@@ -308,9 +281,7 @@
         private Guna.UI2.WinForms.Guna2CustomGradientPanel guna2CustomGradientPanel1;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.ErrorProvider errorProvider1;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label lblSignUp;
         private Guna.UI2.WinForms.Guna2GradientPanel guna2GradientPanel1;
         private System.Windows.Forms.Label label5;
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel1;

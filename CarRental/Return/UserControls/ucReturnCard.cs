@@ -29,8 +29,8 @@ namespace CarRental.Return.UserControls
 
         private void _FillReturnInfo()
         {
-            llShowBookingInfo.Enabled = true;
-            llShowTransactionInfo.Enabled = true;
+            btnShowBookingInfo.Enabled = true;
+            btnShowTransactionInfo.Enabled = true;
 
             lblReturnID.Text = _Return.ReturnID?.ToString();
             lblActualReturnDate.Text = clsFormat.DateToShort(_Return.ActualReturnDate);
@@ -56,8 +56,8 @@ namespace CarRental.Return.UserControls
             lblAdditionalCharges.Text = "[????]";
             lblActualTotalDueAmount.Text = "[????]";
 
-            llShowBookingInfo.Enabled = false;
-            llShowTransactionInfo.Enabled = false;
+            btnShowBookingInfo.Enabled = false;
+            btnShowTransactionInfo.Enabled = false;
         }
 
         public void LoadReturnInfo(int? ReturnID)
@@ -66,7 +66,7 @@ namespace CarRental.Return.UserControls
 
             if (!_ReturnID.HasValue)
             {
-                MessageBox.Show("There is no return!", "Missing Data",
+                MessageBox.Show("Không có thông tin trả xe!", "Thiếu dữ liệu",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 Reset();
@@ -78,7 +78,7 @@ namespace CarRental.Return.UserControls
 
             if (_Return == null)
             {
-                MessageBox.Show("There is no return!", "Missing Data",
+                MessageBox.Show("Không tìm thấy thông tin trả xe!", "Thiếu dữ liệu",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 Reset();
@@ -95,7 +95,19 @@ namespace CarRental.Return.UserControls
             ShowBookingDetails.ShowDialog();
         }
 
+        private void btnShowBookingInfo_Click(object sender, EventArgs e)
+        {
+            frmShowBookingDetails ShowBookingDetails = new frmShowBookingDetails(ReturnInfo?.TransactionInfo?.BookingID);
+            ShowBookingDetails.ShowDialog();
+        }
+
         private void llShowTransactionInfo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            frmShowTransactionDetails ShowTransactionDetails = new frmShowTransactionDetails(ReturnInfo?.TransactionInfo?.TransactionID);
+            ShowTransactionDetails.ShowDialog();
+        }
+
+        private void btnShowTransactionInfo_Click(object sender, EventArgs e)
         {
             frmShowTransactionDetails ShowTransactionDetails = new frmShowTransactionDetails(ReturnInfo?.TransactionInfo?.TransactionID);
             ShowTransactionDetails.ShowDialog();

@@ -28,6 +28,7 @@ namespace CarRental_Business
         public int Mileage { get; set; }
         public float RentalPricePerDay { get; set; }
         public bool IsAvailableForRent { get; set; }
+        public string ImagePath { get; set; }
 
         public clsMake MakeInfo { get; set; }
         public clsModel ModelInfo { get; set; }
@@ -53,6 +54,7 @@ namespace CarRental_Business
             this.Mileage = -1;
             this.RentalPricePerDay = -1f;
             this.IsAvailableForRent = false;
+            this.ImagePath = null;
 
             Mode = enMode.AddNew;
         }
@@ -60,7 +62,7 @@ namespace CarRental_Business
         private clsVehicle(int? VehicleID, int MakeID, int ModelID, int SubModelID, int BodyID,
             string VehicleName, string PlateNumber, short Year, int DriveTypeID, string Engine,
             int FuelTypeID, byte NumberDoors, int Mileage, float RentalPricePerDay,
-            bool IsAvailableForRent)
+            bool IsAvailableForRent, string ImagePath)
         {
             this.VehicleID = VehicleID;
             this.MakeID = MakeID;
@@ -77,6 +79,7 @@ namespace CarRental_Business
             this.Mileage = Mileage;
             this.RentalPricePerDay = RentalPricePerDay;
             this.IsAvailableForRent = IsAvailableForRent;
+            this.ImagePath = ImagePath;
 
             this.MakeInfo = clsMake.Find(MakeID);
             this.ModelInfo = clsModel.Find(ModelID);
@@ -93,7 +96,7 @@ namespace CarRental_Business
             this.VehicleID = clsVehicleData.AddNewVehicle(this.MakeID, this.ModelID, this.SubModelID,
                 this.BodyID, this.VehicleName, this.PlateNumber, this.Year, this.DriveTypeID,
                 this.Engine, this.FuelTypeID, this.NumberDoors, this.Mileage, this.RentalPricePerDay,
-                this.IsAvailableForRent);
+                this.IsAvailableForRent, this.ImagePath);
 
             return (this.VehicleID.HasValue);
         }
@@ -103,7 +106,7 @@ namespace CarRental_Business
             return clsVehicleData.UpdateVehicle(this.VehicleID, this.MakeID, this.ModelID,
                 this.SubModelID, this.BodyID, this.VehicleName, this.PlateNumber, this.Year,
                 this.DriveTypeID, this.Engine, this.FuelTypeID, this.NumberDoors, this.Mileage,
-                this.RentalPricePerDay, this.IsAvailableForRent);
+                this.RentalPricePerDay, this.IsAvailableForRent, this.ImagePath);
         }
 
         public bool Save()
@@ -144,17 +147,18 @@ namespace CarRental_Business
             int Mileage = -1;
             float RentalPricePerDay = -1f;
             bool IsAvailableForRent = false;
+            string ImagePath = null;
 
             bool IsFound = clsVehicleData.GetVehicleInfoByID(VehicleID, ref MakeID, ref ModelID,
                 ref SubModelID, ref BodyID, ref VehicleName, ref PlateNumber, ref Year,
                 ref DriveTypeID, ref Engine, ref FuelTypeID, ref NumberDoors, ref Mileage,
-                ref RentalPricePerDay, ref IsAvailableForRent);
+                ref RentalPricePerDay, ref IsAvailableForRent, ref ImagePath);
 
             if (IsFound)
             {
                 return new clsVehicle(VehicleID, MakeID, ModelID, SubModelID, BodyID, VehicleName,
                     PlateNumber, Year, DriveTypeID, Engine, FuelTypeID, NumberDoors, Mileage,
-                    RentalPricePerDay, IsAvailableForRent);
+                    RentalPricePerDay, IsAvailableForRent, ImagePath);
             }
             else
             {

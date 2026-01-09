@@ -2,15 +2,8 @@
 {
     partial class frmShowVehicleDetails
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,75 +15,72 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
+            this.lblTitle = new System.Windows.Forms.Label();
+            this.btnClose = new Guna.UI2.WinForms.Guna2Button();
             this.ucVehicleCard1 = new CarRental.Vehicles.UserControls.ucVehicleCard();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnClose = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // ucVehicleCard1
+            // lblTitle (TIÊU ĐỀ TRANG)
             // 
-            this.ucVehicleCard1.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.ucVehicleCard1.BackColor = System.Drawing.Color.White;
-            this.ucVehicleCard1.Location = new System.Drawing.Point(0, 71);
-            this.ucVehicleCard1.Name = "ucVehicleCard1";
-            this.ucVehicleCard1.Size = new System.Drawing.Size(772, 359);
-            this.ucVehicleCard1.TabIndex = 0;
+            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(41)))), ((int)(((byte)(55)))));
+            this.lblTitle.Location = new System.Drawing.Point(0, 15);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(800, 50);
+            this.lblTitle.TabIndex = 0;
+            this.lblTitle.Text = "CHI TIẾT THÔNG TIN XE";
+            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label1
+            // btnClose (NÚT ĐÓNG HIỆN ĐẠI)
             // 
-            this.label1.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Firebrick;
-            this.label1.Location = new System.Drawing.Point(0, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(772, 48);
-            this.label1.TabIndex = 120;
-            this.label1.Text = "Thông tin xe";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnClose
-            // 
-            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.Image = global::CarRental.Properties.Resources.Close_32;
-            this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(614, 444);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClose.BorderRadius = 8;
+            this.btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnClose.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
+            this.btnClose.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
+            this.btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(85)))), ((int)(((byte)(99)))));
+            this.btnClose.HoverState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(231)))), ((int)(((byte)(235)))));
+            this.btnClose.Location = new System.Drawing.Point(630, 720);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(156, 37);
-            this.btnClose.TabIndex = 121;
-            this.btnClose.Text = "   Đóng";
-            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Size = new System.Drawing.Size(140, 42);
+            this.btnClose.TabIndex = 1;
+            this.btnClose.Text = "Đóng";
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // ucVehicleCard1 (THẺ THÔNG TIN XE ĐÃ SỬA Ở BƯỚC TRƯỚC)
+            // 
+            this.ucVehicleCard1.BackColor = System.Drawing.Color.White;
+            this.ucVehicleCard1.Location = new System.Drawing.Point(18, 80);
+            this.ucVehicleCard1.Name = "ucVehicleCard1";
+            this.ucVehicleCard1.Size = new System.Drawing.Size(765, 610);
+            this.ucVehicleCard1.TabIndex = 2;
             // 
             // frmShowVehicleDetails
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(772, 483);
-            this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.label1);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(247)))), ((int)(((byte)(251)))));
+            this.ClientSize = new System.Drawing.Size(800, 780);
             this.Controls.Add(this.ucVehicleCard1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            this.Controls.Add(this.btnClose);
+            this.Controls.Add(this.lblTitle);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmShowVehicleDetails";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Xem chi tiết xe";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Chi tiết xe";
+            this.Load += new System.EventHandler(this.frmShowVehicleDetails_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
+        private System.Windows.Forms.Label lblTitle;
+        private Guna.UI2.WinForms.Guna2Button btnClose;
         private UserControls.ucVehicleCard ucVehicleCard1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btnClose;
     }
 }

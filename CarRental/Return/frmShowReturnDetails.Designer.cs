@@ -29,44 +29,56 @@
         private void InitializeComponent()
         {
             this.lblTitle = new System.Windows.Forms.Label();
-            this.btnClose = new System.Windows.Forms.Button();
+            this.guna2PanelMain = new Guna.UI2.WinForms.Guna2Panel();
+            this.btnClose = new Guna.UI2.WinForms.Guna2Button();
             this.ucReturnCard1 = new CarRental.Return.UserControls.ucReturnCard();
+            this.guna2PanelMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblTitle
             // 
-            this.lblTitle.Font = new System.Drawing.Font("Tahoma", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitle.ForeColor = System.Drawing.Color.Firebrick;
-            this.lblTitle.Location = new System.Drawing.Point(3, 0);
+            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 22F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(41)))), ((int)(((byte)(55)))));
+            this.lblTitle.Location = new System.Drawing.Point(0, 0);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(785, 48);
+            this.lblTitle.Size = new System.Drawing.Size(765, 55);
             this.lblTitle.TabIndex = 177;
-            this.lblTitle.Text = "Return Details";
+            this.lblTitle.Text = "CHI TIẾT TRẢ XE";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // guna2PanelMain
+            // 
+            this.guna2PanelMain.BorderRadius = 16;
+            this.guna2PanelMain.FillColor = System.Drawing.Color.White;
+            this.guna2PanelMain.Location = new System.Drawing.Point(12, 60);
+            this.guna2PanelMain.Name = "guna2PanelMain";
+            this.guna2PanelMain.Size = new System.Drawing.Size(765, 380);
+            this.guna2PanelMain.TabIndex = 201;
+            this.guna2PanelMain.Controls.Add(this.ucReturnCard1);
+            this.guna2PanelMain.Controls.Add(this.btnClose);
             // 
             // btnClose
             // 
-            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.Image = global::CarRental.Properties.Resources.Close_32;
-            this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(628, 297);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClose.BorderRadius = 8;
+            this.btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnClose.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
+            this.btnClose.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
+            this.btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(85)))), ((int)(((byte)(99)))));
+            this.btnClose.Location = new System.Drawing.Point(590, 325);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(156, 37);
+            this.btnClose.Size = new System.Drawing.Size(155, 40);
             this.btnClose.TabIndex = 199;
-            this.btnClose.Text = "   Close";
-            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Text = "Đóng";
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // ucReturnCard1
             // 
             this.ucReturnCard1.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.ucReturnCard1.BackColor = System.Drawing.Color.White;
-            this.ucReturnCard1.Location = new System.Drawing.Point(4, 66);
+            this.ucReturnCard1.Location = new System.Drawing.Point(10, 10);
             this.ucReturnCard1.Name = "ucReturnCard1";
-            this.ucReturnCard1.Size = new System.Drawing.Size(784, 223);
+            this.ucReturnCard1.Size = new System.Drawing.Size(745, 330);
             this.ucReturnCard1.TabIndex = 200;
             // 
             // frmShowReturnDetails
@@ -74,15 +86,16 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(790, 339);
-            this.Controls.Add(this.ucReturnCard1);
-            this.Controls.Add(this.btnClose);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(247)))), ((int)(((byte)(251)))));
+            this.ClientSize = new System.Drawing.Size(789, 485);
+            this.Controls.Add(this.guna2PanelMain);
             this.Controls.Add(this.lblTitle);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "frmShowReturnDetails";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Show Return Details";
+            this.Text = "Chi tiết trả xe";
+            this.guna2PanelMain.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -90,7 +103,8 @@
         #endregion
 
         private System.Windows.Forms.Label lblTitle;
-        private System.Windows.Forms.Button btnClose;
+        private Guna.UI2.WinForms.Guna2Panel guna2PanelMain;
+        private Guna.UI2.WinForms.Guna2Button btnClose;
         private UserControls.ucReturnCard ucReturnCard1;
     }
 }

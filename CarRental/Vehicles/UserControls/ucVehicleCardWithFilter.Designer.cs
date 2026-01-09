@@ -46,7 +46,7 @@
             this.ucVehicleCard1.BackColor = System.Drawing.Color.White;
             this.ucVehicleCard1.Location = new System.Drawing.Point(0, 110);
             this.ucVehicleCard1.Name = "ucVehicleCard1";
-            this.ucVehicleCard1.Size = new System.Drawing.Size(772, 359);
+            this.ucVehicleCard1.Size = new System.Drawing.Size(772, 610);
             this.ucVehicleCard1.TabIndex = 0;
             // 
             // gbFilters
@@ -134,7 +134,7 @@
             this.Controls.Add(this.gbFilters);
             this.Controls.Add(this.ucVehicleCard1);
             this.Name = "ucVehicleCardWithFilter";
-            this.Size = new System.Drawing.Size(773, 475);
+            this.Size = new System.Drawing.Size(773, 725);
             this.Load += new System.EventHandler(this.ucVehicleCardWithFilter_Load);
             this.gbFilters.ResumeLayout(false);
             this.gbFilters.PerformLayout();
