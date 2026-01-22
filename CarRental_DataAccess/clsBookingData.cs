@@ -12,8 +12,8 @@ namespace CarRental_DataAccess
     {
         public static bool GetBookingInfoByID(int? BookingID, ref int? CustomerID, ref int? VehicleID,
             ref DateTime RentalStartDate, ref DateTime RentalEndDate, ref int? InitialRentalDays,
-            ref string PickupLocation, ref string DropoffLocation, ref float RentalPricePerDay,
-            ref float? InitialTotalDueAmount, ref string InitialCheckNotes)
+            ref string PickupLocation, ref string DropoffLocation, ref decimal RentalPricePerDay,
+            ref decimal? InitialTotalDueAmount, ref string InitialCheckNotes)
         {
             bool IsFound = false;
 
@@ -43,11 +43,11 @@ namespace CarRental_DataAccess
                                 RentalEndDate = (DateTime)reader["RentalEndDate"];
                                 PickupLocation = (string)reader["PickupLocation"];
                                 DropoffLocation = (string)reader["DropoffLocation"];
-                                RentalPricePerDay = Convert.ToSingle(reader["RentalPricePerDay"]);
+                                RentalPricePerDay = Convert.ToDecimal(reader["RentalPricePerDay"]);
 
                                 // nullable columns
                                 InitialRentalDays = (reader["InitialRentalDays"] != DBNull.Value) ? (int?)reader["InitialRentalDays"] : null;
-                                InitialTotalDueAmount = (reader["InitialTotalDueAmount"] != DBNull.Value) ? (float?)Convert.ToSingle(reader["InitialTotalDueAmount"]) : null;
+                                InitialTotalDueAmount = (reader["InitialTotalDueAmount"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["InitialTotalDueAmount"]) : null;
                                 InitialCheckNotes = (reader["InitialCheckNotes"] != DBNull.Value) ? (string)reader["InitialCheckNotes"] : null;
                             }
                             else
@@ -77,7 +77,7 @@ namespace CarRental_DataAccess
 
         public static int? AddNewBooking(int? CustomerID, int? VehicleID, DateTime RentalStartDate,
             DateTime RentalEndDate, string PickupLocation, string DropoffLocation,
-             float RentalPricePerDay, string InitialCheckNotes)
+             decimal RentalPricePerDay, string InitialCheckNotes)
 
         {
             // This function will return the new person id if succeeded and null if not
@@ -135,7 +135,7 @@ select scope_identity()";
 
         public static bool UpdateBooking(int? BookingID, int? CustomerID, int? VehicleID,
             DateTime RentalStartDate, DateTime RentalEndDate, string PickupLocation,
-             string DropoffLocation, float RentalPricePerDay, string InitialCheckNotes)
+             string DropoffLocation, decimal RentalPricePerDay, string InitialCheckNotes)
 
         {
             int RowAffected = 0;

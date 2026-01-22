@@ -39,7 +39,7 @@ namespace CarRental_Business
             base.NationalityCountryID = NationalityCountryID;
             base.CreatedAt = CreatedAt;
             base.UpdatedAt = UpdatedAt;
-            base.CountryInfo = clsCountry.Find(NationalityCountryID);
+            base.ProvinceInfo = clsProvince.Find(NationalityCountryID);
 
             this.CustomerID = CustomerID;
             this.DriverLicenseNumber = DriverLicenseNumber;

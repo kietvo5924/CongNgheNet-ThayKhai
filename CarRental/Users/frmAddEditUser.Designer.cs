@@ -43,7 +43,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.txtPassword = new Guna.UI2.WinForms.Guna2TextBox();
             this.llChangePassword = new System.Windows.Forms.LinkLabel();
-            this.cbCountry = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.cbProvince = new Guna.UI2.WinForms.Guna2ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.txtPhone = new Guna.UI2.WinForms.Guna2TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -88,7 +88,7 @@
             this.guna2PanelMain.Controls.Add(this.label3);
             this.guna2PanelMain.Controls.Add(this.panelPassword);
             this.guna2PanelMain.Controls.Add(this.llChangePassword);
-            this.guna2PanelMain.Controls.Add(this.cbCountry);
+            this.guna2PanelMain.Controls.Add(this.cbProvince);
             this.guna2PanelMain.Controls.Add(this.label8);
             this.guna2PanelMain.Controls.Add(this.txtPhone);
             this.guna2PanelMain.Controls.Add(this.label4);
@@ -174,9 +174,9 @@
             this.gbPermissions.CustomBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
             this.gbPermissions.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.gbPermissions.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(41)))), ((int)(((byte)(55)))));
-            this.gbPermissions.Location = new System.Drawing.Point(830, 240);
+            this.gbPermissions.Location = new System.Drawing.Point(900, 270);
             this.gbPermissions.Name = "gbPermissions";
-            this.gbPermissions.Size = new System.Drawing.Size(200, 290);
+            this.gbPermissions.Size = new System.Drawing.Size(230, 290);
             this.gbPermissions.TabIndex = 15;
             this.gbPermissions.Text = "Quyền truy cập";
             // 
@@ -413,19 +413,19 @@
             this.llChangePassword.Visible = false;
             this.llChangePassword.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llChangePassword_LinkClicked);
             // 
-            // cbCountry
+            // cbProvince
             // 
-            this.cbCountry.BackColor = System.Drawing.Color.Transparent;
-            this.cbCountry.BorderRadius = 8;
-            this.cbCountry.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cbCountry.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbCountry.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.cbCountry.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(41)))), ((int)(((byte)(55)))));
-            this.cbCountry.ItemHeight = 30;
-            this.cbCountry.Location = new System.Drawing.Point(160, 330);
-            this.cbCountry.Name = "cbCountry";
-            this.cbCountry.Size = new System.Drawing.Size(250, 36);
-            this.cbCountry.TabIndex = 7;
+            this.cbProvince.BackColor = System.Drawing.Color.Transparent;
+            this.cbProvince.BorderRadius = 8;
+            this.cbProvince.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cbProvince.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbProvince.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.cbProvince.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(41)))), ((int)(((byte)(55)))));
+            this.cbProvince.ItemHeight = 30;
+            this.cbProvince.Location = new System.Drawing.Point(160, 330);
+            this.cbProvince.Name = "cbProvince";
+            this.cbProvince.Size = new System.Drawing.Size(250, 36);
+            this.cbProvince.TabIndex = 7;
             // 
             // label8
             // 
@@ -435,8 +435,8 @@
             this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
             this.label8.Location = new System.Drawing.Point(30, 338);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(70, 19);
-            this.label8.Text = "Quốc gia:";
+            this.label8.Size = new System.Drawing.Size(131, 19);
+            this.label8.Text = "Tỉnh/Thành phố:";
             // 
             // txtPhone
             // 
@@ -716,7 +716,7 @@
         private Guna.UI2.WinForms.Guna2TextBox txtPhone;
         private Guna.UI2.WinForms.Guna2TextBox txtEmail;
         private Guna.UI2.WinForms.Guna2TextBox txtAddress;
-        private Guna.UI2.WinForms.Guna2ComboBox cbCountry;
+        private Guna.UI2.WinForms.Guna2ComboBox cbProvince;
         private Guna.UI2.WinForms.Guna2DateTimePicker dtpDateOfBirth;
         private Guna.UI2.WinForms.Guna2RadioButton rbMale;
         private Guna.UI2.WinForms.Guna2RadioButton rbFemale;

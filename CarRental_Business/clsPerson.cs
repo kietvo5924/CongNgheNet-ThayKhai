@@ -27,7 +27,7 @@ namespace CarRental_Business
         public DateTime? UpdatedAt { get; set; }
 
         public string GenderName => (this.Gender == enGender.Male) ? "Male" : "Female";
-        public clsCountry CountryInfo { get; set; }
+        public clsProvince ProvinceInfo { get; set; }
 
         public clsPerson()
         {
@@ -59,7 +59,7 @@ namespace CarRental_Business
             this.NationalityCountryID = NationalityCountryID;
             this.CreatedAt = CreatedAt;
             this.UpdatedAt = UpdatedAt;
-            this.CountryInfo = clsCountry.Find(NationalityCountryID);
+            this.ProvinceInfo = clsProvince.Find(NationalityCountryID);
 
             Mode = enMode.Update;
         }

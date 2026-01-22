@@ -80,7 +80,12 @@ namespace CarRental.Vehicles
                     dgvVehiclesList.Columns["FuelType"].HeaderText = "Nhiên liệu";
 
                 if (dgvVehiclesList.Columns.Contains("RentalPricePerDay"))
-                    dgvVehiclesList.Columns["RentalPricePerDay"].HeaderText = "Giá thuê/ngày";
+                {
+                    var rentalPriceColumn = dgvVehiclesList.Columns["RentalPricePerDay"];
+                    rentalPriceColumn.HeaderText = "Giá thuê/ngày";
+                    rentalPriceColumn.DefaultCellStyle.Format = "N0";
+                    rentalPriceColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                }
 
                 if (dgvVehiclesList.Columns.Contains("IsAvailableForRent"))
                     dgvVehiclesList.Columns["IsAvailableForRent"].HeaderText = "Trạng thái";
@@ -89,6 +94,8 @@ namespace CarRental.Vehicles
                 if (dgvVehiclesList.Columns.Count >= 8)
                 {
                     dgvVehiclesList.Columns[dgvVehiclesList.Columns.Count - 2].HeaderText = "Giá thuê/ngày";
+                    dgvVehiclesList.Columns[dgvVehiclesList.Columns.Count - 2].DefaultCellStyle.Format = "N0";
+                    dgvVehiclesList.Columns[dgvVehiclesList.Columns.Count - 2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                     dgvVehiclesList.Columns[dgvVehiclesList.Columns.Count - 1].HeaderText = "Trạng thái";
                 }
 

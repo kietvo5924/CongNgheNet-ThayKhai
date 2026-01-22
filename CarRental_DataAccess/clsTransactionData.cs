@@ -8,9 +8,9 @@ namespace CarRental_DataAccess
     public class clsTransactionData
     {
         public static bool GetTransactionInfoByTransactionID(int? TransactionID, ref int? BookingID,
-            ref int? ReturnID, ref string PaymentDetails, ref float PaidInitialTotalDueAmount,
-            ref float? ActualTotalDueAmount, ref float? TotalRemaining,
-            ref float? TotalRefundedAmount, ref DateTime TransactionDate,
+            ref int? ReturnID, ref string PaymentDetails, ref decimal PaidInitialTotalDueAmount,
+            ref decimal? ActualTotalDueAmount, ref decimal? TotalRemaining,
+            ref decimal? TotalRefundedAmount, ref DateTime TransactionDate,
             ref DateTime? UpdatedTransactionDate, ref byte TransactionType)
         {
             bool IsFound = false;
@@ -37,10 +37,10 @@ namespace CarRental_DataAccess
                                 BookingID = (reader["BookingID"] != DBNull.Value) ? (int?)reader["BookingID"] : null;
                                 ReturnID = (reader["ReturnID"] != DBNull.Value) ? (int?)reader["ReturnID"] : null;
                                 PaymentDetails = (string)reader["PaymentDetails"];
-                                PaidInitialTotalDueAmount = Convert.ToSingle(reader["PaidInitialTotalDueAmount"]);
-                                ActualTotalDueAmount = (reader["ActualTotalDueAmount"] != DBNull.Value) ? (float?)Convert.ToSingle(reader["ActualTotalDueAmount"]) : null;
-                                TotalRemaining = (reader["TotalRemaining"] != DBNull.Value) ? (float?)Convert.ToSingle(reader["TotalRemaining"]) : null;
-                                TotalRefundedAmount = (reader["TotalRefundedAmount"] != DBNull.Value) ? (float?)Convert.ToSingle(reader["TotalRefundedAmount"]) : null;
+                                PaidInitialTotalDueAmount = Convert.ToDecimal(reader["PaidInitialTotalDueAmount"]);
+                                ActualTotalDueAmount = (reader["ActualTotalDueAmount"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["ActualTotalDueAmount"]) : null;
+                                TotalRemaining = (reader["TotalRemaining"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["TotalRemaining"]) : null;
+                                TotalRefundedAmount = (reader["TotalRefundedAmount"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["TotalRefundedAmount"]) : null;
                                 TransactionDate = (DateTime)reader["TransactionDate"];
                                 UpdatedTransactionDate = (reader["UpdatedTransactionDate"] != DBNull.Value) ? (DateTime?)reader["UpdatedTransactionDate"] : null;
                                 TransactionType = Convert.ToByte(reader["TransactionType"]);
@@ -71,9 +71,9 @@ namespace CarRental_DataAccess
         }
 
         public static bool GetTransactionInfoByReturnID(int? ReturnID, ref int? TransactionID,
-            ref int? BookingID, ref string PaymentDetails, ref float PaidInitialTotalDueAmount,
-            ref float? ActualTotalDueAmount, ref float? TotalRemaining,
-            ref float? TotalRefundedAmount, ref DateTime TransactionDate,
+            ref int? BookingID, ref string PaymentDetails, ref decimal PaidInitialTotalDueAmount,
+            ref decimal? ActualTotalDueAmount, ref decimal? TotalRemaining,
+            ref decimal? TotalRefundedAmount, ref DateTime TransactionDate,
             ref DateTime? UpdatedTransactionDate, ref byte TransactionType)
         {
             bool IsFound = false;
@@ -100,10 +100,10 @@ namespace CarRental_DataAccess
                                 TransactionID = (reader["TransactionID"] != DBNull.Value) ? (int?)reader["TransactionID"] : null;
                                 BookingID = (reader["BookingID"] != DBNull.Value) ? (int?)reader["BookingID"] : null;
                                 PaymentDetails = (string)reader["PaymentDetails"];
-                                PaidInitialTotalDueAmount = Convert.ToSingle(reader["PaidInitialTotalDueAmount"]);
-                                ActualTotalDueAmount = (reader["ActualTotalDueAmount"] != DBNull.Value) ? (float?)Convert.ToSingle(reader["ActualTotalDueAmount"]) : null;
-                                TotalRemaining = (reader["TotalRemaining"] != DBNull.Value) ? (float?)Convert.ToSingle(reader["TotalRemaining"]) : null;
-                                TotalRefundedAmount = (reader["TotalRefundedAmount"] != DBNull.Value) ? (float?)Convert.ToSingle(reader["TotalRefundedAmount"]) : null;
+                                PaidInitialTotalDueAmount = Convert.ToDecimal(reader["PaidInitialTotalDueAmount"]);
+                                ActualTotalDueAmount = (reader["ActualTotalDueAmount"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["ActualTotalDueAmount"]) : null;
+                                TotalRemaining = (reader["TotalRemaining"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["TotalRemaining"]) : null;
+                                TotalRefundedAmount = (reader["TotalRefundedAmount"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["TotalRefundedAmount"]) : null;
                                 TransactionDate = (DateTime)reader["TransactionDate"];
                                 UpdatedTransactionDate = (reader["UpdatedTransactionDate"] != DBNull.Value) ? (DateTime?)reader["UpdatedTransactionDate"] : null;
                                 TransactionType = Convert.ToByte(reader["TransactionType"]);
@@ -134,9 +134,9 @@ namespace CarRental_DataAccess
         }
 
         public static bool GetTransactionInfoByBookingID(int? BookingID, ref int? TransactionID,
-            ref int? ReturnID, ref string PaymentDetails, ref float PaidInitialTotalDueAmount,
-            ref float? ActualTotalDueAmount, ref float? TotalRemaining,
-            ref float? TotalRefundedAmount, ref DateTime TransactionDate,
+            ref int? ReturnID, ref string PaymentDetails, ref decimal PaidInitialTotalDueAmount,
+            ref decimal? ActualTotalDueAmount, ref decimal? TotalRemaining,
+            ref decimal? TotalRefundedAmount, ref DateTime TransactionDate,
             ref DateTime? UpdatedTransactionDate, ref byte TransactionType)
         {
             bool IsFound = false;
@@ -163,10 +163,10 @@ namespace CarRental_DataAccess
                                 TransactionID = (reader["TransactionID"] != DBNull.Value) ? (int?)reader["TransactionID"] : null;
                                 ReturnID = (reader["ReturnID"] != DBNull.Value) ? (int?)reader["ReturnID"] : null;
                                 PaymentDetails = (string)reader["PaymentDetails"];
-                                PaidInitialTotalDueAmount = Convert.ToSingle(reader["PaidInitialTotalDueAmount"]);
-                                ActualTotalDueAmount = (reader["ActualTotalDueAmount"] != DBNull.Value) ? (float?)Convert.ToSingle(reader["ActualTotalDueAmount"]) : null;
-                                TotalRemaining = (reader["TotalRemaining"] != DBNull.Value) ? (float?)Convert.ToSingle(reader["TotalRemaining"]) : null;
-                                TotalRefundedAmount = (reader["TotalRefundedAmount"] != DBNull.Value) ? (float?)Convert.ToSingle(reader["TotalRefundedAmount"]) : null;
+                                PaidInitialTotalDueAmount = Convert.ToDecimal(reader["PaidInitialTotalDueAmount"]);
+                                ActualTotalDueAmount = (reader["ActualTotalDueAmount"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["ActualTotalDueAmount"]) : null;
+                                TotalRemaining = (reader["TotalRemaining"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["TotalRemaining"]) : null;
+                                TotalRefundedAmount = (reader["TotalRefundedAmount"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["TotalRefundedAmount"]) : null;
                                 TransactionDate = (DateTime)reader["TransactionDate"];
                                 UpdatedTransactionDate = (reader["UpdatedTransactionDate"] != DBNull.Value) ? (DateTime?)reader["UpdatedTransactionDate"] : null;
                                 TransactionType = Convert.ToByte(reader["TransactionType"]);
@@ -197,7 +197,7 @@ namespace CarRental_DataAccess
         }
 
         public static int? AddNewTransaction(int? BookingID, string PaymentDetails,
-            float PaidInitialTotalDueAmount)
+            decimal PaidInitialTotalDueAmount)
 
         {
             // This function will return the new person id if succeeded and null if not
@@ -242,8 +242,8 @@ select scope_identity()";
         }
 
         public static bool UpdateTransaction(int? TransactionID, int? ReturnID,
-            float? ActualTotalDueAmount, float? TotalRemaining,
-            float? TotalRefundedAmount)
+            decimal? ActualTotalDueAmount, decimal? TotalRemaining,
+            decimal? TotalRefundedAmount)
         {
             int RowAffected = 0;
 
@@ -287,7 +287,7 @@ where TransactionID = @TransactionID";
             return (RowAffected > 0);
         }
 
-        public static bool UpdateTotalRefundedAmount(int? TransactionID, float? TotalRemaining)
+        public static bool UpdateTotalRefundedAmount(int? TransactionID, decimal? TotalRemaining)
 
         {
             int RowAffected = 0;

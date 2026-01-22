@@ -38,8 +38,8 @@ namespace CarRental.Return.UserControls
             lblMileage.Text = _Return.Mileage.ToString();
             lblConsumedMileage.Text = _Return.ConsumedMileage.ToString();
             lblFinalCheckNotes.Text = _Return.FinalCheckNotes;
-            lblAdditionalCharges.Text = _Return.AdditionalCharges.ToString("N");
-            lblActualTotalDueAmount.Text = _Return.ActualTotalDueAmount.ToString("N");
+            lblAdditionalCharges.Text = _Return.AdditionalCharges.ToString("N0") + " VNĐ";
+            lblActualTotalDueAmount.Text = _Return.ActualTotalDueAmount.ToString("N0") + " VNĐ";
         }
 
         public void Reset()

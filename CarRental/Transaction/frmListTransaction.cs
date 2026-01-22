@@ -50,7 +50,11 @@ namespace CarRental.Transaction
                 if (dgvTransactionsList.Columns.Contains("BookingID")) dgvTransactionsList.Columns["BookingID"].HeaderText = "Mã đặt xe";
                 if (dgvTransactionsList.Columns.Contains("Name")) dgvTransactionsList.Columns["Name"].HeaderText = "Khách hàng";
                 if (dgvTransactionsList.Columns.Contains("Amount")) dgvTransactionsList.Columns["Amount"].HeaderText = "Số tiền"; // Check actual name
-                if (dgvTransactionsList.Columns.Contains("PaidInitialTotalDueAmount")) dgvTransactionsList.Columns["PaidInitialTotalDueAmount"].HeaderText = "Số tiền";
+                if (dgvTransactionsList.Columns.Contains("PaidInitialTotalDueAmount"))
+                {
+                    dgvTransactionsList.Columns["PaidInitialTotalDueAmount"].HeaderText = "Số tiền";
+                    dgvTransactionsList.Columns["PaidInitialTotalDueAmount"].DefaultCellStyle.Format = "N0";
+                }
                 
                 if (dgvTransactionsList.Columns.Contains("TransactionDate")) 
                 {

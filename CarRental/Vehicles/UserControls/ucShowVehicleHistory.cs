@@ -51,6 +51,18 @@ namespace CarRental.Vehicles.UserControls
 
                 dgvVehicleMaintenanceHistoryList.Columns[6].HeaderText = "Sẵn sàng cho thuê";
                 dgvVehicleMaintenanceHistoryList.Columns[6].Width = 110;
+
+                var costColumn = dgvVehicleMaintenanceHistoryList.Columns["Cost"];
+                if (costColumn != null)
+                {
+                    costColumn.DefaultCellStyle.Format = "N0";
+                    costColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                }
+                else if (dgvVehicleMaintenanceHistoryList.Columns.Count > 5)
+                {
+                    dgvVehicleMaintenanceHistoryList.Columns[5].DefaultCellStyle.Format = "N0";
+                    dgvVehicleMaintenanceHistoryList.Columns[5].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                }
             }
         }
 

@@ -193,7 +193,7 @@
             "Họ tên",
             "Tên đăng nhập",
             "Giới tính",
-            "Quốc gia",
+            "Tỉnh/Thành phố",
             "Trạng thái"});
             this.cbFilter.Location = new System.Drawing.Point(110, 25);
             this.cbFilter.Name = "cbFilter";

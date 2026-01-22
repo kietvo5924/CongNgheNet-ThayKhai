@@ -55,15 +55,15 @@ namespace CarRental.Transaction.UserControls
             lblReturnID.Text = _Transaction.ReturnID?.ToString() ?? "Không có";
             lblPaymentDetails.Text = string.IsNullOrWhiteSpace(_Transaction.PaymentDetails) ? "Không có" : _Transaction.PaymentDetails;
 
-            lblPaidInitialTotalDueAmount.Text = _Transaction.PaidInitialTotalDueAmount.ToString("N") + " VNĐ";
+            lblPaidInitialTotalDueAmount.Text = _Transaction.PaidInitialTotalDueAmount.ToString("N0") + " VNĐ";
             lblActualTotalDueAmount.Text = _Transaction.ActualTotalDueAmount.HasValue
-                ? _Transaction.ActualTotalDueAmount.Value.ToString("N") + " VNĐ"
+                ? _Transaction.ActualTotalDueAmount.Value.ToString("N0") + " VNĐ"
                 : "Không có";
             lblTotalRemaining.Text = _Transaction.TotalRemaining.HasValue
-                ? _Transaction.TotalRemaining.Value.ToString("N") + " VNĐ"
+                ? _Transaction.TotalRemaining.Value.ToString("N0") + " VNĐ"
                 : "Không có";
             lblTotalRefundedAmount.Text = _Transaction.TotalRefundedAmount.HasValue
-                ? _Transaction.TotalRefundedAmount.Value.ToString("N") + " VNĐ"
+                ? _Transaction.TotalRefundedAmount.Value.ToString("N0") + " VNĐ"
                 : "Không có";
 
             lblTransactionDate.Text = _Transaction.TransactionDate.ToString("dd/MM/yyyy HH:mm");

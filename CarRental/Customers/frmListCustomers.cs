@@ -41,6 +41,13 @@ namespace CarRental.Customers
                 dgvCustomersList.Columns["Email"].HeaderText = "Email";
                 dgvCustomersList.Columns["DriverLicenseNumber"].HeaderText = "Số bằng lái";
 
+                if (dgvCustomersList.Columns.Contains("Country")) 
+                    dgvCustomersList.Columns["Country"].HeaderText = "Province";
+                else if (dgvCustomersList.Columns.Contains("CountryName")) 
+                    dgvCustomersList.Columns["CountryName"].HeaderText = "Province";
+                else if (dgvCustomersList.Columns.Contains("ProvinceName"))
+                    dgvCustomersList.Columns["ProvinceName"].HeaderText = "Tỉnh/Thành phố";
+
                 dgvCustomersList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
         }

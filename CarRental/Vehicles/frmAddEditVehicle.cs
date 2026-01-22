@@ -5,6 +5,7 @@ using Guna.UI2.WinForms;
 using System;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -92,7 +93,7 @@ namespace CarRental.Vehicles
             txtYear.Text = _Vehicle.Year.ToString();
             txtEngine.Text = _Vehicle.Engine;
             txtMileage.Text = _Vehicle.Mileage.ToString();
-            txtRentalPricePerDay.Text = _Vehicle.RentalPricePerDay.ToString();
+            txtRentalPricePerDay.Text = _Vehicle.RentalPricePerDay.ToString("N0");
             chkIsAvailableForRent.Checked = _Vehicle.IsAvailableForRent;
 
             cbMake.SelectedIndex = cbMake.FindString(_Vehicle.MakeInfo.Make);
@@ -179,7 +180,12 @@ namespace CarRental.Vehicles
             _Vehicle.PlateNumber = txtPlateNumber.Text.Trim();
             _Vehicle.Year = Convert.ToInt16(txtYear.Text.Trim());
             _Vehicle.Mileage = Convert.ToInt32(txtMileage.Text.Trim());
-            _Vehicle.RentalPricePerDay = Convert.ToSingle(txtRentalPricePerDay.Text.Trim());
+            if (!decimal.TryParse(txtRentalPricePerDay.Text.Trim(), NumberStyles.Number, CultureInfo.CurrentCulture, out decimal rentalPricePerDay))
+            {
+                MessageBox.Show("Giá thuê mỗi ngày không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            _Vehicle.RentalPricePerDay = rentalPricePerDay;
             _Vehicle.Engine = txtEngine.Text.Trim();
             _Vehicle.IsAvailableForRent = chkIsAvailableForRent.Checked;
 

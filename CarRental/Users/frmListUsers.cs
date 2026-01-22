@@ -19,13 +19,48 @@ namespace CarRental.Users
 
         private void _FillCountryComboBox()
         {
-            cbCountry.Items.Clear();
-            cbCountry.Items.Add("Tất cả");
-            DataTable dtCountries = clsCountry.GetAllCountriesName();
-            foreach (DataRow Country in dtCountries.Rows)
+            cbCountry.SelectedIndexChanged -= cbCountry_SelectedIndexChanged;
+
+            DataTable dtProvinces = _EnsureProvinceTableSchema(clsProvince.GetAllProvinces());
+
+            DataRow allRow = dtProvinces.NewRow();
+            allRow["ProvinceID"] = DBNull.Value;
+            allRow["ProvinceName"] = "Tất cả";
+            dtProvinces.Rows.InsertAt(allRow, 0);
+
+            cbCountry.DataSource = dtProvinces;
+            cbCountry.DisplayMember = "ProvinceName";
+            cbCountry.ValueMember = "ProvinceID";
+            cbCountry.SelectedIndex = 0;
+
+            cbCountry.SelectedIndexChanged += cbCountry_SelectedIndexChanged;
+        }
+
+        private DataTable _EnsureProvinceTableSchema(DataTable dtProvinces)
+        {
+            if (dtProvinces == null)
+                dtProvinces = new DataTable();
+
+            if (!dtProvinces.Columns.Contains("ProvinceID"))
+                dtProvinces.Columns.Add("ProvinceID", typeof(int));
+
+            if (!dtProvinces.Columns.Contains("ProvinceName"))
+                dtProvinces.Columns.Add("ProvinceName", typeof(string));
+
+            return dtProvinces;
+        }
+
+        private string _GetProvinceColumnName()
+        {
+            if (_dtAllUsers != null)
             {
-                cbCountry.Items.Add(Country["CountryName"].ToString());
+                if (_dtAllUsers.Columns.Contains("ProvinceName"))
+                    return "ProvinceName";
+                if (_dtAllUsers.Columns.Contains("Country"))
+                    return "Country";
             }
+
+            return "ProvinceName";
         }
 
         private string _GetRealColumnNameInDB()
@@ -36,7 +71,7 @@ namespace CarRental.Users
                 case "Họ tên": return "Name";
                 case "Tên đăng nhập": return "Username";
                 case "Giới tính": return "Gender";
-                case "Quốc gia": return "Country";
+                case "Tỉnh/Thành phố": return _GetProvinceColumnName();
                 case "Trạng thái": return "IsActive";
                 default: return "None";
             }
@@ -55,9 +90,13 @@ namespace CarRental.Users
                 dgvUsersList.Columns[2].HeaderText = "Giới tính";
                 dgvUsersList.Columns[3].HeaderText = "Ngày sinh";
                 dgvUsersList.Columns[4].HeaderText = "Tên đăng nhập";
-                dgvUsersList.Columns[5].HeaderText = "Quốc gia";
+                dgvUsersList.Columns[5].HeaderText = "Tỉnh/Thành phố";
                 dgvUsersList.Columns[6].HeaderText = "Ngày tạo";
                 dgvUsersList.Columns[7].HeaderText = "Trạng thái";
+
+                var provinceColumn = dgvUsersList.Columns["ProvinceName"] ?? dgvUsersList.Columns["Country"];
+                if (provinceColumn != null)
+                    provinceColumn.HeaderText = "Tỉnh/Thành phố";
                 dgvUsersList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
         }
@@ -76,8 +115,8 @@ namespace CarRental.Users
 
         private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            txtSearch.Visible = (cbFilter.Text != "Không lọc") && (cbFilter.Text != "Giới tính") && (cbFilter.Text != "Quốc gia") && (cbFilter.Text != "Trạng thái");
-            cbCountry.Visible = (cbFilter.Text == "Quốc gia");
+            txtSearch.Visible = (cbFilter.Text != "Không lọc") && (cbFilter.Text != "Giới tính") && (cbFilter.Text != "Tỉnh/Thành phố") && (cbFilter.Text != "Trạng thái");
+            cbCountry.Visible = (cbFilter.Text == "Tỉnh/Thành phố");
             cbGender.Visible = (cbFilter.Text == "Giới tính");
             cbIsActive.Visible = (cbFilter.Text == "Trạng thái");
 
@@ -168,7 +207,26 @@ namespace CarRental.Users
             DeleteToolStripMenuItem.Enabled = ((int)dgvUsersList.CurrentRow.Cells["UserID"].Value != clsGlobal.CurrentUser.UserID);
         }
 
-        // Các hàm cbGender_SelectedIndexChanged, cbCountry_SelectedIndexChanged, cbIsActive_SelectedIndexChanged 
-        // bạn hãy giữ nguyên logic hoặc cập nhật Filter tương tự txtSearch_TextChanged nhé.
+        private void cbCountry_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_dtAllUsers == null || _dtAllUsers.Rows.Count == 0)
+                return;
+
+            if (cbFilter.Text != "Tỉnh/Thành phố")
+                return;
+
+            if (cbCountry.SelectedValue == null || cbCountry.SelectedValue == DBNull.Value || cbCountry.SelectedIndex == 0)
+            {
+                _dtAllUsers.DefaultView.RowFilter = "";
+            }
+            else
+            {
+                string columnName = _GetProvinceColumnName();
+                string filterValue = cbCountry.Text.Replace("'", "''");
+                _dtAllUsers.DefaultView.RowFilter = string.Format("[{0}] = '{1}'", columnName, filterValue);
+            }
+
+            lblNumberOfRecords.Text = dgvUsersList.Rows.Count.ToString();
+        }
     }
 }

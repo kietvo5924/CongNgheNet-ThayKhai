@@ -24,10 +24,10 @@ namespace CarRental_Business
         public int? TransactionID { get; set; }
         public int? ReturnID { get; set; }
         public string PaymentDetails { get; set; }
-        public float PaidInitialTotalDueAmount { get; set; }
-        public float? ActualTotalDueAmount { get; set; }
-        public float? TotalRemaining { get; set; }
-        public float? TotalRefundedAmount { get; set; }
+        public decimal PaidInitialTotalDueAmount { get; set; }
+        public decimal? ActualTotalDueAmount { get; set; }
+        public decimal? TotalRemaining { get; set; }
+        public decimal? TotalRefundedAmount { get; set; }
         public DateTime TransactionDate { get; set; }
         public DateTime? UpdatedTransactionDate { get; set; }
         public enTransactionType TransactionType { get; set; }
@@ -41,7 +41,7 @@ namespace CarRental_Business
             this.TransactionID = null;
             this.ReturnID = null;
             this.PaymentDetails = string.Empty;
-            this.PaidInitialTotalDueAmount = -1f;
+            this.PaidInitialTotalDueAmount = -1m;
             this.ActualTotalDueAmount = null;
             this.TotalRemaining = null;
             this.TotalRefundedAmount = null;
@@ -54,10 +54,10 @@ namespace CarRental_Business
 
         private clsTransaction(int? BookingID, int? CustomerID, int? VehicleID, DateTime RentalStartDate,
             DateTime RentalEndDate, int? InitialRentalDays, string PickupLocation,
-            string DropoffLocation, float RentalPricePerDay, float? InitialTotalDueAmount,
+            string DropoffLocation, decimal RentalPricePerDay, decimal? InitialTotalDueAmount,
             string InitialCheckNotes, int? TransactionID, int? ReturnID, string PaymentDetails,
-            float PaidInitialTotalDueAmount, float? ActualTotalDueAmount,
-            float? TotalRemaining, float? TotalRefundedAmount, DateTime TransactionDate,
+            decimal PaidInitialTotalDueAmount, decimal? ActualTotalDueAmount,
+            decimal? TotalRemaining, decimal? TotalRefundedAmount, DateTime TransactionDate,
             DateTime? UpdatedTransactionDate, enTransactionType TransactionType)
         {
             base.BookingID = BookingID;
@@ -158,10 +158,10 @@ namespace CarRental_Business
             int? BookingID = null;
             int? ReturnID = null;
             string PaymentDetails = string.Empty;
-            float PaidInitialTotalDueAmount = -1f;
-            float? ActualTotalDueAmount = null;
-            float? TotalRemaining = null;
-            float? TotalRefundedAmount = null;
+            decimal PaidInitialTotalDueAmount = -1m;
+            decimal? ActualTotalDueAmount = null;
+            decimal? TotalRemaining = null;
+            decimal? TotalRefundedAmount = null;
             DateTime TransactionDate = DateTime.Now;
             DateTime? UpdatedTransactionDate = null;
             byte TransactionType = 0;
@@ -200,10 +200,10 @@ namespace CarRental_Business
             int? TransactionID = null;
             int? BookingID = null;
             string PaymentDetails = string.Empty;
-            float PaidInitialTotalDueAmount = -1f;
-            float? ActualTotalDueAmount = null;
-            float? TotalRemaining = null;
-            float? TotalRefundedAmount = null;
+            decimal PaidInitialTotalDueAmount = -1m;
+            decimal? ActualTotalDueAmount = null;
+            decimal? TotalRemaining = null;
+            decimal? TotalRefundedAmount = null;
             DateTime TransactionDate = DateTime.Now;
             DateTime? UpdatedTransactionDate = null;
             byte TransactionType = 0;
@@ -242,10 +242,10 @@ namespace CarRental_Business
             int? TransactionID = null;
             int? ReturnID = null;
             string PaymentDetails = string.Empty;
-            float PaidInitialTotalDueAmount = -1f;
-            float? ActualTotalDueAmount = null;
-            float? TotalRemaining = null;
-            float? TotalRefundedAmount = null;
+            decimal PaidInitialTotalDueAmount = -1m;
+            decimal? ActualTotalDueAmount = null;
+            decimal? TotalRemaining = null;
+            decimal? TotalRefundedAmount = null;
             DateTime TransactionDate = DateTime.Now;
             DateTime? UpdatedTransactionDate = null;
             byte TransactionType = 0;
@@ -314,7 +314,7 @@ namespace CarRental_Business
             return clsTransactionData.UpdateTotalRefundedAmount(this.TransactionID, this.TotalRemaining);
         }
 
-        public static bool UpdateTotalRefundedAmount(int? TransactionID, float? TotalRemaining)
+        public static bool UpdateTotalRefundedAmount(int? TransactionID, decimal? TotalRemaining)
         {
             return clsTransactionData.UpdateTotalRefundedAmount(TransactionID, TotalRemaining);
         }

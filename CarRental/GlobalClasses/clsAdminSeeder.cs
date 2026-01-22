@@ -43,7 +43,7 @@ namespace CarRental.GlobalClasses
             admin.Email = "admin@carrental.local";
             admin.DateOfBirth = new DateTime(1990, 1, 1);
             admin.Gender = clsPerson.enGender.Male;
-            admin.NationalityCountryID = _TryGetDefaultCountryID();
+            admin.NationalityCountryID = _TryGetDefaultProvinceID();
             admin.Password = clsGlobal.ComputeHash(_DefaultAdminPassword);
             admin.Permissions = (int)clsUser.enPermissions.All;
             admin.SecurityQuestion = "Default security question";
@@ -52,13 +52,13 @@ namespace CarRental.GlobalClasses
             admin.ImagePath = null;
         }
 
-        private static int? _TryGetDefaultCountryID()
+        private static int? _TryGetDefaultProvinceID()
         {
             try
             {
-                clsCountry defaultCountry = clsCountry.Find("Jordan");
-                if (defaultCountry != null)
-                    return defaultCountry.CountryID;
+                clsProvince defaultProvince = clsProvince.Find("Jordan");
+                if (defaultProvince != null)
+                    return defaultProvince.ProvinceID;
             }
             catch
             {

@@ -21,8 +21,8 @@ namespace CarRental_Business
         public int? InitialRentalDays { get; set; }
         public string PickupLocation { get; set; }
         public string DropoffLocation { get; set; }
-        public float RentalPricePerDay { get; set; }
-        public float? InitialTotalDueAmount { get; set; }
+        public decimal RentalPricePerDay { get; set; }
+        public decimal? InitialTotalDueAmount { get; set; }
         public string InitialCheckNotes { get; set; }
 
         public clsCustomer CustomerInfo { get; set; }
@@ -41,7 +41,7 @@ namespace CarRental_Business
             this.InitialRentalDays = null;
             this.PickupLocation = string.Empty;
             this.DropoffLocation = string.Empty;
-            this.RentalPricePerDay = -1f;
+            this.RentalPricePerDay = -1m;
             this.InitialTotalDueAmount = null;
             this.InitialCheckNotes = null;
 
@@ -50,7 +50,7 @@ namespace CarRental_Business
 
         private clsBooking(int? BookingID, int? CustomerID, int? VehicleID, DateTime RentalStartDate,
             DateTime RentalEndDate, int? InitialRentalDays, string PickupLocation,
-            string DropoffLocation, float RentalPricePerDay, float? InitialTotalDueAmount,
+            string DropoffLocation, decimal RentalPricePerDay, decimal? InitialTotalDueAmount,
             string InitialCheckNotes)
         {
             this.BookingID = BookingID;
@@ -119,8 +119,8 @@ namespace CarRental_Business
             int? InitialRentalDays = null;
             string PickupLocation = string.Empty;
             string DropoffLocation = string.Empty;
-            float RentalPricePerDay = -1f;
-            float? InitialTotalDueAmount = null;
+            decimal RentalPricePerDay = -1m;
+            decimal? InitialTotalDueAmount = null;
             string InitialCheckNotes = null;
 
             bool IsFound = clsBookingData.GetBookingInfoByID(BookingID, ref CustomerID,

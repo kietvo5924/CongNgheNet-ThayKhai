@@ -22,7 +22,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.lblCreatedAt = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.lblCountry = new System.Windows.Forms.Label();
+            this.lblProvince = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.lblPhone = new System.Windows.Forms.Label();
             this.lblGender = new System.Windows.Forms.Label();
@@ -52,7 +52,7 @@
             this.guna2Panel1.Controls.Add(this.label9);
             this.guna2Panel1.Controls.Add(this.lblCreatedAt);
             this.guna2Panel1.Controls.Add(this.label7);
-            this.guna2Panel1.Controls.Add(this.lblCountry);
+            this.guna2Panel1.Controls.Add(this.lblProvince);
             this.guna2Panel1.Controls.Add(this.label15);
             this.guna2Panel1.Controls.Add(this.lblPhone);
             this.guna2Panel1.Controls.Add(this.lblGender);
@@ -182,7 +182,7 @@
             this.lblEmail.Size = new System.Drawing.Size(41, 19);
             this.lblEmail.Text = "[????]";
             // 
-            // label15 (Quốc gia)
+            // label15 (Tỉnh/Thành phố)
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
@@ -190,16 +190,16 @@
             this.label15.Location = new System.Drawing.Point(380, 135);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(70, 19);
-            this.label15.Text = "Quốc gia:";
+            this.label15.Text = "Tỉnh/Thành phố:";
             // 
-            // lblCountry
+            // lblProvince
             // 
-            this.lblCountry.AutoSize = true;
-            this.lblCountry.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.lblCountry.Location = new System.Drawing.Point(495, 135);
-            this.lblCountry.Name = "lblCountry";
-            this.lblCountry.Size = new System.Drawing.Size(41, 19);
-            this.lblCountry.Text = "[????]";
+            this.lblProvince.AutoSize = true;
+            this.lblProvince.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lblProvince.Location = new System.Drawing.Point(495, 135);
+            this.lblProvince.Name = "lblProvince";
+            this.lblProvince.Size = new System.Drawing.Size(41, 19);
+            this.lblProvince.Text = "[????]";
             // 
             // label12 (Địa chỉ)
             // 
@@ -310,7 +310,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label lblCountry;
+        private System.Windows.Forms.Label lblProvince;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label lblUpdatedAt;
         private System.Windows.Forms.Label label9;

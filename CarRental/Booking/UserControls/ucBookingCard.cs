@@ -36,7 +36,9 @@ namespace CarRental.Booking.UserControls
             lblStartDate.Text = clsFormat.DateToShort(_Booking.RentalStartDate);
             lblEndDate.Text = clsFormat.DateToShort(_Booking.RentalEndDate);
             lblInitialRentalDays.Text = _Booking.InitialRentalDays?.ToString();
-            lblInitialTotalDueAmount.Text = _Booking.InitialTotalDueAmount?.ToString("N");
+            lblInitialTotalDueAmount.Text = _Booking.InitialTotalDueAmount.HasValue
+                ? _Booking.InitialTotalDueAmount.Value.ToString("N0") + " VNĐ"
+                : "Không có";
             lblPickUpLocation.Text = _Booking.PickupLocation;
             lblDropOffLocation.Text = _Booking.DropoffLocation;
             lblInitialCheckNotes.Text = string.IsNullOrWhiteSpace(_Booking.InitialCheckNotes) ? "Không có ghi chú" : _Booking.InitialCheckNotes;

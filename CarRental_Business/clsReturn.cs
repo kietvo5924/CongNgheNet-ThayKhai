@@ -19,8 +19,8 @@ namespace CarRental_Business
         public int Mileage { get; set; }
         public int ConsumedMileage { get; set; }
         public string FinalCheckNotes { get; set; }
-        public float AdditionalCharges { get; set; }
-        public float ActualTotalDueAmount { get; set; }
+        public decimal AdditionalCharges { get; set; }
+        public decimal ActualTotalDueAmount { get; set; }
 
         public clsTransaction TransactionInfo => clsTransaction.FindByReturnID(this.ReturnID);
 
@@ -32,15 +32,15 @@ namespace CarRental_Business
             this.Mileage = -1;
             this.ConsumedMileage = 0;
             this.FinalCheckNotes = string.Empty;
-            this.AdditionalCharges = -1f;
-            this.ActualTotalDueAmount = 0f;
+            this.AdditionalCharges = -1m;
+            this.ActualTotalDueAmount = 0m;
 
             Mode = enMode.AddNew;
         }
 
         private clsReturn(int? ReturnID, DateTime ActualReturnDate, int ActualRentalDays,
-            int Mileage, int ConsumedMileage, string FinalCheckNotes, float AdditionalCharges,
-            float ActualTotalDueAmount)
+            int Mileage, int ConsumedMileage, string FinalCheckNotes, decimal AdditionalCharges,
+            decimal ActualTotalDueAmount)
         {
             this.ReturnID = ReturnID;
             this.ActualReturnDate = ActualReturnDate;
@@ -100,8 +100,8 @@ namespace CarRental_Business
             int Mileage = -1;
             int ConsumedMileage = 0;
             string FinalCheckNotes = string.Empty;
-            float AdditionalCharges = -1f;
-            float ActualTotalDueAmount = 0f;
+            decimal AdditionalCharges = -1m;
+            decimal ActualTotalDueAmount = 0m;
 
             bool IsFound = clsReturnData.GetReturnInfoByID(ReturnID, ref ActualReturnDate,
                 ref ActualRentalDays, ref Mileage, ref ConsumedMileage, ref FinalCheckNotes,
@@ -150,7 +150,9 @@ namespace CarRental_Business
 
             Transaction.ReturnID = this.ReturnID;
             Transaction.ActualTotalDueAmount = this.ActualTotalDueAmount;
-            Transaction.TotalRemaining = Transaction.InitialTotalDueAmount - this.ActualTotalDueAmount;
+            Transaction.TotalRemaining = Transaction.InitialTotalDueAmount.HasValue
+                ? Transaction.InitialTotalDueAmount - this.ActualTotalDueAmount
+                : (decimal?)null;
 
             return Transaction.Save();
         }

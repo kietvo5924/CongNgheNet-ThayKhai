@@ -36,7 +36,7 @@ namespace CarRental.People.UserControls
             lblAddress.Text = _Person.Address;
             lblEmail.Text = _Person.Email;
             lblPhone.Text = _Person.Phone;
-            lblCountry.Text = _Person.CountryInfo.CountryName;
+            lblProvince.Text = _Person.ProvinceInfo?.ProvinceName ?? "[????]";
             lblCreatedAt.Text = _Person.CreatedAt.ToString("dd/MMM/yyyy hh:mm tt");
             lblUpdatedAt.Text = _Person.UpdatedAt?.ToString("dd/MMM/yyyy hh:mm tt");
         }
@@ -53,7 +53,7 @@ namespace CarRental.People.UserControls
             lblAddress.Text = "[????]";
             lblEmail.Text = "[????]";
             lblPhone.Text = "[????]";
-            lblCountry.Text = "[????]";
+            lblProvince.Text = "[????]";
             lblCreatedAt.Text = "[????]";
             lblUpdatedAt.Text = "[????]";
         }

@@ -86,15 +86,23 @@ namespace CarRental.Booking
                 return;
             }
             lblVehicleID.Text = Vehicle.VehicleID.ToString();
-            lblRentalPricePerDay.Text = Vehicle.RentalPricePerDay.ToString("N");
+            lblRentalPricePerDay.Text = Vehicle.RentalPricePerDay.ToString("N0");
 
-            int days = 0;
-            if (int.TryParse(lblInitialRentalDays.Text, out days))
-            {
-                lblInitialTotalDueAmount.Text = (Vehicle.RentalPricePerDay * days).ToString("N");
-            }
+            decimal initialTotal = _GetInitialTotalDueAmount(Vehicle);
+            lblInitialTotalDueAmount.Text = initialTotal.ToString("N0");
 
             btnBook.Enabled = true;
+        }
+
+        private decimal _GetInitialTotalDueAmount(clsVehicle vehicle)
+        {
+            if (vehicle == null)
+                return 0m;
+
+            if (!int.TryParse(lblInitialRentalDays.Text, out int days))
+                return 0m;
+
+            return vehicle.RentalPricePerDay * days;
         }
 
         private void _Reset()
@@ -120,7 +128,7 @@ namespace CarRental.Booking
             Transaction.DropoffLocation = txtDropOffLocation.Text.Trim();
             Transaction.RentalPricePerDay = ucSelectedCustomerAndVehicleWithFilter1.SelectedVehicleInfo.RentalPricePerDay;
             Transaction.InitialCheckNotes = txtInitailCheckNotes.Text.Trim();
-            Transaction.PaidInitialTotalDueAmount = Convert.ToSingle(lblInitialTotalDueAmount.Text);
+            Transaction.PaidInitialTotalDueAmount = _GetInitialTotalDueAmount(ucSelectedCustomerAndVehicleWithFilter1.SelectedVehicleInfo);
             Transaction.PaymentDetails = txtPaymentDetails.Text.Trim();
 
             if (!Transaction.Save())

@@ -13,7 +13,7 @@ namespace CarRental_DataAccess
         public static bool GetVehicleInfoByID(int? VehicleID, ref int MakeID, ref int ModelID,
             ref int SubModelID, ref int BodyID, ref string VehicleName, ref string PlateNumber,
             ref short Year, ref int DriveTypeID, ref string Engine, ref int FuelTypeID,
-            ref byte NumberDoors, ref int Mileage, ref float RentalPricePerDay,
+            ref byte NumberDoors, ref int Mileage, ref decimal RentalPricePerDay,
             ref bool IsAvailableForRent, ref string Image)
         {
             bool IsFound = false;
@@ -49,7 +49,7 @@ namespace CarRental_DataAccess
                                 FuelTypeID = (int)reader["FuelTypeID"];
                                 NumberDoors = (byte)reader["NumberDoors"];
                                 Mileage = (int)reader["Mileage"];
-                                RentalPricePerDay = Convert.ToSingle(reader["RentalPricePerDay"]);
+                                RentalPricePerDay = Convert.ToDecimal(reader["RentalPricePerDay"]);
                                 IsAvailableForRent = (bool)reader["IsAvailableForRent"];
 
                                 // Handle Image path safely (in case column doesn't exist)
@@ -92,7 +92,7 @@ namespace CarRental_DataAccess
 
         public static int? AddNewVehicle(int MakeID, int ModelID, int SubModelID, int BodyID,
             string VehicleName, string PlateNumber, short Year, int DriveTypeID, string Engine,
-            int FuelTypeID, byte NumberDoors, int Mileage, float RentalPricePerDay,
+            int FuelTypeID, byte NumberDoors, int Mileage, decimal RentalPricePerDay,
             bool IsAvailableForRent, string Image)
         {
             // This function will return the new person id if succeeded and null if not
@@ -153,7 +153,7 @@ select scope_identity()";
 
         public static bool UpdateVehicle(int? VehicleID, int MakeID, int ModelID, int SubModelID,
             int BodyID, string VehicleName, string PlateNumber, short Year, int DriveTypeID,
-            string Engine, int FuelTypeID, byte NumberDoors, int Mileage, float RentalPricePerDay,
+            string Engine, int FuelTypeID, byte NumberDoors, int Mileage, decimal RentalPricePerDay,
             bool IsAvailableForRent, string Image)
         {
             int RowAffected = 0;

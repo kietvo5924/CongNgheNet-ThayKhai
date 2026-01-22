@@ -43,14 +43,27 @@ namespace CarRental.Users
                 || clsGlobal.CheckAccessDenied(clsUser.enPermissions.ManageUsers);
         }
 
-        private void _FillCountryComboBox()
+        private void _FillProvinceComboBox()
         {
-            DataTable dtCountries = clsCountry.GetAllCountriesName();
-            cbCountry.Items.Clear();
-            foreach (DataRow Country in dtCountries.Rows)
-            {
-                cbCountry.Items.Add(Country["CountryName"].ToString());
-            }
+            DataTable dtProvinces = _EnsureProvinceTableSchema(clsProvince.GetAllProvinces());
+
+            cbProvince.DataSource = dtProvinces;
+            cbProvince.DisplayMember = "ProvinceName";
+            cbProvince.ValueMember = "ProvinceID";
+        }
+
+        private DataTable _EnsureProvinceTableSchema(DataTable dtProvinces)
+        {
+            if (dtProvinces == null)
+                dtProvinces = new DataTable();
+
+            if (!dtProvinces.Columns.Contains("ProvinceID"))
+                dtProvinces.Columns.Add("ProvinceID", typeof(int));
+
+            if (!dtProvinces.Columns.Contains("ProvinceName"))
+                dtProvinces.Columns.Add("ProvinceName", typeof(string));
+
+            return dtProvinces;
         }
 
         private bool _IsAllItemIsChecked()
@@ -96,7 +109,7 @@ namespace CarRental.Users
 
         private void _ResetDefaultValues()
         {
-            _FillCountryComboBox();
+            _FillProvinceComboBox();
 
             if (_Mode == enMode.AddNew)
             {
@@ -116,8 +129,11 @@ namespace CarRental.Users
             dtpDateOfBirth.MaxDate = DateTime.Now.AddYears(-18);
             dtpDateOfBirth.MinDate = DateTime.Now.AddYears(-100);
 
-            int vietnamIndex = cbCountry.FindString("Vietnam");
-            cbCountry.SelectedIndex = (vietnamIndex != -1) ? vietnamIndex : 0;
+            if (cbProvince.Items.Count > 0)
+            {
+                int vietnamIndex = cbProvince.FindString("Vietnam");
+                cbProvince.SelectedIndex = (vietnamIndex != -1) ? vietnamIndex : 0;
+            }
 
             gbPermissions.Visible = _canEditPermissions;
             gbPermissions.Enabled = _canEditPermissions;
@@ -155,7 +171,17 @@ namespace CarRental.Users
             txtUsername.Text = _User.Username;
             txtSecurityQuestion.Text = _User.SecurityQuestion;
             txtSecurityAnswer.Text = clsGlobal.Decrypt(_User.SecurityAnswer);
-            cbCountry.SelectedIndex = cbCountry.FindString(_User.CountryInfo.CountryName);
+            if (_User.ProvinceInfo?.ProvinceID != null)
+            {
+                cbProvince.SelectedValue = _User.ProvinceInfo.ProvinceID.Value;
+            }
+            else
+            {
+                string provinceName = _User.ProvinceInfo?.ProvinceName ?? string.Empty;
+                int provinceIndex = cbProvince.FindString(provinceName);
+                if (provinceIndex >= 0)
+                    cbProvince.SelectedIndex = provinceIndex;
+            }
 
             if (_User.Gender == (byte)clsPerson.enGender.Male)
             {
@@ -237,7 +263,10 @@ namespace CarRental.Users
             _User.Email = txtEmail.Text.Trim();
             _User.Address = txtAddress.Text.Trim();
             _User.Phone = txtPhone.Text.Trim();
-            _User.NationalityCountryID = clsCountry.Find(cbCountry.Text).CountryID;
+            if (cbProvince.SelectedValue == null || cbProvince.SelectedValue == DBNull.Value)
+                _User.NationalityCountryID = null;
+            else
+                _User.NationalityCountryID = Convert.ToInt32(cbProvince.SelectedValue);
             _User.Gender = (rbMale.Checked) ? clsPerson.enGender.Male : clsPerson.enGender.Female;
             _User.DateOfBirth = dtpDateOfBirth.Value;
             _User.Username = txtUsername.Text.Trim();

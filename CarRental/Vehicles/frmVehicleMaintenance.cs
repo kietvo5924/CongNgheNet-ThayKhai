@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,28 +46,24 @@ namespace CarRental.Vehicles
 
         private void txtCost_Validating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtCost.Text.Trim()))
+            string rawValue = txtCost.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(rawValue))
             {
                 e.Cancel = true;
                 errorProvider1.SetError(txtCost, "Chi phí không được để trống!");
                 return;
             }
-            else
-            {
-                errorProvider1.SetError(txtCost, null);
 
-            }
-
-
-            if (!clsValidation.IsNumber(txtCost.Text.Trim()))
+            if (!decimal.TryParse(rawValue, NumberStyles.Number, CultureInfo.CurrentCulture, out decimal cost) || cost < 0)
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtCost, "Giá trị không hợp lệ.");
+                errorProvider1.SetError(txtCost, "Giá trị chi phí không hợp lệ.");
+                return;
             }
-            else
-            {
-                errorProvider1.SetError(txtCost, null);
-            }
+
+            errorProvider1.SetError(txtCost, null);
+            txtCost.Text = cost.ToString("N0");
         }
 
         private void txtDescription_Validating(object sender, CancelEventArgs e)
@@ -120,9 +117,15 @@ namespace CarRental.Vehicles
                 return;
             }
 
+            if (!decimal.TryParse(txtCost.Text.Trim(), NumberStyles.Number, CultureInfo.CurrentCulture, out decimal cost))
+            {
+                MessageBox.Show("Giá trị chi phí không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             _MaintenanceID = ucVehicleCardWithFilter1.SelectedVehicleInfo.
                 Maintenance(txtDescription.Text.Trim(), dtpMaintenanceDate.Value,
-                            Convert.ToSingle(txtCost.Text.Trim()));
+                            cost);
 
             if (!_MaintenanceID.HasValue)
             {

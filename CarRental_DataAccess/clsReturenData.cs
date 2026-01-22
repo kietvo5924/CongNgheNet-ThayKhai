@@ -12,8 +12,8 @@ namespace CarRental_DataAccess
     {
         public static bool GetReturnInfoByID(int? ReturenID, ref DateTime ActualReturnDate,
             ref int ActualRentalDays, ref int Mileage, ref int ConsumedMileage,
-            ref string FinalCheckNotes, ref float AdditionalCharges,
-            ref float ActualTotalDueAmount)
+            ref string FinalCheckNotes, ref decimal AdditionalCharges,
+            ref decimal ActualTotalDueAmount)
         {
             bool IsFound = false;
 
@@ -41,8 +41,8 @@ namespace CarRental_DataAccess
                                 Mileage = (int)reader["Mileage"];
                                 ConsumedMileage = (int)reader["ConsumedMileage"];
                                 FinalCheckNotes = (string)reader["FinalCheckNotes"];
-                                AdditionalCharges = Convert.ToSingle(reader["AdditionalCharges"]);
-                                ActualTotalDueAmount = Convert.ToSingle(reader["ActualTotalDueAmount"]);
+                                AdditionalCharges = Convert.ToDecimal(reader["AdditionalCharges"]);
+                                ActualTotalDueAmount = Convert.ToDecimal(reader["ActualTotalDueAmount"]);
                             }
                             else
                             {
@@ -71,7 +71,7 @@ namespace CarRental_DataAccess
 
         public static int? AddNewReturn(DateTime ActualReturnDate, int ActualRentalDays,
             int Mileage, int ConsumedMileage, string FinalCheckNotes,
-            float AdditionalCharges, float ActualTotalDueAmount)
+            decimal AdditionalCharges, decimal ActualTotalDueAmount)
 
         {
             // This function will return the new person id if succeeded and null if not
@@ -120,7 +120,7 @@ select scope_identity()";
 
         public static bool UpdateReturn(int? ReturenID, DateTime ActualReturnDate,
             int ActualRentalDays,int Mileage, int ConsumedMileage,
-             string FinalCheckNotes,float AdditionalCharges, float ActualTotalDueAmount )
+             string FinalCheckNotes,decimal AdditionalCharges, decimal ActualTotalDueAmount )
 
         {
             int RowAffected = 0;

@@ -26,7 +26,7 @@ namespace CarRental_Business
         public int FuelTypeID { get; set; }
         public byte NumberDoors { get; set; }
         public int Mileage { get; set; }
-        public float RentalPricePerDay { get; set; }
+        public decimal RentalPricePerDay { get; set; }
         public bool IsAvailableForRent { get; set; }
         public string ImagePath { get; set; }
 
@@ -52,7 +52,7 @@ namespace CarRental_Business
             this.FuelTypeID = -1;
             this.NumberDoors = 0;
             this.Mileage = -1;
-            this.RentalPricePerDay = -1f;
+            this.RentalPricePerDay = -1m;
             this.IsAvailableForRent = false;
             this.ImagePath = null;
 
@@ -61,7 +61,7 @@ namespace CarRental_Business
 
         private clsVehicle(int? VehicleID, int MakeID, int ModelID, int SubModelID, int BodyID,
             string VehicleName, string PlateNumber, short Year, int DriveTypeID, string Engine,
-            int FuelTypeID, byte NumberDoors, int Mileage, float RentalPricePerDay,
+            int FuelTypeID, byte NumberDoors, int Mileage, decimal RentalPricePerDay,
             bool IsAvailableForRent, string ImagePath)
         {
             this.VehicleID = VehicleID;
@@ -145,7 +145,7 @@ namespace CarRental_Business
             int FuelTypeID = -1;
             byte NumberDoors = 0;
             int Mileage = -1;
-            float RentalPricePerDay = -1f;
+            decimal RentalPricePerDay = -1m;
             bool IsAvailableForRent = false;
             string ImagePath = null;
 
@@ -196,7 +196,7 @@ namespace CarRental_Business
             return clsVehicleData.GetAllVehiclesCount();
         }
 
-        public int? Maintenance(string Description, DateTime MaintenanceDate, float Cost)
+        public int? Maintenance(string Description, DateTime MaintenanceDate, decimal Cost)
         {
             // this method will add Maintenance record to DB and return MaintenanceID
 

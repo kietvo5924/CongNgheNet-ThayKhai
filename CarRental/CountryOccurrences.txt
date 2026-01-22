@@ -1,0 +1,118 @@
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\GlobalClasses\clsAdminSeeder.cs:46:admin.NationalityCountryID = _TryGetDefaultCountryID();
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\GlobalClasses\clsAdminSeeder.cs:55:private static int? _TryGetDefaultCountryID()
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\GlobalClasses\clsAdminSeeder.cs:59:clsCountry defaultCountry = clsCountry.Find("Jordan");
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\GlobalClasses\clsAdminSeeder.cs:60:if (defaultCountry != null)
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\GlobalClasses\clsAdminSeeder.cs:61:return defaultCountry.CountryID;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\People\UserControls\ucPersonCard.cs:39:lblCountry.Text = _Person.CountryInfo.CountryName;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\People\UserControls\ucPersonCard.cs:56:lblCountry.Text = "[????]";
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\People\UserControls\ucPersonCard.Designer.cs:25:this.lblCountry = new System.Windows.Forms.Label();
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\People\UserControls\ucPersonCard.Designer.cs:55:this.guna2Panel1.Controls.Add(this.lblCountry);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\People\UserControls\ucPersonCard.Designer.cs:195:// lblCountry
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\People\UserControls\ucPersonCard.Designer.cs:197:this.lblCountry.AutoSize = true;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\People\UserControls\ucPersonCard.Designer.cs:198:this.lblCountry.Font = new System.Drawing.Font("Segoe UI", 10F);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\People\UserControls\ucPersonCard.Designer.cs:199:this.lblCountry.Location = new System.Drawing.Point(495, 135);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\People\UserControls\ucPersonCard.Designer.cs:200:this.lblCountry.Name = "lblCountry";
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\People\UserControls\ucPersonCard.Designer.cs:201:this.lblCountry.Size = new System.Drawing.Size(41, 19);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\People\UserControls\ucPersonCard.Designer.cs:202:this.lblCountry.Text = "[????]";
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\People\UserControls\ucPersonCard.Designer.cs:313:private System.Windows.Forms.Label lblCountry;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Properties\Resources.Designer.cs:346:internal static System.Drawing.Bitmap Country_32 {
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Properties\Resources.Designer.cs:348:object obj = ResourceManager.GetObject("Country 32", resourceCulture);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.cs:46:private void _FillCountryComboBox()
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.cs:48:DataTable dtCountries = clsCountry.GetAllCountriesName();
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.cs:49:cbCountry.Items.Clear();
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.cs:50:foreach (DataRow Country in dtCountries.Rows)
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.cs:52:cbCountry.Items.Add(Country["CountryName"].ToString());
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.cs:99:_FillCountryComboBox();
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.cs:119:int vietnamIndex = cbCountry.FindString("Vietnam");
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.cs:120:cbCountry.SelectedIndex = (vietnamIndex != -1) ? vietnamIndex : 0;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.cs:158:cbCountry.SelectedIndex = cbCountry.FindString(_User.CountryInfo.CountryName);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.cs:240:_User.NationalityCountryID = clsCountry.Find(cbCountry.Text).CountryID;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:46:this.cbCountry = new Guna.UI2.WinForms.Guna2ComboBox();
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:91:this.guna2PanelMain.Controls.Add(this.cbCountry);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:416:// cbCountry
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:418:this.cbCountry.BackColor = System.Drawing.Color.Transparent;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:419:this.cbCountry.BorderRadius = 8;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:420:this.cbCountry.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:421:this.cbCountry.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:422:this.cbCountry.Font = new System.Drawing.Font("Segoe UI", 11F);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:423:this.cbCountry.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(41)))), ((int)(((byte)(55)))));
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:424:this.cbCountry.ItemHeight = 30;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:425:this.cbCountry.Location = new System.Drawing.Point(160, 330);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:426:this.cbCountry.Name = "cbCountry";
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:427:this.cbCountry.Size = new System.Drawing.Size(250, 36);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:428:this.cbCountry.TabIndex = 7;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmAddEditUser.Designer.cs:719:private Guna.UI2.WinForms.Guna2ComboBox cbCountry;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.cs:20:private void _FillCountryComboBox()
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.cs:22:cbCountry.Items.Clear();
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.cs:23:cbCountry.Items.Add("T?t c?");
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.cs:24:DataTable dtCountries = clsCountry.GetAllCountriesName();
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.cs:25:foreach (DataRow Country in dtCountries.Rows)
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.cs:27:cbCountry.Items.Add(Country["CountryName"].ToString());
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.cs:39:case "Qu?c gia": return "Country";
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.cs:73:_FillCountryComboBox();
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.cs:80:cbCountry.Visible = (cbFilter.Text == "Qu?c gia");
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.cs:85:if (cbCountry.Visible) cbCountry.SelectedIndex = 0;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.cs:171:// Các hàm cbGender_SelectedIndexChanged, cbCountry_SelectedIndexChanged, cbIsActive_SelectedIndexChanged
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.Designer.cs:37:this.cbCountry = new Guna.UI2.WinForms.Guna2ComboBox();
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.Designer.cs:102:this.guna2Panel1.Controls.Add(this.cbCountry);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.Designer.cs:216:// [Ph?n cbCountry, cbGender, cbIsActive gi? các thu?c tính Guna2 tuong t?...]
+D:\GameLinkNeverDie\car-rental-management-system\CarRental\Users\frmListUsers.Designer.cs:264:private Guna.UI2.WinForms.Guna2ComboBox cbCountry;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:11:public class clsCountry
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:16:public int? CountryID { get; set; }
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:17:public string CountryName { get; set; }
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:19:public clsCountry()
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:21:this.CountryID = null;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:22:this.CountryName = string.Empty;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:27:private clsCountry(int? CountryID, string CountryName)
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:29:this.CountryID = CountryID;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:30:this.CountryName = CountryName;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:35:public static clsCountry Find(int? CountryID)
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:37:string CountryName = string.Empty;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:39:bool IsFound = clsCountryData.GetCountryInfoByID(CountryID, ref CountryName);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:43:return new clsCountry(CountryID, CountryName);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:51:public static clsCountry Find(string CountryName)
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:53:int? CountryID = null;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:55:bool IsFound = clsCountryData.GetCountryInfoByName(CountryName, ref CountryID);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:59:return new clsCountry(CountryID, CountryName);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:69:return clsCountryData.GetAllCountries();
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCountry.cs:74:return clsCountryData.GetAllCountriesName();
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCustomer.cs:29:string Email, DateTime DateOfBirth, enGender Gender, int? NationalityCountryID,
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCustomer.cs:39:base.NationalityCountryID = NationalityCountryID;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCustomer.cs:42:base.CountryInfo = clsCountry.Find(NationalityCountryID);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsCustomer.cs:116:Person.Email, Person.DateOfBirth, Person.Gender, Person.NationalityCountryID,
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsPerson.cs:25:public int? NationalityCountryID { get; set; }
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsPerson.cs:30:public clsCountry CountryInfo { get; set; }
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsPerson.cs:41:this.NationalityCountryID = null;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsPerson.cs:49:string Email, DateTime DateOfBirth, enGender Gender, int? NationalityCountryID,
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsPerson.cs:59:this.NationalityCountryID = NationalityCountryID;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsPerson.cs:62:this.CountryInfo = clsCountry.Find(NationalityCountryID);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsPerson.cs:70:this.Email, this.DateOfBirth, (byte)this.Gender, this.NationalityCountryID);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsPerson.cs:78:this.Phone, this.Email, this.DateOfBirth, (byte)this.Gender, this.NationalityCountryID,
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsPerson.cs:112:int? NationalityCountryID = null;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsPerson.cs:117:ref Phone, ref Email, ref DateOfBirth, ref Gender, ref NationalityCountryID,
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsPerson.cs:123:DateOfBirth, (enGender)Gender, NationalityCountryID, CreatedAt, UpdatedAt);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsUser.cs:52:string Email, DateTime DateOfBirth, enGender Gender, int? NationalityCountryID,
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsUser.cs:64:base.NationalityCountryID = NationalityCountryID;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsUser.cs:67:base.CountryInfo = clsCountry.Find(NationalityCountryID);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsUser.cs:156:Person.Email, Person.DateOfBirth, Person.Gender, Person.NationalityCountryID,
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsUser.cs:191:Person.Email, Person.DateOfBirth, Person.Gender, Person.NationalityCountryID,
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_Business\clsUser.cs:225:Person.Email, Person.DateOfBirth, Person.Gender, Person.NationalityCountryID,
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsCountryData.cs:11:public class clsCountryData
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsCountryData.cs:13:public static bool GetCountryInfoByID(int? CountryID, ref string CountryName)
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsCountryData.cs:23:string query = @"select * from Countries where CountryID = @CountryID";
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsCountryData.cs:27:command.Parameters.AddWithValue("@CountryID", (object)CountryID ?? DBNull.Value);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsCountryData.cs:36:CountryName = (string)reader["CountryName"];
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsCountryData.cs:63:public static bool GetCountryInfoByName(string CountryName, ref int? CountryID)
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsCountryData.cs:73:string query = @"select * from Countries where CountryName = @CountryName";
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsCountryData.cs:77:command.Parameters.AddWithValue("@CountryName", CountryName);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsCountryData.cs:86:CountryID = (reader["CountryID"] != DBNull.Value) ? (int?)reader["CountryID"] : null;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsCountryData.cs:159:string query = @"select CountryName from Countries";
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsPersonData.cs:15:ref int? NationalityCountryID, ref DateTime CreatedAt, ref DateTime? UpdatedAt)
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsPersonData.cs:44:NationalityCountryID = (reader["NationalityCountryID"] != DBNull.Value) ? (int?)reader["NationalityCountryID"] : null;
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsPersonData.cs:74:DateTime DateOfBirth, byte Gender, int? NationalityCountryID)
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsPersonData.cs:86:string query = @"insert into People (Name, Address, Phone, Email, DateOfBirth, Gender, NationalityCountryID, CreatedAt, UpdatedAt)
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsPersonData.cs:87:values (@Name, @Address, @Phone, @Email, @DateOfBirth, @Gender, @NationalityCountryID, @CreatedAt, @UpdatedAt)
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsPersonData.cs:98:command.Parameters.AddWithValue("@NationalityCountryID", (object)NationalityCountryID ?? DBNull.Value);
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsPersonData.cs:125:string Email, DateTime DateOfBirth, byte Gender, int? NationalityCountryID,
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsPersonData.cs:143:NationalityCountryID = @NationalityCountryID,
+D:\GameLinkNeverDie\car-rental-management-system\CarRental_DataAccess\clsPersonData.cs:157:command.Parameters.AddWithValue("@NationalityCountryID", (object)NationalityCountryID ?? DBNull.Value);

@@ -1,0 +1,62 @@
+[35mCarRental.csproj[m[36m:[m[32m616[m[36m:[m    <None Include="Resources\[1;31mCountry[m 32.png" />
+[35mGlobalClasses/clsAdminSeeder.cs[m[36m:[m[32m46[m[36m:[m            admin.Nationality[1;31mCountry[mID = _TryGetDefault[1;31mCountry[mID();
+[35mGlobalClasses/clsAdminSeeder.cs[m[36m:[m[32m55[m[36m:[m        private static int? _TryGetDefault[1;31mCountry[mID()
+[35mGlobalClasses/clsAdminSeeder.cs[m[36m:[m[32m59[m[36m:[m                cls[1;31mCountry[m default[1;31mCountry[m = cls[1;31mCountry[m.Find("Jordan");
+[35mGlobalClasses/clsAdminSeeder.cs[m[36m:[m[32m60[m[36m:[m                if (default[1;31mCountry[m != null)
+[35mGlobalClasses/clsAdminSeeder.cs[m[36m:[m[32m61[m[36m:[m                    return default[1;31mCountry[m.[1;31mCountry[mID;
+[35mPeople/UserControls/ucPersonCard.Designer.cs[m[36m:[m[32m25[m[36m:[m            this.lbl[1;31mCountry[m = new System.Windows.Forms.Label();
+[35mPeople/UserControls/ucPersonCard.Designer.cs[m[36m:[m[32m55[m[36m:[m            this.guna2Panel1.Controls.Add(this.lbl[1;31mCountry[m);
+[35mPeople/UserControls/ucPersonCard.Designer.cs[m[36m:[m[32m195[m[36m:[m            // lbl[1;31mCountry[m
+[35mPeople/UserControls/ucPersonCard.Designer.cs[m[36m:[m[32m197[m[36m:[m            this.lbl[1;31mCountry[m.AutoSize = true;
+[35mPeople/UserControls/ucPersonCard.Designer.cs[m[36m:[m[32m198[m[36m:[m            this.lbl[1;31mCountry[m.Font = new System.Drawing.Font("Segoe UI", 10F);
+[35mPeople/UserControls/ucPersonCard.Designer.cs[m[36m:[m[32m199[m[36m:[m            this.lbl[1;31mCountry[m.Location = new System.Drawing.Point(495, 135);
+[35mPeople/UserControls/ucPersonCard.Designer.cs[m[36m:[m[32m200[m[36m:[m            this.lbl[1;31mCountry[m.Name = "lbl[1;31mCountry[m";
+[35mPeople/UserControls/ucPersonCard.Designer.cs[m[36m:[m[32m201[m[36m:[m            this.lbl[1;31mCountry[m.Size = new System.Drawing.Size(41, 19);
+[35mPeople/UserControls/ucPersonCard.Designer.cs[m[36m:[m[32m202[m[36m:[m            this.lbl[1;31mCountry[m.Text = "[????]";
+[35mPeople/UserControls/ucPersonCard.Designer.cs[m[36m:[m[32m313[m[36m:[m        private System.Windows.Forms.Label lbl[1;31mCountry[m;
+[35mPeople/UserControls/ucPersonCard.cs[m[36m:[m[32m39[m[36m:[m            lbl[1;31mCountry[m.Text = _Person.[1;31mCountry[mInfo.[1;31mCountry[mName;
+[35mPeople/UserControls/ucPersonCard.cs[m[36m:[m[32m56[m[36m:[m            lbl[1;31mCountry[m.Text = "[????]";
+[35mProperties/Resources.Designer.cs[m[36m:[m[32m346[m[36m:[m        internal static System.Drawing.Bitmap [1;31mCountry[m_32 {
+[35mProperties/Resources.Designer.cs[m[36m:[m[32m348[m[36m:[m                object obj = ResourceManager.GetObject("[1;31mCountry[m 32", resourceCulture);
+[35mProperties/Resources.resx[m[36m:[m[32m127[m[36m:[m  <data name="[1;31mCountry[m 32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+[35mProperties/Resources.resx[m[36m:[m[32m128[m[36m:[m    <value>..\Resources\[1;31mCountry[m 32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m46[m[36m:[m            this.cb[1;31mCountry[m = new Guna.UI2.WinForms.Guna2ComboBox();
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m91[m[36m:[m            this.guna2PanelMain.Controls.Add(this.cb[1;31mCountry[m);
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m416[m[36m:[m            // cb[1;31mCountry[m
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m418[m[36m:[m            this.cb[1;31mCountry[m.BackColor = System.Drawing.Color.Transparent;
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m419[m[36m:[m            this.cb[1;31mCountry[m.BorderRadius = 8;
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m420[m[36m:[m            this.cb[1;31mCountry[m.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m421[m[36m:[m            this.cb[1;31mCountry[m.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m422[m[36m:[m            this.cb[1;31mCountry[m.Font = new System.Drawing.Font("Segoe UI", 11F);
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m423[m[36m:[m            this.cb[1;31mCountry[m.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(41)))), ((int)(((byte)(55)))));
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m424[m[36m:[m            this.cb[1;31mCountry[m.ItemHeight = 30;
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m425[m[36m:[m            this.cb[1;31mCountry[m.Location = new System.Drawing.Point(160, 330);
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m426[m[36m:[m            this.cb[1;31mCountry[m.Name = "cb[1;31mCountry[m";
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m427[m[36m:[m            this.cb[1;31mCountry[m.Size = new System.Drawing.Size(250, 36);
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m428[m[36m:[m            this.cb[1;31mCountry[m.TabIndex = 7;
+[35mUsers/frmAddEditUser.Designer.cs[m[36m:[m[32m719[m[36m:[m        private Guna.UI2.WinForms.Guna2ComboBox cb[1;31mCountry[m;
+[35mUsers/frmAddEditUser.cs[m[36m:[m[32m46[m[36m:[m        private void _Fill[1;31mCountry[mComboBox()
+[35mUsers/frmAddEditUser.cs[m[36m:[m[32m48[m[36m:[m            DataTable dtCountries = cls[1;31mCountry[m.GetAllCountriesName();
+[35mUsers/frmAddEditUser.cs[m[36m:[m[32m49[m[36m:[m            cb[1;31mCountry[m.Items.Clear();
+[35mUsers/frmAddEditUser.cs[m[36m:[m[32m50[m[36m:[m            foreach (DataRow [1;31mCountry[m in dtCountries.Rows)
+[35mUsers/frmAddEditUser.cs[m[36m:[m[32m52[m[36m:[m                cb[1;31mCountry[m.Items.Add([1;31mCountry[m["[1;31mCountry[mName"].ToString());
+[35mUsers/frmAddEditUser.cs[m[36m:[m[32m99[m[36m:[m            _Fill[1;31mCountry[mComboBox();
+[35mUsers/frmAddEditUser.cs[m[36m:[m[32m119[m[36m:[m            int vietnamIndex = cb[1;31mCountry[m.FindString("Vietnam");
+[35mUsers/frmAddEditUser.cs[m[36m:[m[32m120[m[36m:[m            cb[1;31mCountry[m.SelectedIndex = (vietnamIndex != -1) ? vietnamIndex : 0;
+[35mUsers/frmAddEditUser.cs[m[36m:[m[32m158[m[36m:[m            cb[1;31mCountry[m.SelectedIndex = cb[1;31mCountry[m.FindString(_User.[1;31mCountry[mInfo.[1;31mCountry[mName);
+[35mUsers/frmAddEditUser.cs[m[36m:[m[32m240[m[36m:[m            _User.Nationality[1;31mCountry[mID = cls[1;31mCountry[m.Find(cb[1;31mCountry[m.Text).[1;31mCountry[mID;
+[35mUsers/frmListUsers.Designer.cs[m[36m:[m[32m37[m[36m:[m            this.cb[1;31mCountry[m = new Guna.UI2.WinForms.Guna2ComboBox();
+[35mUsers/frmListUsers.Designer.cs[m[36m:[m[32m102[m[36m:[m            this.guna2Panel1.Controls.Add(this.cb[1;31mCountry[m);
+[35mUsers/frmListUsers.Designer.cs[m[36m:[m[32m216[m[36m:[m            // [Phần cb[1;31mCountry[m, cbGender, cbIsActive giữ các thuộc tính Guna2 tương tự...]
+[35mUsers/frmListUsers.Designer.cs[m[36m:[m[32m264[m[36m:[m        private Guna.UI2.WinForms.Guna2ComboBox cb[1;31mCountry[m;
+[35mUsers/frmListUsers.cs[m[36m:[m[32m20[m[36m:[m        private void _Fill[1;31mCountry[mComboBox()
+[35mUsers/frmListUsers.cs[m[36m:[m[32m22[m[36m:[m            cb[1;31mCountry[m.Items.Clear();
+[35mUsers/frmListUsers.cs[m[36m:[m[32m23[m[36m:[m            cb[1;31mCountry[m.Items.Add("Tất cả");
+[35mUsers/frmListUsers.cs[m[36m:[m[32m24[m[36m:[m            DataTable dtCountries = cls[1;31mCountry[m.GetAllCountriesName();
+[35mUsers/frmListUsers.cs[m[36m:[m[32m25[m[36m:[m            foreach (DataRow [1;31mCountry[m in dtCountries.Rows)
+[35mUsers/frmListUsers.cs[m[36m:[m[32m27[m[36m:[m                cb[1;31mCountry[m.Items.Add([1;31mCountry[m["[1;31mCountry[mName"].ToString());
+[35mUsers/frmListUsers.cs[m[36m:[m[32m39[m[36m:[m                case "Quốc gia": return "[1;31mCountry[m";
+[35mUsers/frmListUsers.cs[m[36m:[m[32m73[m[36m:[m            _Fill[1;31mCountry[mComboBox();
+[35mUsers/frmListUsers.cs[m[36m:[m[32m80[m[36m:[m            cb[1;31mCountry[m.Visible = (cbFilter.Text == "Quốc gia");
+[35mUsers/frmListUsers.cs[m[36m:[m[32m85[m[36m:[m            if (cb[1;31mCountry[m.Visible) cb[1;31mCountry[m.SelectedIndex = 0;
+[35mUsers/frmListUsers.cs[m[36m:[m[32m171[m[36m:[m        // Các hàm cbGender_SelectedIndexChanged, cb[1;31mCountry[m_SelectedIndexChanged, cbIsActive_SelectedIndexChanged 

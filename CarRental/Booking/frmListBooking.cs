@@ -52,6 +52,30 @@ namespace CarRental.Booking
                 dgvBookingList.Columns[9].HeaderText = "Số ngày";
                 dgvBookingList.Columns[10].HeaderText = "Tổng tiền";
 
+                var rentalPriceColumn = dgvBookingList.Columns["RentalPricePerDay"];
+                if (rentalPriceColumn != null)
+                {
+                    rentalPriceColumn.DefaultCellStyle.Format = "N0";
+                    rentalPriceColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                }
+                else if (dgvBookingList.Columns.Count > 8)
+                {
+                    dgvBookingList.Columns[8].DefaultCellStyle.Format = "N0";
+                    dgvBookingList.Columns[8].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                }
+
+                var initialTotalColumn = dgvBookingList.Columns["InitialTotalDueAmount"];
+                if (initialTotalColumn != null)
+                {
+                    initialTotalColumn.DefaultCellStyle.Format = "N0";
+                    initialTotalColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                }
+                else if (dgvBookingList.Columns.Count > 10)
+                {
+                    dgvBookingList.Columns[10].DefaultCellStyle.Format = "N0";
+                    dgvBookingList.Columns[10].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                }
+
                 // Tự động căn chỉnh độ rộng cột
                 dgvBookingList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }

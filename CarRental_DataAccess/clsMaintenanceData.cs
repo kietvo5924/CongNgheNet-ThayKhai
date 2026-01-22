@@ -11,7 +11,7 @@ namespace CarRental_DataAccess
     public class clsMaintenanceData
     {
         public static bool GetMaintenanceInfoByID(int? MaintenanceID, ref int? VehicleID,
-            ref string Description, ref DateTime MaintenanceDate, ref float Cost)
+            ref string Description, ref DateTime MaintenanceDate, ref decimal Cost)
         {
             bool IsFound = false;
 
@@ -37,7 +37,7 @@ namespace CarRental_DataAccess
                                 VehicleID = (reader["VehicleID"] != DBNull.Value) ? (int?)reader["VehicleID"] : null;
                                 Description = (string)reader["Description"];
                                 MaintenanceDate = (DateTime)reader["MaintenanceDate"];
-                                Cost = Convert.ToSingle(reader["Cost"]);
+                                Cost = Convert.ToDecimal(reader["Cost"]);
                             }
                             else
                             {
@@ -65,7 +65,7 @@ namespace CarRental_DataAccess
         }
 
         public static int? AddNewMaintenance(int? VehicleID, string Description,
-            DateTime MaintenanceDate, float Cost)
+            DateTime MaintenanceDate, decimal Cost)
         {
             // This function will return the new person id if succeeded and null if not
             int? MaintenanceID = null;
@@ -108,7 +108,7 @@ select scope_identity()";
         }
 
         public static bool UpdateMaintenance(int? MaintenanceID, int? VehicleID,
-            string Description, DateTime MaintenanceDate, float Cost)
+            string Description, DateTime MaintenanceDate, decimal Cost)
         {
             int RowAffected = 0;
 

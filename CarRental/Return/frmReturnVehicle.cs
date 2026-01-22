@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -138,15 +139,15 @@ namespace CarRental.Return
             return 0;
         }
 
-        private float _CalculateActualTotalDueAmount()
+        private decimal _CalculateActualTotalDueAmount()
         {
-            if (ucBookingCardWithFilter1.SelectedBookingInfo == null) return 0;
+            if (ucBookingCardWithFilter1.SelectedBookingInfo == null) return 0m;
 
-            float RentalPricePerDay = ucBookingCardWithFilter1.SelectedBookingInfo.RentalPricePerDay;
+            decimal RentalPricePerDay = ucBookingCardWithFilter1.SelectedBookingInfo.RentalPricePerDay;
             int ActualRentalDays = _CalculateActualRentalDays();
-            float AdditionalCharges = 0;
+            decimal AdditionalCharges = 0m;
 
-            float.TryParse(txtAdditionalCharges.Text.Trim(), out AdditionalCharges);
+            decimal.TryParse(txtAdditionalCharges.Text.Trim(), NumberStyles.Number, CultureInfo.CurrentCulture, out AdditionalCharges);
 
             return (ActualRentalDays * RentalPricePerDay) + AdditionalCharges;
         }
@@ -174,11 +175,10 @@ namespace CarRental.Return
 
             _Return.FinalCheckNotes = txtFinalCheckNotes.Text.Trim();
 
-            float additionalCharges = 0;
-            if (float.TryParse(txtAdditionalCharges.Text.Trim(), out additionalCharges))
-                _Return.AdditionalCharges = additionalCharges;
-            else
-                _Return.AdditionalCharges = 0;
+            decimal additionalCharges = 0m;
+            if (decimal.TryParse(txtAdditionalCharges.Text.Trim(), NumberStyles.Number, CultureInfo.CurrentCulture, out decimal parsedCharges))
+                additionalCharges = parsedCharges;
+            _Return.AdditionalCharges = additionalCharges;
 
             _Return.ConsumedMileage = (int)_CalculateConsumedMileage();
             _Return.ActualRentalDays = _CalculateActualRentalDays();
