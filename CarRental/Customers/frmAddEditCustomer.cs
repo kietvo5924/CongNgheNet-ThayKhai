@@ -2,6 +2,7 @@
 using Guna.UI2.WinForms;
 using System;
 using System.ComponentModel;
+using System.Data;
 using System.Windows.Forms;
 
 namespace CarRental.Customers
@@ -14,6 +15,50 @@ namespace CarRental.Customers
         private enMode _Mode = enMode.AddNew;
         private int? _CustomerID = null;
         private clsCustomer _Customer;
+
+        private void _FillProvinceComboBox()
+        {
+            DataTable dtProvinces = clsProvince.GetAllProvinces();
+
+            if (dtProvinces == null)
+                dtProvinces = new DataTable();
+
+            if (!dtProvinces.Columns.Contains("ProvinceID"))
+            {
+                dtProvinces.Columns.Add("ProvinceID", typeof(int));
+
+                if (dtProvinces.Columns.Contains("CountryID"))
+                {
+                    foreach (DataRow row in dtProvinces.Rows)
+                    {
+                        if (row["CountryID"] != DBNull.Value)
+                            row["ProvinceID"] = row["CountryID"];
+                    }
+                }
+            }
+
+            if (!dtProvinces.Columns.Contains("ProvinceName"))
+                dtProvinces.Columns.Add("ProvinceName", typeof(string));
+
+            cbProvince.DataSource = dtProvinces;
+            cbProvince.DisplayMember = "ProvinceName";
+            cbProvince.ValueMember = "ProvinceID";
+
+            if (dtProvinces.Rows.Count == 0)
+            {
+                MessageBox.Show("Không tải được dữ liệu Tỉnh/Thành phố từ cơ sở dữ liệu.\nHãy kiểm tra bảng dbo.Provinces và dữ liệu trong bảng.",
+                    "Thiếu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            if (cbProvince.Items.Count > 0)
+            {
+                int vietnamIndex = cbProvince.FindString("Vietnam");
+                if (vietnamIndex < 0)
+                    vietnamIndex = cbProvince.FindString("Việt Nam");
+
+                cbProvince.SelectedIndex = (vietnamIndex >= 0) ? vietnamIndex : 0;
+            }
+        }
 
         public frmAddEditCustomer()
         {
@@ -30,6 +75,8 @@ namespace CarRental.Customers
 
         private void _ResetDefaultValues()
         {
+            _FillProvinceComboBox();
+
             if (_Mode == enMode.AddNew)
             {
                 lblTitle.Text = "THÊM KHÁCH HÀNG";
@@ -44,6 +91,7 @@ namespace CarRental.Customers
             txtPhone.Clear();
             txtEmail.Clear();
             txtDriverLicenseNumber.Clear();
+            rbMale.Checked = true;
         }
 
         private void _LoadData()
@@ -62,6 +110,41 @@ namespace CarRental.Customers
             txtPhone.Text = _Customer.Phone;
             txtEmail.Text = _Customer.Email;
             txtDriverLicenseNumber.Text = _Customer.DriverLicenseNumber;
+
+            rbMale.Checked = (_Customer.Gender == clsPerson.enGender.Male);
+            rbFemale.Checked = (_Customer.Gender == clsPerson.enGender.Female);
+
+            if (_Customer.NationalityCountryID.HasValue)
+                cbProvince.SelectedValue = _Customer.NationalityCountryID.Value;
+        }
+
+        private void _ApplyDefaultPersonFieldsForCustomer()
+        {
+            if (string.IsNullOrWhiteSpace(_Customer.Address))
+                _Customer.Address = "Chưa cập nhật";
+
+            if (_Customer.DateOfBirth == default(DateTime))
+                _Customer.DateOfBirth = DateTime.Now.AddYears(-18);
+
+            _Customer.Gender = rbFemale.Checked ? clsPerson.enGender.Female : clsPerson.enGender.Male;
+
+            if (!_Customer.NationalityCountryID.HasValue)
+            {
+                clsProvince vietnam = clsProvince.Find("Vietnam") ?? clsProvince.Find("Việt Nam");
+
+                if (vietnam != null && vietnam.ProvinceID.HasValue)
+                {
+                    _Customer.NationalityCountryID = vietnam.ProvinceID.Value;
+                }
+                else
+                {
+                    DataTable dtProvinces = clsProvince.GetAllProvinces();
+                    if (dtProvinces != null && dtProvinces.Rows.Count > 0 && dtProvinces.Columns.Contains("ProvinceID"))
+                    {
+                        _Customer.NationalityCountryID = Convert.ToInt32(dtProvinces.Rows[0]["ProvinceID"]);
+                    }
+                }
+            }
         }
 
         private void frmAddEditCustomer_Load(object sender, EventArgs e)
@@ -80,10 +163,31 @@ namespace CarRental.Customers
                 return;
             }
 
+            bool isDriverLicenseChanged = (_Mode == enMode.AddNew) ||
+                                          !string.Equals(_Customer.DriverLicenseNumber, txtDriverLicenseNumber.Text.Trim(), StringComparison.OrdinalIgnoreCase);
+
+            if (isDriverLicenseChanged && clsCustomer.DoesDriverLicenseNumberExist(txtDriverLicenseNumber.Text.Trim()))
+            {
+                MessageBox.Show("Số bằng lái đã tồn tại. Vui lòng nhập số khác.", "Trùng dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtDriverLicenseNumber.Focus();
+                return;
+            }
+
             _Customer.Name = txtFullName.Text.Trim();
             _Customer.Phone = txtPhone.Text.Trim();
             _Customer.Email = txtEmail.Text.Trim();
             _Customer.DriverLicenseNumber = txtDriverLicenseNumber.Text.Trim();
+            _Customer.NationalityCountryID = (cbProvince.SelectedValue == null || cbProvince.SelectedValue == DBNull.Value)
+                ? (int?)null
+                : Convert.ToInt32(cbProvince.SelectedValue);
+            _ApplyDefaultPersonFieldsForCustomer();
+
+            if (!_Customer.NationalityCountryID.HasValue)
+            {
+                MessageBox.Show("Vui lòng chọn Tỉnh/Thành phố hợp lệ.", "Thiếu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cbProvince.Focus();
+                return;
+            }
 
             if (_Customer.Save())
             {
@@ -97,7 +201,31 @@ namespace CarRental.Customers
             }
             else
             {
-                MessageBox.Show("Đã xảy ra lỗi khi lưu thông tin!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Không thể lưu thông tin khách hàng.\nVui lòng kiểm tra lại Email, SĐT, Số bằng lái và Tỉnh/Thành phố.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void txtPhone_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+        }
+
+        private void txtEmail_Validating(object sender, CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtEmail.Text.Trim()))
+            {
+                errorProvider1.SetError(txtEmail, null);
+                return;
+            }
+
+            if (!CarRental.GlobalClasses.clsValidation.ValidateEmail(txtEmail.Text.Trim()))
+            {
+                e.Cancel = true;
+                errorProvider1.SetError(txtEmail, "Email không hợp lệ!");
+            }
+            else
+            {
+                errorProvider1.SetError(txtEmail, null);
             }
         }
 

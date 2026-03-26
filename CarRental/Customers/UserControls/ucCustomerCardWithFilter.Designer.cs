@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.gbFilters = new System.Windows.Forms.GroupBox();
+            this.cbSearchBy = new System.Windows.Forms.ComboBox();
             this.label22 = new System.Windows.Forms.Label();
             this.btnAddNew = new System.Windows.Forms.Button();
             this.btnFind = new System.Windows.Forms.Button();
@@ -42,6 +43,7 @@
             // 
             // gbFilters
             // 
+            this.gbFilters.Controls.Add(this.cbSearchBy);
             this.gbFilters.Controls.Add(this.label22);
             this.gbFilters.Controls.Add(this.btnAddNew);
             this.gbFilters.Controls.Add(this.btnFind);
@@ -54,6 +56,19 @@
             this.gbFilters.TabStop = false;
             this.gbFilters.Text = "Bộ lọc";
             // 
+            // cbSearchBy
+            // 
+            this.cbSearchBy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSearchBy.FormattingEnabled = true;
+            this.cbSearchBy.Items.AddRange(new object[] {
+            "Tất cả",
+            "Theo mã",
+            "Theo tên"});
+            this.cbSearchBy.Location = new System.Drawing.Point(141, 37);
+            this.cbSearchBy.Name = "cbSearchBy";
+            this.cbSearchBy.Size = new System.Drawing.Size(130, 25);
+            this.cbSearchBy.TabIndex = 16;
+            // 
             // label22
             // 
             this.label22.AutoSize = true;
@@ -64,7 +79,7 @@
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(105, 19);
             this.label22.TabIndex = 114;
-            this.label22.Text = "Mã khách hàng:";
+            this.label22.Text = "Từ khóa:";
             // 
             // btnAddNew
             // 
@@ -73,10 +88,10 @@
             this.btnAddNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddNew.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAddNew.ForeColor = System.Drawing.Color.White;
-            this.btnAddNew.Location = new System.Drawing.Point(487, 31);
+            this.btnAddNew.Location = new System.Drawing.Point(523, 31);
             this.btnAddNew.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnAddNew.Name = "btnAddNew";
-            this.btnAddNew.Size = new System.Drawing.Size(200, 37);
+            this.btnAddNew.Size = new System.Drawing.Size(170, 37);
             this.btnAddNew.TabIndex = 20;
             this.btnAddNew.Text = "Thêm khách hàng";
             this.btnAddNew.UseVisualStyleBackColor = false;
@@ -89,7 +104,7 @@
             this.btnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFind.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFind.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(41)))), ((int)(((byte)(59)))));
-            this.btnFind.Location = new System.Drawing.Point(389, 31);
+            this.btnFind.Location = new System.Drawing.Point(425, 31);
             this.btnFind.Name = "btnFind";
             this.btnFind.Size = new System.Drawing.Size(90, 37);
             this.btnFind.TabIndex = 18;
@@ -100,10 +115,10 @@
             // txtFilterValue
             // 
             this.txtFilterValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtFilterValue.Location = new System.Drawing.Point(141, 37);
+            this.txtFilterValue.Location = new System.Drawing.Point(277, 37);
             this.txtFilterValue.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtFilterValue.Name = "txtFilterValue";
-            this.txtFilterValue.Size = new System.Drawing.Size(214, 26);
+            this.txtFilterValue.Size = new System.Drawing.Size(142, 26);
             this.txtFilterValue.TabIndex = 17;
             this.txtFilterValue.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterValue_KeyPress);
             this.txtFilterValue.Validating += new System.ComponentModel.CancelEventHandler(this.txtFilterValue_Validating);
@@ -142,6 +157,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox gbFilters;
+        private System.Windows.Forms.ComboBox cbSearchBy;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Button btnAddNew;
         private System.Windows.Forms.Button btnFind;

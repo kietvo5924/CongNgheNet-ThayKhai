@@ -164,6 +164,14 @@ namespace CarRental.Return
 
         private void _ReturnVehicle()
         {
+            string validationError;
+            if (!_ValidateBeforeReturn(out validationError))
+            {
+                MessageBox.Show("Không thể trả xe.\nLý do: " + validationError,
+                    "Trả xe thất bại", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             _Return = new clsReturn();
 
             _Return.ActualReturnDate = dtpActualReturnDate.Value;
@@ -184,17 +192,15 @@ namespace CarRental.Return
             _Return.ActualRentalDays = _CalculateActualRentalDays();
             _Return.ActualTotalDueAmount = _CalculateActualTotalDueAmount();
 
-            if (!_Return.Save())
-            {
-                MessageBox.Show("Lỗi hệ thống: Không thể lưu thông tin trả xe.", "Lỗi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            int? transactionID = ucBookingCardWithFilter1.SelectedBookingInfo?.TransactionInfo?.TransactionID;
 
-            if (!_Return.UpdateTransaction(ucBookingCardWithFilter1.SelectedBookingInfo?
-                .TransactionInfo?.TransactionID))
+            if (!_Return.CompleteReturnWorkflow(transactionID))
             {
-                MessageBox.Show("Lỗi hệ thống: Không thể cập nhật giao dịch.", "Lỗi",
+                string reason = string.IsNullOrWhiteSpace(_Return.LastError)
+                    ? "Không xác định nguyên nhân. Vui lòng kiểm tra dữ liệu đơn và thử lại."
+                    : _Return.LastError;
+
+                MessageBox.Show("Không thể hoàn tất trả xe.\nLý do: " + reason, "Trả xe thất bại",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -204,7 +210,7 @@ namespace CarRental.Return
             lblConsumedMileage.Text = _Return.ConsumedMileage.ToString();
             lblActualTotalDueAmount.Text = _Return.ActualTotalDueAmount.ToString("N");
 
-            MessageBox.Show("Trả xe thành công!", "Hoàn tất",
+            MessageBox.Show("Trả xe thành công!\nSố KM hiện tại đã được cập nhật vào xe và dùng cho lịch sử/bảo trì.", "Hoàn tất",
                    MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             _ReturnID = _Return.ReturnID;
@@ -213,26 +219,73 @@ namespace CarRental.Return
             llShowUpdatedTransactionDetails.Enabled = true;
 
             _Reset();
-            _UpdateMileageOfTheVehicleInDB();
-            _SetVehicleAvailableForRent();
 
             GetReturnByDelegate?.Invoke(_Return.ReturnID.Value);
         }
 
+        private bool _ValidateBeforeReturn(out string errorMessage)
+        {
+            errorMessage = null;
+
+            if (!_SelectedBookingID.HasValue || ucBookingCardWithFilter1.SelectedBookingInfo == null)
+            {
+                errorMessage = "Bạn chưa chọn đơn đặt xe hợp lệ.";
+                return false;
+            }
+
+            if (ucBookingCardWithFilter1.SelectedBookingInfo.IsBookingReturned)
+            {
+                errorMessage = "Đơn đặt xe này đã được trả trước đó.";
+                return false;
+            }
+
+            int? transactionID = ucBookingCardWithFilter1.SelectedBookingInfo.TransactionInfo?.TransactionID;
+            if (!transactionID.HasValue)
+            {
+                errorMessage = "Không tìm thấy giao dịch của đơn đặt xe để quyết toán.";
+                return false;
+            }
+
+            if (!int.TryParse(txtMileage.Text.Trim(), out int mileage))
+            {
+                errorMessage = "Số KM hiện tại không hợp lệ.";
+                return false;
+            }
+
+            int initialMileage = ucBookingCardWithFilter1.SelectedBookingInfo.VehicleInfo?.Mileage ?? 0;
+            if (mileage < initialMileage)
+            {
+                errorMessage = "Số KM hiện tại không được nhỏ hơn số KM ban đầu (" + initialMileage + ").";
+                return false;
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtAdditionalCharges.Text.Trim()))
+            {
+                if (!decimal.TryParse(txtAdditionalCharges.Text.Trim(), NumberStyles.Number, CultureInfo.CurrentCulture, out decimal additionalCharges))
+                {
+                    errorMessage = "Phí phát sinh không hợp lệ.";
+                    return false;
+                }
+
+                if (additionalCharges < 0)
+                {
+                    errorMessage = "Phí phát sinh không được âm.";
+                    return false;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(txtFinalCheckNotes.Text.Trim()))
+            {
+                errorMessage = "Bạn cần nhập ghi chú kiểm tra xe trước khi trả xe.";
+                return false;
+            }
+
+            return true;
+        }
+
         private void txtFinalCheckNotes_Validating(object sender, CancelEventArgs e)
         {
-            Guna2TextBox temp = (Guna2TextBox)sender;
-
-            if (string.IsNullOrWhiteSpace(temp.Text.Trim()))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(temp, "Vui lòng nhập ghi chú kiểm tra xe!");
-                return;
-            }
-            else
-            {
-                errorProvider1.SetError(temp, null);
-            }
+            clsValidation.ValidateRequired((Control)sender, errorProvider1, e, "Vui lòng nhập ghi chú kiểm tra xe!");
         }
 
         private void frmReturnVehicle_Load(object sender, EventArgs e)
@@ -274,21 +327,15 @@ namespace CarRental.Return
 
         private void txtAdditionalCharges_Validating(object sender, CancelEventArgs e)
         {
-            Guna2TextBox temp = (Guna2TextBox)sender;
-
-            if (string.IsNullOrWhiteSpace(temp.Text.Trim()))
-            {
-                errorProvider1.SetError(temp, null);
-            }
-            else if (!clsValidation.IsNumber(temp.Text.Trim()))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(temp, "Vui lòng nhập số hợp lệ.");
-            }
-            else
-            {
-                errorProvider1.SetError(temp, null);
-            }
+            clsValidation.ValidateMoney(
+                (Control)sender,
+                errorProvider1,
+                e,
+                out _,
+                required: false,
+                allowNegative: false,
+                formatAfterValidate: false,
+                invalidMessage: "Vui lòng nhập số hợp lệ.");
 
             if (!e.Cancel)
             {
@@ -298,24 +345,26 @@ namespace CarRental.Return
 
         private void txtMileage_Validating(object sender, CancelEventArgs e)
         {
-            Guna2TextBox temp = (Guna2TextBox)sender;
+            Control temp = (Control)sender;
 
-            if (string.IsNullOrWhiteSpace(temp.Text.Trim()))
+            if (!clsValidation.ValidateMoney(
+                temp,
+                errorProvider1,
+                e,
+                out decimal mileageDecimal,
+                required: true,
+                allowNegative: false,
+                formatAfterValidate: false,
+                emptyMessage: "Vui lòng nhập số KM hiện tại!",
+                invalidMessage: "Số không hợp lệ."))
             {
-                e.Cancel = true;
-                errorProvider1.SetError(temp, "Vui lòng nhập số KM hiện tại!");
                 return;
             }
 
-            if (!clsValidation.IsNumber(temp.Text.Trim()))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(temp, "Số không hợp lệ.");
-                return;
-            }
+            double mileage = (double)mileageDecimal;
 
             if (_SelectedBookingID.HasValue &&
-                double.Parse(temp.Text.Trim()) < ucBookingCardWithFilter1.SelectedBookingInfo?.VehicleInfo?.Mileage)
+                mileage < ucBookingCardWithFilter1.SelectedBookingInfo?.VehicleInfo?.Mileage)
             {
                 e.Cancel = true;
                 errorProvider1.SetError(temp, $"Số KM ban đầu là: " +

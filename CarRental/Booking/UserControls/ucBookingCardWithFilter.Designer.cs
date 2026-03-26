@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.gbFilters = new System.Windows.Forms.GroupBox();
+            this.cbSearchBy = new System.Windows.Forms.ComboBox();
             this.label22 = new System.Windows.Forms.Label();
             this.btnAddNew = new System.Windows.Forms.Button();
             this.btnFind = new System.Windows.Forms.Button();
@@ -42,6 +43,7 @@
             // 
             // gbFilters
             // 
+            this.gbFilters.Controls.Add(this.cbSearchBy);
             this.gbFilters.Controls.Add(this.label22);
             this.gbFilters.Controls.Add(this.btnAddNew);
             this.gbFilters.Controls.Add(this.btnFind);
@@ -54,6 +56,19 @@
             this.gbFilters.TabStop = false;
             this.gbFilters.Text = "Bộ lọc";
             // 
+            // cbSearchBy
+            // 
+            this.cbSearchBy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSearchBy.FormattingEnabled = true;
+            this.cbSearchBy.Items.AddRange(new object[] {
+            "Tất cả",
+            "Theo mã",
+            "Theo tên KH"});
+            this.cbSearchBy.Location = new System.Drawing.Point(137, 29);
+            this.cbSearchBy.Name = "cbSearchBy";
+            this.cbSearchBy.Size = new System.Drawing.Size(120, 28);
+            this.cbSearchBy.TabIndex = 16;
+            // 
             // label22
             // 
             this.label22.AutoSize = true;
@@ -63,7 +78,7 @@
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(103, 20);
             this.label22.TabIndex = 114;
-            this.label22.Text = "Mã lịch đặt:";
+            this.label22.Text = "Từ khóa:";
             // 
             // btnAddNew
             // 
@@ -93,10 +108,10 @@
             // txtFilterValue
             // 
             this.txtFilterValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtFilterValue.Location = new System.Drawing.Point(137, 29);
+            this.txtFilterValue.Location = new System.Drawing.Point(263, 29);
             this.txtFilterValue.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtFilterValue.Name = "txtFilterValue";
-            this.txtFilterValue.Size = new System.Drawing.Size(214, 26);
+            this.txtFilterValue.Size = new System.Drawing.Size(88, 26);
             this.txtFilterValue.TabIndex = 17;
             this.txtFilterValue.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterValue_KeyPress);
             this.txtFilterValue.Validating += new System.ComponentModel.CancelEventHandler(this.txtFilterValue_Validating);
@@ -135,6 +150,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox gbFilters;
+        private System.Windows.Forms.ComboBox cbSearchBy;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Button btnAddNew;
         private System.Windows.Forms.Button btnFind;

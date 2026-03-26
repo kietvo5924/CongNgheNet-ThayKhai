@@ -48,7 +48,7 @@
             this.tcSelectCustomerVehicle.Margin = new System.Windows.Forms.Padding(2);
             this.tcSelectCustomerVehicle.Name = "tcSelectCustomerVehicle";
             this.tcSelectCustomerVehicle.SelectedIndex = 0;
-            this.tcSelectCustomerVehicle.Size = new System.Drawing.Size(793, 573);
+            this.tcSelectCustomerVehicle.Size = new System.Drawing.Size(793, 600);
             this.tcSelectCustomerVehicle.TabButtonHoverState.BorderColor = System.Drawing.Color.Empty;
             this.tcSelectCustomerVehicle.TabButtonHoverState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(52)))), ((int)(((byte)(70)))));
             this.tcSelectCustomerVehicle.TabButtonHoverState.Font = new System.Drawing.Font("Segoe UI Semibold", 10F);
@@ -80,7 +80,7 @@
             this.tpSelectCustomer.Margin = new System.Windows.Forms.Padding(2);
             this.tpSelectCustomer.Name = "tpSelectCustomer";
             this.tpSelectCustomer.Padding = new System.Windows.Forms.Padding(2);
-            this.tpSelectCustomer.Size = new System.Drawing.Size(785, 525);
+            this.tpSelectCustomer.Size = new System.Drawing.Size(785, 552);
             this.tpSelectCustomer.TabIndex = 0;
             this.tpSelectCustomer.Text = "Chọn khách hàng";
             // 
@@ -96,7 +96,7 @@
             this.btnNext.Image = global::CarRental.Properties.Resources.Next_32;
             this.btnNext.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.btnNext.ImageOffset = new System.Drawing.Point(6, 0);
-            this.btnNext.Location = new System.Drawing.Point(560, 473);
+            this.btnNext.Location = new System.Drawing.Point(560, 514);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(155, 32);
             this.btnNext.TabIndex = 119;
@@ -112,7 +112,7 @@
             this.ucCustomerCardWithFilter1.Location = new System.Drawing.Point(18, 4);
             this.ucCustomerCardWithFilter1.Name = "ucCustomerCardWithFilter1";
             this.ucCustomerCardWithFilter1.ShowAddMemberButton = true;
-            this.ucCustomerCardWithFilter1.Size = new System.Drawing.Size(725, 462);
+            this.ucCustomerCardWithFilter1.Size = new System.Drawing.Size(725, 515);
             this.ucCustomerCardWithFilter1.TabIndex = 0;
             this.ucCustomerCardWithFilter1.OnCustomerSelected += new System.EventHandler<CarRental.Customers.UserControls.ucCustomerCardWithFilter.CustomerSelectedEventArgs>(this.ucCustomerCardWithFilter1_OnCustomerSelected);
             // 
@@ -125,7 +125,7 @@
             this.tpSelectVehicle.Margin = new System.Windows.Forms.Padding(2);
             this.tpSelectVehicle.Name = "tpSelectVehicle";
             this.tpSelectVehicle.Padding = new System.Windows.Forms.Padding(2);
-            this.tpSelectVehicle.Size = new System.Drawing.Size(785, 525);
+            this.tpSelectVehicle.Size = new System.Drawing.Size(785, 552);
             this.tpSelectVehicle.TabIndex = 1;
             this.tpSelectVehicle.Text = "Chọn xe";
             // 
@@ -137,7 +137,7 @@
             this.ucVehicleCardWithFilter1.Location = new System.Drawing.Point(5, 6);
             this.ucVehicleCardWithFilter1.Name = "ucVehicleCardWithFilter1";
             this.ucVehicleCardWithFilter1.ShowAddVehicleButton = true;
-            this.ucVehicleCardWithFilter1.Size = new System.Drawing.Size(773, 447);
+            this.ucVehicleCardWithFilter1.Size = new System.Drawing.Size(773, 500);
             this.ucVehicleCardWithFilter1.TabIndex = 0;
             this.ucVehicleCardWithFilter1.OnVehicleSelected += new System.EventHandler<CarRental.Vehicles.UserControls.ucVehicleCardWithFilter.VehicleSelectedEventArgs>(this.ucVehicleCardWithFilter1_OnVehicleSelected);
             // 
@@ -149,7 +149,7 @@
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.tcSelectCustomerVehicle);
             this.Name = "ucSelectedCustomerAndVehicleWithFilter";
-            this.Size = new System.Drawing.Size(795, 574);
+            this.Size = new System.Drawing.Size(795, 601);
             this.tcSelectCustomerVehicle.ResumeLayout(false);
             this.tpSelectCustomer.ResumeLayout(false);
             this.tpSelectVehicle.ResumeLayout(false);

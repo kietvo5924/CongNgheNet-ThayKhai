@@ -58,6 +58,9 @@ namespace CarRental.Dashboard
             this.label2 = new System.Windows.Forms.Label();
             this.guna2CustomGradientPanel7 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             this.chartVehiclesStatus = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.guna2CustomGradientPanel8 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
+            this.lstActiveRentals = new System.Windows.Forms.ListBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.guna2CustomGradientPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.guna2CustomGradientPanel2.SuspendLayout();
@@ -72,6 +75,7 @@ namespace CarRental.Dashboard
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.guna2CustomGradientPanel7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartVehiclesStatus)).BeginInit();
+            this.guna2CustomGradientPanel8.SuspendLayout();
             this.SuspendLayout();
             // 
             // guna2CustomGradientPanel1 (Khách hàng)
@@ -419,12 +423,51 @@ namespace CarRental.Dashboard
             title1.Text = "Trạng thái xe";
             this.chartVehiclesStatus.Titles.Add(title1);
             // 
+            // guna2CustomGradientPanel8 (Danh sách thuê chưa trả)
+            // 
+            this.guna2CustomGradientPanel8.BorderRadius = 20;
+            this.guna2CustomGradientPanel8.Controls.Add(this.lstActiveRentals);
+            this.guna2CustomGradientPanel8.Controls.Add(this.label8);
+            this.guna2CustomGradientPanel8.FillColor = System.Drawing.Color.White;
+            this.guna2CustomGradientPanel8.FillColor2 = System.Drawing.Color.White;
+            this.guna2CustomGradientPanel8.FillColor3 = System.Drawing.Color.White;
+            this.guna2CustomGradientPanel8.FillColor4 = System.Drawing.Color.White;
+            this.guna2CustomGradientPanel8.Location = new System.Drawing.Point(940, 440);
+            this.guna2CustomGradientPanel8.Name = "guna2CustomGradientPanel8";
+            this.guna2CustomGradientPanel8.Size = new System.Drawing.Size(380, 300);
+            this.guna2CustomGradientPanel8.TabIndex = 8;
+            // 
+            // lstActiveRentals
+            // 
+            this.lstActiveRentals.BackColor = System.Drawing.Color.White;
+            this.lstActiveRentals.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lstActiveRentals.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lstActiveRentals.FormattingEnabled = true;
+            this.lstActiveRentals.ItemHeight = 17;
+            this.lstActiveRentals.Location = new System.Drawing.Point(15, 45);
+            this.lstActiveRentals.Name = "lstActiveRentals";
+            this.lstActiveRentals.Size = new System.Drawing.Size(350, 238);
+            this.lstActiveRentals.TabIndex = 1;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.Color.Transparent;
+            this.label8.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(41)))), ((int)(((byte)(55)))));
+            this.label8.Location = new System.Drawing.Point(15, 15);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(247, 20);
+            this.label8.TabIndex = 0;
+            this.label8.Text = "Khách hàng đang thuê chưa trả";
+            // 
             // frmDashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(242)))), ((int)(((byte)(245)))));
             this.ClientSize = new System.Drawing.Size(1366, 780);
+            this.Controls.Add(this.guna2CustomGradientPanel8);
             this.Controls.Add(this.guna2CustomGradientPanel7);
             this.Controls.Add(this.guna2CustomGradientPanel6);
             this.Controls.Add(this.guna2CustomGradientPanel5);
@@ -456,6 +499,8 @@ namespace CarRental.Dashboard
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.guna2CustomGradientPanel7.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chartVehiclesStatus)).EndInit();
+            this.guna2CustomGradientPanel8.ResumeLayout(false);
+            this.guna2CustomGradientPanel8.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -488,5 +533,8 @@ namespace CarRental.Dashboard
         private System.Windows.Forms.Label label2;
         private Guna.UI2.WinForms.Guna2CustomGradientPanel guna2CustomGradientPanel7;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartVehiclesStatus;
+        private Guna.UI2.WinForms.Guna2CustomGradientPanel guna2CustomGradientPanel8;
+        private System.Windows.Forms.ListBox lstActiveRentals;
+        private System.Windows.Forms.Label label8;
     }
 }

@@ -91,8 +91,9 @@
             this.ClientSize = new System.Drawing.Size(824, 1060);
             this.Controls.Add(this.guna2PanelMain);
             this.Controls.Add(this.lblTitle);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            this.MaximizeBox = true;
+            this.MinimizeBox = true;
             this.Name = "frmShowReturnDetailsWithCustomerAndVehicle";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Chi tiết trả xe";

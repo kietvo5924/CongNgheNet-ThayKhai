@@ -30,6 +30,17 @@ namespace CarRental.Booking.UserControls
         {
             btnTransactionInfo.Enabled = true;
 
+            string customerProvince = _Booking.CustomerInfo?.ProvinceInfo?.ProvinceName;
+            string customerAddress = _Booking.CustomerInfo?.Address;
+            string customerLocation = string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(customerProvince) && !string.IsNullOrWhiteSpace(customerAddress))
+                customerLocation = customerProvince + " - " + customerAddress;
+            else if (!string.IsNullOrWhiteSpace(customerProvince))
+                customerLocation = customerProvince;
+            else if (!string.IsNullOrWhiteSpace(customerAddress))
+                customerLocation = customerAddress;
+
             lblBookingID.Text = _Booking.BookingID?.ToString();
             lblCustomerID.Text = _Booking.CustomerID?.ToString();
             lblVehicleID.Text = _Booking.VehicleID?.ToString();
@@ -39,8 +50,15 @@ namespace CarRental.Booking.UserControls
             lblInitialTotalDueAmount.Text = _Booking.InitialTotalDueAmount.HasValue
                 ? _Booking.InitialTotalDueAmount.Value.ToString("N0") + " VNĐ"
                 : "Không có";
-            lblPickUpLocation.Text = _Booking.PickupLocation;
-            lblDropOffLocation.Text = _Booking.DropoffLocation;
+
+            lblPickUpLocation.Text = !string.IsNullOrWhiteSpace(_Booking.PickupLocation)
+                ? _Booking.PickupLocation
+                : (!string.IsNullOrWhiteSpace(customerLocation) ? customerLocation : "Chưa cập nhật");
+
+            lblDropOffLocation.Text = !string.IsNullOrWhiteSpace(_Booking.DropoffLocation)
+                ? _Booking.DropoffLocation
+                : (!string.IsNullOrWhiteSpace(customerLocation) ? customerLocation : "Chưa cập nhật");
+
             lblInitialCheckNotes.Text = string.IsNullOrWhiteSpace(_Booking.InitialCheckNotes) ? "Không có ghi chú" : _Booking.InitialCheckNotes;
         }
 

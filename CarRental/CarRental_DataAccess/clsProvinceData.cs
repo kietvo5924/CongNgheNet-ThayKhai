@@ -21,12 +21,11 @@ namespace CarRental_DataAccess
                 {
                     connection.Open();
 
-                    // Try Provinces table first, fallback to Countries
                     string query = @"
-                        IF OBJECT_ID('Provinces', 'U') IS NOT NULL
-                            SELECT ProvinceName FROM Provinces WHERE ProvinceID = @ProvinceID
-                        ELSE IF OBJECT_ID('Countries', 'U') IS NOT NULL
-                            SELECT CountryName AS ProvinceName FROM Countries WHERE CountryID = @ProvinceID";
+IF OBJECT_ID('dbo.Provinces', 'U') IS NOT NULL
+    SELECT ProvinceName FROM dbo.Provinces WHERE CountryID = @ProvinceID
+ELSE IF OBJECT_ID('dbo.Countries', 'U') IS NOT NULL
+    SELECT CountryName AS ProvinceName FROM dbo.Countries WHERE CountryID = @ProvinceID";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -37,11 +36,7 @@ namespace CarRental_DataAccess
                             if (reader.Read())
                             {
                                 isFound = true;
-                                provinceName = (string)reader["ProvinceName"];
-                            }
-                            else
-                            {
-                                isFound = false;
+                                provinceName = reader["ProvinceName"].ToString();
                             }
                         }
                     }
@@ -49,12 +44,10 @@ namespace CarRental_DataAccess
             }
             catch (SqlException ex)
             {
-                isFound = false;
                 clsLogError.LogError("Database Exception", ex);
             }
             catch (Exception ex)
             {
-                isFound = false;
                 clsLogError.LogError("General Exception", ex);
             }
 
@@ -71,12 +64,11 @@ namespace CarRental_DataAccess
                 {
                     connection.Open();
 
-                    // Try Provinces table first, fallback to Countries
                     string query = @"
-                        IF OBJECT_ID('Provinces', 'U') IS NOT NULL
-                            SELECT ProvinceID FROM Provinces WHERE ProvinceName = @ProvinceName
-                        ELSE IF OBJECT_ID('Countries', 'U') IS NOT NULL
-                            SELECT CountryID AS ProvinceID FROM Countries WHERE CountryName = @ProvinceName";
+IF OBJECT_ID('dbo.Provinces', 'U') IS NOT NULL
+    SELECT CountryID AS ProvinceID FROM dbo.Provinces WHERE ProvinceName = @ProvinceName
+ELSE IF OBJECT_ID('dbo.Countries', 'U') IS NOT NULL
+    SELECT CountryID AS ProvinceID FROM dbo.Countries WHERE CountryName = @ProvinceName";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -87,11 +79,7 @@ namespace CarRental_DataAccess
                             if (reader.Read())
                             {
                                 isFound = true;
-                                provinceID = (reader["ProvinceID"] != DBNull.Value) ? (int?)reader["ProvinceID"] : null;
-                            }
-                            else
-                            {
-                                isFound = false;
+                                provinceID = (reader["ProvinceID"] != DBNull.Value) ? (int?)Convert.ToInt32(reader["ProvinceID"]) : null;
                             }
                         }
                     }
@@ -99,12 +87,10 @@ namespace CarRental_DataAccess
             }
             catch (SqlException ex)
             {
-                isFound = false;
                 clsLogError.LogError("Database Exception", ex);
             }
             catch (Exception ex)
             {
-                isFound = false;
                 clsLogError.LogError("General Exception", ex);
             }
 
@@ -121,20 +107,19 @@ namespace CarRental_DataAccess
                 {
                     connection.Open();
 
-                    // Try Provinces table first, fallback to Countries if not exists
                     string query = @"
-                        IF OBJECT_ID('Provinces', 'U') IS NOT NULL
-                            SELECT ProvinceID, ProvinceName FROM Provinces
-                        ELSE IF OBJECT_ID('Countries', 'U') IS NOT NULL
-                            SELECT CountryID AS ProvinceID, CountryName AS ProvinceName FROM Countries
-                        ELSE
-                            SELECT NULL AS ProvinceID, NULL AS ProvinceName WHERE 1=0";
+IF OBJECT_ID('dbo.Provinces', 'U') IS NOT NULL
+    SELECT CountryID AS ProvinceID, ProvinceName FROM dbo.Provinces
+ELSE IF OBJECT_ID('dbo.Countries', 'U') IS NOT NULL
+    SELECT CountryID AS ProvinceID, CountryName AS ProvinceName FROM dbo.Countries
+ELSE
+    SELECT CAST(NULL AS INT) AS ProvinceID, CAST(NULL AS NVARCHAR(255)) AS ProvinceName WHERE 1 = 0";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            dt.Load(reader); // Load schema even when there are no rows
+                            dt.Load(reader);
                         }
                     }
                 }
@@ -161,20 +146,19 @@ namespace CarRental_DataAccess
                 {
                     connection.Open();
 
-                    // Try Provinces table first, fallback to Countries
                     string query = @"
-                        IF OBJECT_ID('Provinces', 'U') IS NOT NULL
-                            SELECT ProvinceID, ProvinceName FROM Provinces
-                        ELSE IF OBJECT_ID('Countries', 'U') IS NOT NULL
-                            SELECT CountryID AS ProvinceID, CountryName AS ProvinceName FROM Countries
-                        ELSE
-                            SELECT NULL AS ProvinceID, NULL AS ProvinceName WHERE 1 = 0";
+IF OBJECT_ID('dbo.Provinces', 'U') IS NOT NULL
+    SELECT ProvinceName FROM dbo.Provinces
+ELSE IF OBJECT_ID('dbo.Countries', 'U') IS NOT NULL
+    SELECT CountryName AS ProvinceName FROM dbo.Countries
+ELSE
+    SELECT CAST(NULL AS NVARCHAR(255)) AS ProvinceName WHERE 1 = 0";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            dt.Load(reader); // Load schema even when there are no rows
+                            dt.Load(reader);
                         }
                     }
                 }

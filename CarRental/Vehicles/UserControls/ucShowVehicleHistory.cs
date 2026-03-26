@@ -20,6 +20,35 @@ namespace CarRental.Vehicles.UserControls
         public ucShowVehicleHistory()
         {
             InitializeComponent();
+            _ApplyModernUi();
+        }
+
+        private void _ApplyModernUi()
+        {
+            this.BackColor = Color.White;
+
+            guna2TabControl1.Font = new Font("Segoe UI", 10F);
+            guna2TabControl1.TabMenuBackColor = Color.White;
+            guna2TabControl1.TabButtonIdleState.FillColor = Color.White;
+            guna2TabControl1.TabButtonIdleState.ForeColor = Color.FromArgb(107, 114, 128);
+            guna2TabControl1.TabButtonIdleState.InnerColor = Color.White;
+            guna2TabControl1.TabButtonSelectedState.FillColor = Color.White;
+            guna2TabControl1.TabButtonSelectedState.ForeColor = Color.FromArgb(31, 41, 55);
+            guna2TabControl1.TabButtonSelectedState.InnerColor = Color.FromArgb(0, 118, 212);
+            guna2TabControl1.TabButtonHoverState.FillColor = Color.White;
+            guna2TabControl1.TabButtonHoverState.ForeColor = Color.FromArgb(31, 41, 55);
+            guna2TabControl1.TabButtonHoverState.InnerColor = Color.FromArgb(0, 118, 212);
+
+            label2.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            label2.ForeColor = Color.FromArgb(107, 114, 128);
+            lblNumberOfRecords.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblNumberOfRecords.ForeColor = Color.FromArgb(31, 41, 55);
+
+            dgvVehicleMaintenanceHistoryList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            dgvVehicleMaintenanceHistoryList.ColumnHeadersHeight = 38;
+            dgvVehicleMaintenanceHistoryList.RowTemplate.Height = 30;
+
+            cmsEditProfile.Font = new Font("Segoe UI", 10F);
         }
 
         private void _RefreshMaintenanceHistoryList()
@@ -50,7 +79,7 @@ namespace CarRental.Vehicles.UserControls
                 dgvVehicleMaintenanceHistoryList.Columns[5].Width = 80;
 
                 dgvVehicleMaintenanceHistoryList.Columns[6].HeaderText = "Sẵn sàng cho thuê";
-                dgvVehicleMaintenanceHistoryList.Columns[6].Width = 110;
+                dgvVehicleMaintenanceHistoryList.Columns[6].Width = 160;
 
                 var costColumn = dgvVehicleMaintenanceHistoryList.Columns["Cost"];
                 if (costColumn != null)

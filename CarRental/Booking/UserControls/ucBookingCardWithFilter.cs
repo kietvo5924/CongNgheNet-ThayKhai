@@ -1,4 +1,5 @@
 ﻿using CarRental.Customers.UserControls;
+using CarRental.GlobalClasses;
 using CarRental_Business;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace CarRental.Booking.UserControls
 {
     public partial class ucBookingCardWithFilter : UserControl
     {
+        private DataTable _dtBookingSource;
+
         public ucBookingCardWithFilter()
         {
             InitializeComponent();
@@ -81,25 +84,101 @@ namespace CarRental.Booking.UserControls
 
             }
 
-            LoadBookingInfo(int.Parse(txtFilterValue.Text.Trim()));
+            if (!_TryResolveBookingID(txtFilterValue.Text.Trim(), out int bookingID))
+            {
+                MessageBox.Show("Không tìm thấy lịch đặt theo mã/tên khách hàng đã nhập.",
+                    "Không tìm thấy", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            LoadBookingInfo(bookingID);
         }
 
         private void txtFilterValue_Validating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtFilterValue.Text.Trim()))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(txtFilterValue, "Vui lòng không để trống trường này!");
-            }
-            else
-            {
-                errorProvider1.SetError(txtFilterValue, null);
-            }
+            clsValidation.ValidateRequired(txtFilterValue, errorProvider1, e);
         }
 
         private void ucBookingCardWithFilter_Load(object sender, EventArgs e)
         {
+            _LoadBookingAutoComplete();
+            cbSearchBy.SelectedIndex = 0;
             txtFilterValue.Focus();
+        }
+
+        private void _LoadBookingAutoComplete()
+        {
+            _dtBookingSource = clsBooking.GetAllRentalBooking();
+
+            AutoCompleteStringCollection source = new AutoCompleteStringCollection();
+            if (_dtBookingSource != null)
+            {
+                foreach (DataRow row in _dtBookingSource.Rows)
+                {
+                    string id = row.Table.Columns.Contains("BookingID") ? row["BookingID"].ToString() : string.Empty;
+                    string name = row.Table.Columns.Contains("CustomerName") ? row["CustomerName"].ToString() : string.Empty;
+
+                    if (!string.IsNullOrWhiteSpace(id))
+                        source.Add(id);
+
+                    if (!string.IsNullOrWhiteSpace(name))
+                        source.Add(name);
+
+                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name))
+                        source.Add($"{id} - {name}");
+                }
+            }
+
+            txtFilterValue.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            txtFilterValue.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            txtFilterValue.AutoCompleteCustomSource = source;
+        }
+
+        private bool _TryResolveBookingID(string input, out int bookingID)
+        {
+            bookingID = -1;
+
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+
+            input = input.Trim();
+            bool allowById = cbSearchBy.SelectedIndex != 2;
+            bool allowByName = cbSearchBy.SelectedIndex != 1;
+
+            if (allowById && int.TryParse(input, out bookingID))
+                return true;
+
+            int dashIndex = input.IndexOf('-');
+            if (allowById && dashIndex > 0)
+            {
+                string prefix = input.Substring(0, dashIndex).Trim();
+                if (int.TryParse(prefix, out bookingID))
+                    return true;
+            }
+
+            if (!allowByName)
+                return false;
+
+            if (_dtBookingSource == null)
+                _dtBookingSource = clsBooking.GetAllRentalBooking();
+
+            if (_dtBookingSource == null || !_dtBookingSource.Columns.Contains("BookingID") || !_dtBookingSource.Columns.Contains("CustomerName"))
+                return false;
+
+            DataRow matched = _dtBookingSource.AsEnumerable()
+                .FirstOrDefault(r => string.Equals((r["CustomerName"]?.ToString() ?? string.Empty).Trim(), input, StringComparison.OrdinalIgnoreCase));
+
+            if (matched == null)
+            {
+                matched = _dtBookingSource.AsEnumerable()
+                    .FirstOrDefault(r => (r["CustomerName"]?.ToString() ?? string.Empty)
+                        .Trim().StartsWith(input, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (matched == null)
+                return false;
+
+            return int.TryParse(matched["BookingID"].ToString(), out bookingID);
         }
 
         public void LoadBookingInfo(int? BookingID)
@@ -138,9 +217,6 @@ namespace CarRental.Booking.UserControls
             {
                 btnFind.PerformClick();
             }
-
-            // to make sure that the user can enter only numbers
-            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
         }
     }
 }

@@ -67,30 +67,12 @@ namespace CarRental.Users
 
         private void txtCurrentPassword_Validating(object sender, CancelEventArgs e)
         {
-            Guna2TextBox temp = (Guna2TextBox)sender;
-            if (string.IsNullOrWhiteSpace(temp.Text))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(temp, "Vui lòng nhập mật khẩu hiện tại!");
-            }
-            else
-            {
-                errorProvider1.SetError(temp, null);
-            }
+            clsValidation.ValidateRequired((Control)sender, errorProvider1, e, "Vui lòng nhập mật khẩu hiện tại!");
         }
 
         private void txtNewPassword_Validating(object sender, CancelEventArgs e)
         {
-            Guna2TextBox temp = (Guna2TextBox)sender;
-            if (string.IsNullOrWhiteSpace(temp.Text))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(temp, "Vui lòng nhập mật khẩu mới!");
-            }
-            else
-            {
-                errorProvider1.SetError(temp, null);
-            }
+            clsValidation.ValidateRequired((Control)sender, errorProvider1, e, "Vui lòng nhập mật khẩu mới!");
         }
 
         private void txtConfirmPassword_Validating(object sender, CancelEventArgs e)

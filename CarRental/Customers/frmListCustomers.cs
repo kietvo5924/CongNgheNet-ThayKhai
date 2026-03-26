@@ -42,9 +42,9 @@ namespace CarRental.Customers
                 dgvCustomersList.Columns["DriverLicenseNumber"].HeaderText = "Số bằng lái";
 
                 if (dgvCustomersList.Columns.Contains("Country")) 
-                    dgvCustomersList.Columns["Country"].HeaderText = "Province";
+                    dgvCustomersList.Columns["Country"].HeaderText = "Tỉnh/Thành phố";
                 else if (dgvCustomersList.Columns.Contains("CountryName")) 
-                    dgvCustomersList.Columns["CountryName"].HeaderText = "Province";
+                    dgvCustomersList.Columns["CountryName"].HeaderText = "Tỉnh/Thành phố";
                 else if (dgvCustomersList.Columns.Contains("ProvinceName"))
                     dgvCustomersList.Columns["ProvinceName"].HeaderText = "Tỉnh/Thành phố";
 

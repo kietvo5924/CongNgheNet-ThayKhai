@@ -23,6 +23,7 @@ namespace CarRental.Main
         private Guna2Button _CurrentButton;
         private Form _ActiveForm;
         private Form _frmLoginForm;
+        private Guna2Button _btnMaintenance;
         public Form frmDeniedMassage = new frmAccessDeniedMessage();
 
         public frmMainMenu(Form frmLoginForm)
@@ -31,6 +32,39 @@ namespace CarRental.Main
             this._frmLoginForm = frmLoginForm;
             this.DoubleBuffered = true;
             _EnableDoubleBuffer(panelHeader);
+            _EnsureMaintenanceButton();
+        }
+
+        private void _EnsureMaintenanceButton()
+        {
+            if (_btnMaintenance != null)
+                return;
+
+            _btnMaintenance = new Guna2Button
+            {
+                Name = "btnMaintenance",
+                ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton,
+                CheckedState =
+                {
+                    CustomBorderColor = Color.FromArgb(0, 118, 212),
+                    FillColor = Color.FromArgb(240, 247, 255),
+                    ForeColor = Color.FromArgb(0, 118, 212)
+                },
+                CustomBorderThickness = new Padding(5, 0, 0, 0),
+                FillColor = Color.White,
+                Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(125, 137, 149),
+                Location = new Point(0, 490),
+                Size = new Size(240, 50),
+                Text = "Bảo trì",
+                TextAlign = HorizontalAlignment.Left,
+                TextOffset = new Point(20, 0)
+            };
+
+            _btnMaintenance.Click += btnMaintenance_Click;
+            panelMenu.Controls.Add(_btnMaintenance);
+            _btnMaintenance.BringToFront();
+            btnLogOut.BringToFront();
         }
 
         private void _EnableDoubleBuffer(Control control)
@@ -137,6 +171,16 @@ namespace CarRental.Main
                 return;
             }
             _OpenChildForm(new frmListVehicles(), sender);
+        }
+
+        private void btnMaintenance_Click(object sender, EventArgs e)
+        {
+            if (!clsGlobal.CheckAccessDenied(clsUser.enPermissions.ManageVehicles))
+            {
+                frmDeniedMassage.ShowDialog();
+                return;
+            }
+            _OpenChildForm(new frmVehicleMaintenance(), sender);
         }
 
         private void btnBooking_Click(object sender, EventArgs e)

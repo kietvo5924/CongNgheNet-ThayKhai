@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.ucVehicleCard1 = new CarRental.Vehicles.UserControls.ucVehicleCard();
             this.gbFilters = new System.Windows.Forms.GroupBox();
+            this.cbSearchBy = new System.Windows.Forms.ComboBox();
             this.label22 = new System.Windows.Forms.Label();
             this.btnAddNew = new System.Windows.Forms.Button();
             this.btnFind = new System.Windows.Forms.Button();
@@ -42,26 +43,44 @@
             // 
             // ucVehicleCard1
             // 
+            this.ucVehicleCard1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ucVehicleCard1.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.ucVehicleCard1.BackColor = System.Drawing.Color.White;
             this.ucVehicleCard1.Location = new System.Drawing.Point(0, 110);
             this.ucVehicleCard1.Name = "ucVehicleCard1";
-            this.ucVehicleCard1.Size = new System.Drawing.Size(772, 610);
+            this.ucVehicleCard1.Size = new System.Drawing.Size(773, 610);
             this.ucVehicleCard1.TabIndex = 0;
             // 
             // gbFilters
             // 
+            this.gbFilters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbFilters.Controls.Add(this.cbSearchBy);
             this.gbFilters.Controls.Add(this.label22);
             this.gbFilters.Controls.Add(this.btnAddNew);
             this.gbFilters.Controls.Add(this.btnFind);
             this.gbFilters.Controls.Add(this.txtFilterValue);
             this.gbFilters.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbFilters.Location = new System.Drawing.Point(4, 3);
+            this.gbFilters.Location = new System.Drawing.Point(10, 3);
             this.gbFilters.Name = "gbFilters";
-            this.gbFilters.Size = new System.Drawing.Size(762, 96);
+            this.gbFilters.Size = new System.Drawing.Size(753, 96);
             this.gbFilters.TabIndex = 19;
             this.gbFilters.TabStop = false;
             this.gbFilters.Text = "Bộ lọc";
+            // 
+            // cbSearchBy
+            // 
+            this.cbSearchBy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSearchBy.FormattingEnabled = true;
+            this.cbSearchBy.Items.AddRange(new object[] {
+            "Tất cả",
+            "Theo mã",
+            "Theo tên"});
+            this.cbSearchBy.Location = new System.Drawing.Point(133, 37);
+            this.cbSearchBy.Name = "cbSearchBy";
+            this.cbSearchBy.Size = new System.Drawing.Size(130, 25);
+            this.cbSearchBy.TabIndex = 16;
             // 
             // label22
             // 
@@ -73,7 +92,7 @@
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(46, 19);
             this.label22.TabIndex = 114;
-            this.label22.Text = "Mã xe:";
+            this.label22.Text = "Từ khóa:";
             // 
             // btnAddNew
             // 
@@ -113,10 +132,10 @@
             // txtFilterValue
             // 
             this.txtFilterValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtFilterValue.Location = new System.Drawing.Point(133, 37);
+            this.txtFilterValue.Location = new System.Drawing.Point(271, 37);
             this.txtFilterValue.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtFilterValue.Name = "txtFilterValue";
-            this.txtFilterValue.Size = new System.Drawing.Size(214, 26);
+            this.txtFilterValue.Size = new System.Drawing.Size(170, 26);
             this.txtFilterValue.TabIndex = 17;
             this.txtFilterValue.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterValue_KeyPress);
             this.txtFilterValue.Validating += new System.ComponentModel.CancelEventHandler(this.txtFilterValue_Validating);
@@ -147,6 +166,7 @@
 
         private ucVehicleCard ucVehicleCard1;
         private System.Windows.Forms.GroupBox gbFilters;
+        private System.Windows.Forms.ComboBox cbSearchBy;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Button btnAddNew;
         private System.Windows.Forms.Button btnFind;

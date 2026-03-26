@@ -1,4 +1,5 @@
 ﻿using CarRental_Business;
+using CarRental.GlobalClasses;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +14,8 @@ namespace CarRental.Customers.UserControls
 {
     public partial class ucCustomerCardWithFilter : UserControl
     {
+        private DataTable _dtCustomerSource;
+
         public ucCustomerCardWithFilter()
         {
             InitializeComponent();
@@ -76,9 +79,6 @@ namespace CarRental.Customers.UserControls
             {
                 btnFind.PerformClick();
             }
-
-            // to make sure that the user can enter only numbers
-            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
         }
 
         private void btnFind_Click(object sender, EventArgs e)
@@ -92,25 +92,101 @@ namespace CarRental.Customers.UserControls
 
             }
 
-            LoadCustomerInfo(int.Parse(txtFilterValue.Text.Trim()));
+            if (!_TryResolveCustomerID(txtFilterValue.Text.Trim(), out int customerID))
+            {
+                MessageBox.Show("Không tìm thấy khách hàng theo mã/tên đã nhập.",
+                    "Không tìm thấy", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            LoadCustomerInfo(customerID);
         }
 
         private void txtFilterValue_Validating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtFilterValue.Text.Trim()))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(txtFilterValue, "Vui lòng không để trống trường này!");
-            }
-            else
-            {
-                errorProvider1.SetError(txtFilterValue, null);
-            }
+            clsValidation.ValidateRequired(txtFilterValue, errorProvider1, e);
         }
 
         private void ucCustomerCardWithFilter_Load(object sender, EventArgs e)
         {
+            _LoadCustomerAutoComplete();
+            cbSearchBy.SelectedIndex = 0;
             txtFilterValue.Focus();
+        }
+
+        private void _LoadCustomerAutoComplete()
+        {
+            _dtCustomerSource = clsCustomer.GetAllCustomers();
+
+            AutoCompleteStringCollection source = new AutoCompleteStringCollection();
+            if (_dtCustomerSource != null)
+            {
+                foreach (DataRow row in _dtCustomerSource.Rows)
+                {
+                    string id = row.Table.Columns.Contains("CustomerID") ? row["CustomerID"].ToString() : string.Empty;
+                    string name = row.Table.Columns.Contains("Name") ? row["Name"].ToString() : string.Empty;
+
+                    if (!string.IsNullOrWhiteSpace(id))
+                        source.Add(id);
+
+                    if (!string.IsNullOrWhiteSpace(name))
+                        source.Add(name);
+
+                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name))
+                        source.Add($"{id} - {name}");
+                }
+            }
+
+            txtFilterValue.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            txtFilterValue.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            txtFilterValue.AutoCompleteCustomSource = source;
+        }
+
+        private bool _TryResolveCustomerID(string input, out int customerID)
+        {
+            customerID = -1;
+
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+
+            input = input.Trim();
+            bool allowById = cbSearchBy.SelectedIndex != 2;
+            bool allowByName = cbSearchBy.SelectedIndex != 1;
+
+            if (allowById && int.TryParse(input, out customerID))
+                return true;
+
+            int dashIndex = input.IndexOf('-');
+            if (allowById && dashIndex > 0)
+            {
+                string prefix = input.Substring(0, dashIndex).Trim();
+                if (int.TryParse(prefix, out customerID))
+                    return true;
+            }
+
+            if (!allowByName)
+                return false;
+
+            if (_dtCustomerSource == null)
+                _dtCustomerSource = clsCustomer.GetAllCustomers();
+
+            if (_dtCustomerSource == null || !_dtCustomerSource.Columns.Contains("CustomerID") || !_dtCustomerSource.Columns.Contains("Name"))
+                return false;
+
+            DataRow matched = _dtCustomerSource.AsEnumerable()
+                .FirstOrDefault(r => string.Equals((r["Name"]?.ToString() ?? string.Empty).Trim(), input, StringComparison.OrdinalIgnoreCase));
+
+            if (matched == null)
+            {
+                matched = _dtCustomerSource.AsEnumerable()
+                    .FirstOrDefault(r => (r["Name"]?.ToString() ?? string.Empty)
+                        .Trim().StartsWith(input, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (matched == null)
+                return false;
+
+            return int.TryParse(matched["CustomerID"].ToString(), out customerID);
         }
 
         public void LoadCustomerInfo(int? CustomerID)

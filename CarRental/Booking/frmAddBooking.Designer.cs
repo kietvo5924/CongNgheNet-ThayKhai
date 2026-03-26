@@ -56,6 +56,8 @@
             // 
             // guna2PanelBookingInfo (THẺ CHI TIẾT TRẮNG)
             // 
+            this.guna2PanelBookingInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right))));
             this.guna2PanelBookingInfo.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
             this.guna2PanelBookingInfo.BorderRadius = 15;
             this.guna2PanelBookingInfo.BorderThickness = 1;
@@ -85,7 +87,7 @@
             this.guna2PanelBookingInfo.Controls.Add(this.label22);
             this.guna2PanelBookingInfo.Controls.Add(this.lblBookingID);
             this.guna2PanelBookingInfo.FillColor = System.Drawing.Color.White;
-            this.guna2PanelBookingInfo.Location = new System.Drawing.Point(12, 655);
+            this.guna2PanelBookingInfo.Location = new System.Drawing.Point(12, 682);
             this.guna2PanelBookingInfo.Name = "guna2PanelBookingInfo";
             this.guna2PanelBookingInfo.Size = new System.Drawing.Size(775, 270);
             this.guna2PanelBookingInfo.TabIndex = 177;
@@ -364,13 +366,14 @@
             // 
             // btnBook
             // 
+            this.btnBook.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnBook.BorderRadius = 8;
             this.btnBook.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnBook.Enabled = false;
             this.btnBook.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
             this.btnBook.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnBook.ForeColor = System.Drawing.Color.White;
-            this.btnBook.Location = new System.Drawing.Point(625, 940);
+            this.btnBook.Location = new System.Drawing.Point(625, 967);
             this.btnBook.Name = "btnBook";
             this.btnBook.Size = new System.Drawing.Size(160, 45);
             this.btnBook.TabIndex = 198;
@@ -379,12 +382,13 @@
             // 
             // btnClose
             // 
+            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.BorderRadius = 8;
             this.btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnClose.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
             this.btnClose.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(85)))), ((int)(((byte)(99)))));
-            this.btnClose.Location = new System.Drawing.Point(450, 940);
+            this.btnClose.Location = new System.Drawing.Point(450, 967);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(160, 45);
             this.btnClose.TabIndex = 197;
@@ -393,6 +397,8 @@
             // 
             // lblTitle
             // 
+            this.lblTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 28F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(41)))), ((int)(((byte)(55)))));
             this.lblTitle.Location = new System.Drawing.Point(0, 5);
@@ -404,11 +410,12 @@
             // 
             // llTransactionInfo
             // 
+            this.llTransactionInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.llTransactionInfo.AutoSize = true;
             this.llTransactionInfo.Enabled = false;
             this.llTransactionInfo.Font = new System.Drawing.Font("Segoe UI", 11F);
             this.llTransactionInfo.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
-            this.llTransactionInfo.Location = new System.Drawing.Point(20, 950);
+            this.llTransactionInfo.Location = new System.Drawing.Point(20, 977);
             this.llTransactionInfo.Name = "llTransactionInfo";
             this.llTransactionInfo.Size = new System.Drawing.Size(164, 20);
             this.llTransactionInfo.TabIndex = 214;
@@ -418,28 +425,34 @@
             // 
             // ucSelectedCustomerAndVehicleWithFilter1
             // 
+            this.ucSelectedCustomerAndVehicleWithFilter1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right))));
             this.ucSelectedCustomerAndVehicleWithFilter1.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.ucSelectedCustomerAndVehicleWithFilter1.BackColor = System.Drawing.Color.Transparent;
             this.ucSelectedCustomerAndVehicleWithFilter1.FilterEnable = true;
             this.ucSelectedCustomerAndVehicleWithFilter1.Location = new System.Drawing.Point(2, 65);
             this.ucSelectedCustomerAndVehicleWithFilter1.Name = "ucSelectedCustomerAndVehicleWithFilter1";
-            this.ucSelectedCustomerAndVehicleWithFilter1.Size = new System.Drawing.Size(795, 585);
+            this.ucSelectedCustomerAndVehicleWithFilter1.Size = new System.Drawing.Size(795, 612);
             this.ucSelectedCustomerAndVehicleWithFilter1.TabIndex = 176;
             // 
             // frmAddBooking
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
+            this.AutoScrollMinSize = new System.Drawing.Size(0, 1035);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(247)))), ((int)(((byte)(251)))));
-            this.ClientSize = new System.Drawing.Size(799, 1000);
+            this.ClientSize = new System.Drawing.Size(799, 1027);
             this.Controls.Add(this.llTransactionInfo);
             this.Controls.Add(this.btnBook);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.guna2PanelBookingInfo);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.ucSelectedCustomerAndVehicleWithFilter1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            this.MaximizeBox = true;
+            this.MinimizeBox = true;
+            this.MinimumSize = new System.Drawing.Size(815, 700);
             this.Name = "frmAddBooking";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Thêm lịch đặt";

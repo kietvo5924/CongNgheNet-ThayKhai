@@ -24,7 +24,7 @@ namespace CarRental.Users
             DataTable dtProvinces = _EnsureProvinceTableSchema(clsProvince.GetAllProvinces());
 
             DataRow allRow = dtProvinces.NewRow();
-            allRow["ProvinceID"] = DBNull.Value;
+            allRow["ProvinceID"] = 0;
             allRow["ProvinceName"] = "Tất cả";
             dtProvinces.Rows.InsertAt(allRow, 0);
 
@@ -42,7 +42,18 @@ namespace CarRental.Users
                 dtProvinces = new DataTable();
 
             if (!dtProvinces.Columns.Contains("ProvinceID"))
+            {
                 dtProvinces.Columns.Add("ProvinceID", typeof(int));
+
+                if (dtProvinces.Columns.Contains("CountryID"))
+                {
+                    foreach (DataRow row in dtProvinces.Rows)
+                    {
+                        if (row["CountryID"] != DBNull.Value)
+                            row["ProvinceID"] = row["CountryID"];
+                    }
+                }
+            }
 
             if (!dtProvinces.Columns.Contains("ProvinceName"))
                 dtProvinces.Columns.Add("ProvinceName", typeof(string));
@@ -215,7 +226,7 @@ namespace CarRental.Users
             if (cbFilter.Text != "Tỉnh/Thành phố")
                 return;
 
-            if (cbCountry.SelectedValue == null || cbCountry.SelectedValue == DBNull.Value || cbCountry.SelectedIndex == 0)
+            if (cbCountry.SelectedValue == null || cbCountry.SelectedIndex == 0 || cbCountry.SelectedValue.ToString() == "0")
             {
                 _dtAllUsers.DefaultView.RowFilter = "";
             }

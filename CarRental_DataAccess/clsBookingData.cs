@@ -88,35 +88,59 @@ namespace CarRental_DataAccess
                 using (SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString))
                 {
                     connection.Open();
-
-                    string query = @"
-update Vehicles
+                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            string lockVehicleQuery = @"update Vehicles
 set IsAvailableForRent = 0
-where VehicleID = @VehicleID;
+where VehicleID = @VehicleID and IsAvailableForRent = 1";
 
-insert into RentalBooking (CustomerID, VehicleID, RentalStartDate, RentalEndDate, PickupLocation, DropoffLocation, RentalPricePerDay, InitialCheckNotes)
+                            using (SqlCommand lockVehicleCommand = new SqlCommand(lockVehicleQuery, connection, transaction))
+                            {
+                                lockVehicleCommand.Parameters.AddWithValue("@VehicleID", (object)VehicleID ?? DBNull.Value);
+                                int affectedRows = lockVehicleCommand.ExecuteNonQuery();
+                                if (affectedRows == 0)
+                                {
+                                    transaction.Rollback();
+                                    return null;
+                                }
+                            }
+
+                            string insertBookingQuery = @"insert into RentalBooking (CustomerID, VehicleID, RentalStartDate, RentalEndDate, PickupLocation, DropoffLocation, RentalPricePerDay, InitialCheckNotes)
 values (@CustomerID, @VehicleID, @RentalStartDate, @RentalEndDate, @PickupLocation, @DropoffLocation, @RentalPricePerDay, @InitialCheckNotes)
 select scope_identity()";
 
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        // un nullable columns
-                        command.Parameters.AddWithValue("@CustomerID", (object)CustomerID ?? DBNull.Value);
-                        command.Parameters.AddWithValue("@VehicleID", (object)VehicleID ?? DBNull.Value);
-                        command.Parameters.AddWithValue("@RentalStartDate", RentalStartDate);
-                        command.Parameters.AddWithValue("@RentalEndDate", RentalEndDate);
-                        command.Parameters.AddWithValue("@PickupLocation", PickupLocation);
-                        command.Parameters.AddWithValue("@DropoffLocation", DropoffLocation);
-                        command.Parameters.AddWithValue("@RentalPricePerDay", RentalPricePerDay);
+                            using (SqlCommand insertBookingCommand = new SqlCommand(insertBookingQuery, connection, transaction))
+                            {
+                                insertBookingCommand.Parameters.AddWithValue("@CustomerID", (object)CustomerID ?? DBNull.Value);
+                                insertBookingCommand.Parameters.AddWithValue("@VehicleID", (object)VehicleID ?? DBNull.Value);
+                                insertBookingCommand.Parameters.AddWithValue("@RentalStartDate", RentalStartDate);
+                                insertBookingCommand.Parameters.AddWithValue("@RentalEndDate", RentalEndDate);
+                                insertBookingCommand.Parameters.AddWithValue("@PickupLocation", PickupLocation);
+                                insertBookingCommand.Parameters.AddWithValue("@DropoffLocation", DropoffLocation);
+                                insertBookingCommand.Parameters.AddWithValue("@RentalPricePerDay", RentalPricePerDay);
+                                insertBookingCommand.Parameters.AddWithValue("@InitialCheckNotes", (object)InitialCheckNotes ?? DBNull.Value);
 
-                        // nullable columns
-                        command.Parameters.AddWithValue("@InitialCheckNotes", (object)InitialCheckNotes ?? DBNull.Value);
+                                object result = insertBookingCommand.ExecuteScalar();
+                                if (result != null && int.TryParse(result.ToString(), out int InsertID))
+                                {
+                                    BookingID = InsertID;
+                                }
+                            }
 
-                        object result = command.ExecuteScalar();
+                            if (!BookingID.HasValue)
+                            {
+                                transaction.Rollback();
+                                return null;
+                            }
 
-                        if (result != null && int.TryParse(result.ToString(), out int InsertID))
+                            transaction.Commit();
+                        }
+                        catch
                         {
-                            BookingID = InsertID;
+                            transaction.Rollback();
+                            throw;
                         }
                     }
                 }
@@ -350,6 +374,87 @@ where BookingID = @BookingID";
                     {
                         command.Parameters.AddWithValue("@CustomerID", (object)CustomerID ?? DBNull.Value);
 
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                dt.Load(reader);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                clsLogError.LogError("Database Exception", ex);
+            }
+            catch (Exception ex)
+            {
+                clsLogError.LogError("General Exception", ex);
+            }
+
+            return dt;
+        }
+
+        public static int GetActiveRentalBookingsCount()
+        {
+            int Count = 0;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString))
+                {
+                    connection.Open();
+
+                    string query = @"SELECT COUNT(*)
+                                     FROM RentalTransaction
+                                     WHERE ReturnID IS NULL";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        object result = command.ExecuteScalar();
+
+                        if (result != null && int.TryParse(result.ToString(), out int value))
+                        {
+                            Count = value;
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                clsLogError.LogError("Database Exception", ex);
+            }
+            catch (Exception ex)
+            {
+                clsLogError.LogError("General Exception", ex);
+            }
+
+            return Count;
+        }
+
+        public static DataTable GetActiveRentalBookingsForDashboard()
+        {
+            DataTable dt = new DataTable();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString))
+                {
+                    connection.Open();
+
+                    string query = @"SELECT BookingID, CustomerID, CustomerName, VehicleID, RentalStartDate, RentalEndDate
+                                     FROM BookingDetails_View
+                                     WHERE BookingID IN
+                                     (
+                                         SELECT BookingID
+                                         FROM RentalTransaction
+                                         WHERE ReturnID IS NULL
+                                     )
+                                     ORDER BY RentalStartDate DESC";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)

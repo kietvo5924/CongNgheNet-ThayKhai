@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Data;
-using System.Diagnostics;
 
 namespace CarRental_DataAccess
 {
@@ -25,7 +24,7 @@ namespace CarRental_DataAccess
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@TransactionID", TransactionID);
+                        command.Parameters.AddWithValue("@TransactionID", (object)TransactionID ?? DBNull.Value);
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -36,7 +35,7 @@ namespace CarRental_DataAccess
 
                                 BookingID = (reader["BookingID"] != DBNull.Value) ? (int?)reader["BookingID"] : null;
                                 ReturnID = (reader["ReturnID"] != DBNull.Value) ? (int?)reader["ReturnID"] : null;
-                                PaymentDetails = (string)reader["PaymentDetails"];
+                                PaymentDetails = (reader["PaymentDetails"] != DBNull.Value) ? (string)reader["PaymentDetails"] : string.Empty;
                                 PaidInitialTotalDueAmount = Convert.ToDecimal(reader["PaidInitialTotalDueAmount"]);
                                 ActualTotalDueAmount = (reader["ActualTotalDueAmount"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["ActualTotalDueAmount"]) : null;
                                 TotalRemaining = (reader["TotalRemaining"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["TotalRemaining"]) : null;
@@ -88,7 +87,7 @@ namespace CarRental_DataAccess
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@ReturnID", ReturnID);
+                        command.Parameters.AddWithValue("@ReturnID", (object)ReturnID ?? DBNull.Value);
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -99,7 +98,7 @@ namespace CarRental_DataAccess
 
                                 TransactionID = (reader["TransactionID"] != DBNull.Value) ? (int?)reader["TransactionID"] : null;
                                 BookingID = (reader["BookingID"] != DBNull.Value) ? (int?)reader["BookingID"] : null;
-                                PaymentDetails = (string)reader["PaymentDetails"];
+                                PaymentDetails = (reader["PaymentDetails"] != DBNull.Value) ? (string)reader["PaymentDetails"] : string.Empty;
                                 PaidInitialTotalDueAmount = Convert.ToDecimal(reader["PaidInitialTotalDueAmount"]);
                                 ActualTotalDueAmount = (reader["ActualTotalDueAmount"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["ActualTotalDueAmount"]) : null;
                                 TotalRemaining = (reader["TotalRemaining"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["TotalRemaining"]) : null;
@@ -151,7 +150,7 @@ namespace CarRental_DataAccess
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@BookingID", BookingID);
+                        command.Parameters.AddWithValue("@BookingID", (object)BookingID ?? DBNull.Value);
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -162,7 +161,7 @@ namespace CarRental_DataAccess
 
                                 TransactionID = (reader["TransactionID"] != DBNull.Value) ? (int?)reader["TransactionID"] : null;
                                 ReturnID = (reader["ReturnID"] != DBNull.Value) ? (int?)reader["ReturnID"] : null;
-                                PaymentDetails = (string)reader["PaymentDetails"];
+                                PaymentDetails = (reader["PaymentDetails"] != DBNull.Value) ? (string)reader["PaymentDetails"] : string.Empty;
                                 PaidInitialTotalDueAmount = Convert.ToDecimal(reader["PaidInitialTotalDueAmount"]);
                                 ActualTotalDueAmount = (reader["ActualTotalDueAmount"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["ActualTotalDueAmount"]) : null;
                                 TotalRemaining = (reader["TotalRemaining"] != DBNull.Value) ? (decimal?)Convert.ToDecimal(reader["TotalRemaining"]) : null;
@@ -216,7 +215,7 @@ select scope_identity()";
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@BookingID", (object)BookingID ?? DBNull.Value);
-                        command.Parameters.AddWithValue("@PaymentDetails", PaymentDetails);
+                        command.Parameters.AddWithValue("@PaymentDetails", (object)PaymentDetails ?? DBNull.Value);
                         command.Parameters.AddWithValue("@PaidInitialTotalDueAmount", PaidInitialTotalDueAmount);
                         command.Parameters.AddWithValue("@TransactionDate", DateTime.Now);
 
@@ -239,6 +238,114 @@ select scope_identity()";
             }
 
             return TransactionID;
+        }
+
+        public static bool AddNewBookingAndTransaction(int? CustomerID, int? VehicleID,
+            DateTime RentalStartDate, DateTime RentalEndDate, string PickupLocation,
+            string DropoffLocation, decimal RentalPricePerDay, string InitialCheckNotes,
+            string PaymentDetails, decimal PaidInitialTotalDueAmount,
+            ref int? BookingID, ref int? TransactionID)
+        {
+            bool isSaved = false;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString))
+                {
+                    connection.Open();
+                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            string lockVehicleQuery = @"update Vehicles
+set IsAvailableForRent = 0
+where VehicleID = @VehicleID and IsAvailableForRent = 1";
+
+                            using (SqlCommand lockVehicleCommand = new SqlCommand(lockVehicleQuery, connection, transaction))
+                            {
+                                lockVehicleCommand.Parameters.AddWithValue("@VehicleID", (object)VehicleID ?? DBNull.Value);
+                                if (lockVehicleCommand.ExecuteNonQuery() == 0)
+                                {
+                                    transaction.Rollback();
+                                    return false;
+                                }
+                            }
+
+                            string insertBookingQuery = @"insert into RentalBooking (CustomerID, VehicleID, RentalStartDate, RentalEndDate, PickupLocation, DropoffLocation, RentalPricePerDay, InitialCheckNotes)
+values (@CustomerID, @VehicleID, @RentalStartDate, @RentalEndDate, @PickupLocation, @DropoffLocation, @RentalPricePerDay, @InitialCheckNotes)
+select scope_identity()";
+
+                            using (SqlCommand insertBookingCommand = new SqlCommand(insertBookingQuery, connection, transaction))
+                            {
+                                insertBookingCommand.Parameters.AddWithValue("@CustomerID", (object)CustomerID ?? DBNull.Value);
+                                insertBookingCommand.Parameters.AddWithValue("@VehicleID", (object)VehicleID ?? DBNull.Value);
+                                insertBookingCommand.Parameters.AddWithValue("@RentalStartDate", RentalStartDate);
+                                insertBookingCommand.Parameters.AddWithValue("@RentalEndDate", RentalEndDate);
+                                insertBookingCommand.Parameters.AddWithValue("@PickupLocation", PickupLocation);
+                                insertBookingCommand.Parameters.AddWithValue("@DropoffLocation", DropoffLocation);
+                                insertBookingCommand.Parameters.AddWithValue("@RentalPricePerDay", RentalPricePerDay);
+                                insertBookingCommand.Parameters.AddWithValue("@InitialCheckNotes", (object)InitialCheckNotes ?? DBNull.Value);
+
+                                object bookingResult = insertBookingCommand.ExecuteScalar();
+                                if (bookingResult != null && int.TryParse(bookingResult.ToString(), out int bookingId))
+                                {
+                                    BookingID = bookingId;
+                                }
+                            }
+
+                            if (!BookingID.HasValue)
+                            {
+                                transaction.Rollback();
+                                return false;
+                            }
+
+                            string insertTransactionQuery = @"insert into RentalTransaction (BookingID, PaymentDetails, PaidInitialTotalDueAmount, TransactionDate)
+values (@BookingID, @PaymentDetails, @PaidInitialTotalDueAmount, @TransactionDate)
+select scope_identity()";
+
+                            using (SqlCommand insertTransactionCommand = new SqlCommand(insertTransactionQuery, connection, transaction))
+                            {
+                                insertTransactionCommand.Parameters.AddWithValue("@BookingID", BookingID.Value);
+                                insertTransactionCommand.Parameters.AddWithValue("@PaymentDetails", (object)PaymentDetails ?? DBNull.Value);
+                                insertTransactionCommand.Parameters.AddWithValue("@PaidInitialTotalDueAmount", PaidInitialTotalDueAmount);
+                                insertTransactionCommand.Parameters.AddWithValue("@TransactionDate", DateTime.Now);
+
+                                object transactionResult = insertTransactionCommand.ExecuteScalar();
+                                if (transactionResult != null && int.TryParse(transactionResult.ToString(), out int transactionId))
+                                {
+                                    TransactionID = transactionId;
+                                }
+                            }
+
+                            if (!TransactionID.HasValue)
+                            {
+                                transaction.Rollback();
+                                return false;
+                            }
+
+                            transaction.Commit();
+                            isSaved = true;
+                        }
+                        catch
+                        {
+                            transaction.Rollback();
+                            throw;
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                isSaved = false;
+                clsLogError.LogError("Database Exception", ex);
+            }
+            catch (Exception ex)
+            {
+                isSaved = false;
+                clsLogError.LogError("General Exception", ex);
+            }
+
+            return isSaved;
         }
 
         public static bool UpdateTransaction(int? TransactionID, int? ReturnID,
@@ -300,7 +407,8 @@ where TransactionID = @TransactionID";
 
                     string query = @"Update RentalTransaction
                                      set TotalRefundedAmount = ABS(@TotalRemaining),
-                                         TotalRemaining = 0
+                                         TotalRemaining = 0,
+                                         UpdatedTransactionDate = @UpdatedTransactionDate
                                      where TransactionID = @TransactionID";
 
 
@@ -308,6 +416,7 @@ where TransactionID = @TransactionID";
                     {
                         command.Parameters.AddWithValue("@TransactionID", (object)TransactionID ?? DBNull.Value);
                         command.Parameters.AddWithValue("@TotalRemaining", (object)TotalRemaining ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@UpdatedTransactionDate", DateTime.Now);
 
                         RowAffected = command.ExecuteNonQuery();
                     }

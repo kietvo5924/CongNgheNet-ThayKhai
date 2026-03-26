@@ -118,6 +118,163 @@ select scope_identity()";
             return ReturenID;
         }
 
+        public static bool CompleteReturnWithTransactionAndVehicleUpdate(int? TransactionID,
+            DateTime ActualReturnDate, int ActualRentalDays, int Mileage, int ConsumedMileage,
+            string FinalCheckNotes, decimal AdditionalCharges, decimal ActualTotalDueAmount,
+            ref int? ReturenID, ref decimal? TotalRemaining, ref decimal? TotalRefundedAmount,
+            out string failureReason)
+        {
+            bool isCompleted = false;
+            failureReason = null;
+
+            if (!TransactionID.HasValue)
+            {
+                failureReason = "Không tìm thấy giao dịch tương ứng với đơn đặt xe.";
+                return false;
+            }
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString))
+                {
+                    connection.Open();
+                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            int? vehicleID = null;
+                            decimal paidInitialAmount = 0m;
+
+                            string getTransactionContextQuery = @"select t.BookingID, b.VehicleID, t.PaidInitialTotalDueAmount
+from RentalTransaction t
+inner join RentalBooking b on b.BookingID = t.BookingID
+where t.TransactionID = @TransactionID and t.ReturnID is null";
+
+                            using (SqlCommand getContextCommand = new SqlCommand(getTransactionContextQuery, connection, transaction))
+                            {
+                                getContextCommand.Parameters.AddWithValue("@TransactionID", (object)TransactionID ?? DBNull.Value);
+                                using (SqlDataReader reader = getContextCommand.ExecuteReader())
+                                {
+                                    if (!reader.Read())
+                                    {
+                                        transaction.Rollback();
+                                        failureReason = "Giao dịch không tồn tại hoặc đơn này đã được trả trước đó.";
+                                        return false;
+                                    }
+
+                                    vehicleID = reader["VehicleID"] != DBNull.Value ? (int?)Convert.ToInt32(reader["VehicleID"]) : null;
+                                    paidInitialAmount = reader["PaidInitialTotalDueAmount"] != DBNull.Value ? Convert.ToDecimal(reader["PaidInitialTotalDueAmount"]) : 0m;
+                                }
+                            }
+
+                            if (!vehicleID.HasValue)
+                            {
+                                transaction.Rollback();
+                                failureReason = "Không xác định được xe cần cập nhật khi trả xe.";
+                                return false;
+                            }
+
+                            string insertReturnQuery = @"insert into VehicleReturns (ActualReturnDate, ActualRentalDays, Mileage, ConsumedMileage, FinalCheckNotes, AdditionalCharges, ActualTotalDueAmount)
+values (@ActualReturnDate, @ActualRentalDays, @Mileage, @ConsumedMileage, @FinalCheckNotes, @AdditionalCharges, @ActualTotalDueAmount)
+select scope_identity()";
+
+                            using (SqlCommand insertReturnCommand = new SqlCommand(insertReturnQuery, connection, transaction))
+                            {
+                                insertReturnCommand.Parameters.AddWithValue("@ActualReturnDate", ActualReturnDate);
+                                insertReturnCommand.Parameters.AddWithValue("@ActualRentalDays", ActualRentalDays);
+                                insertReturnCommand.Parameters.AddWithValue("@Mileage", Mileage);
+                                insertReturnCommand.Parameters.AddWithValue("@ConsumedMileage", ConsumedMileage);
+                                insertReturnCommand.Parameters.AddWithValue("@FinalCheckNotes", (object)FinalCheckNotes ?? DBNull.Value);
+                                insertReturnCommand.Parameters.AddWithValue("@AdditionalCharges", AdditionalCharges);
+                                insertReturnCommand.Parameters.AddWithValue("@ActualTotalDueAmount", ActualTotalDueAmount);
+
+                                object returnResult = insertReturnCommand.ExecuteScalar();
+                                if (returnResult != null && int.TryParse(returnResult.ToString(), out int insertedReturnID))
+                                {
+                                    ReturenID = insertedReturnID;
+                                }
+                            }
+
+                            if (!ReturenID.HasValue)
+                            {
+                                transaction.Rollback();
+                                failureReason = "Không thể lưu phiếu trả xe vào cơ sở dữ liệu.";
+                                return false;
+                            }
+
+                            TotalRemaining = ActualTotalDueAmount - paidInitialAmount;
+                            TotalRefundedAmount = TotalRemaining < 0 ? Math.Abs(TotalRemaining.Value) : 0m;
+
+                            string updateTransactionQuery = @"update RentalTransaction
+set ReturnID = @ReturnID,
+    ActualTotalDueAmount = @ActualTotalDueAmount,
+    TotalRemaining = @TotalRemaining,
+    TotalRefundedAmount = @TotalRefundedAmount,
+    UpdatedTransactionDate = @UpdatedTransactionDate
+where TransactionID = @TransactionID and ReturnID is null";
+
+                            using (SqlCommand updateTransactionCommand = new SqlCommand(updateTransactionQuery, connection, transaction))
+                            {
+                                updateTransactionCommand.Parameters.AddWithValue("@ReturnID", ReturenID.Value);
+                                updateTransactionCommand.Parameters.AddWithValue("@ActualTotalDueAmount", ActualTotalDueAmount);
+                                updateTransactionCommand.Parameters.AddWithValue("@TotalRemaining", (object)TotalRemaining ?? DBNull.Value);
+                                updateTransactionCommand.Parameters.AddWithValue("@TotalRefundedAmount", (object)TotalRefundedAmount ?? DBNull.Value);
+                                updateTransactionCommand.Parameters.AddWithValue("@UpdatedTransactionDate", DateTime.Now);
+                                updateTransactionCommand.Parameters.AddWithValue("@TransactionID", (object)TransactionID ?? DBNull.Value);
+
+                                if (updateTransactionCommand.ExecuteNonQuery() == 0)
+                                {
+                                    transaction.Rollback();
+                                    failureReason = "Không thể cập nhật giao dịch quyết toán (đơn có thể đã được xử lý trước đó).";
+                                    return false;
+                                }
+                            }
+
+                            string updateVehicleQuery = @"update Vehicles
+set Mileage = @Mileage,
+    IsAvailableForRent = 1
+where VehicleID = @VehicleID";
+
+                            using (SqlCommand updateVehicleCommand = new SqlCommand(updateVehicleQuery, connection, transaction))
+                            {
+                                updateVehicleCommand.Parameters.AddWithValue("@Mileage", Mileage);
+                                updateVehicleCommand.Parameters.AddWithValue("@VehicleID", (object)vehicleID ?? DBNull.Value);
+
+                                if (updateVehicleCommand.ExecuteNonQuery() == 0)
+                                {
+                                    transaction.Rollback();
+                                    failureReason = "Không thể cập nhật trạng thái xe sau khi trả.";
+                                    return false;
+                                }
+                            }
+
+                            transaction.Commit();
+                            isCompleted = true;
+                        }
+                        catch
+                        {
+                            transaction.Rollback();
+                            throw;
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                isCompleted = false;
+                failureReason = "Lỗi cơ sở dữ liệu: " + ex.Message;
+                clsLogError.LogError("Database Exception", ex);
+            }
+            catch (Exception ex)
+            {
+                isCompleted = false;
+                failureReason = "Lỗi hệ thống: " + ex.Message;
+                clsLogError.LogError("General Exception", ex);
+            }
+
+            return isCompleted;
+        }
+
         public static bool UpdateReturn(int? ReturenID, DateTime ActualReturnDate,
             int ActualRentalDays,int Mileage, int ConsumedMileage,
              string FinalCheckNotes,decimal AdditionalCharges, decimal ActualTotalDueAmount )

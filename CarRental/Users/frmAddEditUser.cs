@@ -50,6 +50,12 @@ namespace CarRental.Users
             cbProvince.DataSource = dtProvinces;
             cbProvince.DisplayMember = "ProvinceName";
             cbProvince.ValueMember = "ProvinceID";
+
+            if (dtProvinces.Rows.Count == 0)
+            {
+                MessageBox.Show("Không tải được dữ liệu Tỉnh/Thành phố từ cơ sở dữ liệu.\nHãy kiểm tra bảng dbo.Provinces và dữ liệu trong bảng.",
+                    "Thiếu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private DataTable _EnsureProvinceTableSchema(DataTable dtProvinces)
@@ -58,7 +64,18 @@ namespace CarRental.Users
                 dtProvinces = new DataTable();
 
             if (!dtProvinces.Columns.Contains("ProvinceID"))
+            {
                 dtProvinces.Columns.Add("ProvinceID", typeof(int));
+
+                if (dtProvinces.Columns.Contains("CountryID"))
+                {
+                    foreach (DataRow row in dtProvinces.Rows)
+                    {
+                        if (row["CountryID"] != DBNull.Value)
+                            row["ProvinceID"] = row["CountryID"];
+                    }
+                }
+            }
 
             if (!dtProvinces.Columns.Contains("ProvinceName"))
                 dtProvinces.Columns.Add("ProvinceName", typeof(string));
@@ -335,13 +352,7 @@ namespace CarRental.Users
 
         private void ValidateEmptyTextBox(object sender, CancelEventArgs e)
         {
-            Guna2TextBox temp = (Guna2TextBox)sender;
-            if (string.IsNullOrWhiteSpace(temp.Text.Trim()))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(temp, "Không được để trống!");
-            }
-            else errorProvider1.SetError(temp, null);
+            clsValidation.ValidateRequired((Control)sender, errorProvider1, e, "Không được để trống!");
         }
 
         private void txtEmail_Validating(object sender, CancelEventArgs e)
@@ -374,12 +385,7 @@ namespace CarRental.Users
         private void txtPassword_Validating(object sender, CancelEventArgs e)
         {
             if (!panelPassword.Visible) return;
-            if (string.IsNullOrWhiteSpace(txtPassword.Text))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(txtPassword, "Mật khẩu trống!");
-            }
-            else errorProvider1.SetError(txtPassword, null);
+            clsValidation.ValidateRequired(txtPassword, errorProvider1, e, "Mật khẩu trống!");
         }
 
         private void txtConfirmPassword_Validating(object sender, CancelEventArgs e)
@@ -395,22 +401,12 @@ namespace CarRental.Users
 
         private void txtSecurityQuestion_Validating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtSecurityQuestion.Text))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(txtSecurityQuestion, "Nhập câu hỏi bảo mật!");
-            }
-            else errorProvider1.SetError(txtSecurityQuestion, null);
+            clsValidation.ValidateRequired(txtSecurityQuestion, errorProvider1, e, "Nhập câu hỏi bảo mật!");
         }
 
         private void txtSecurityAnswer_Validating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtSecurityAnswer.Text))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(txtSecurityAnswer, "Nhập câu trả lời!");
-            }
-            else errorProvider1.SetError(txtSecurityAnswer, null);
+            clsValidation.ValidateRequired(txtSecurityAnswer, errorProvider1, e, "Nhập câu trả lời!");
         }
 
         private void txtPhone_KeyPress(object sender, KeyPressEventArgs e)

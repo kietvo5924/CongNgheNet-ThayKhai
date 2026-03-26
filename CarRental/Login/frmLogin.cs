@@ -28,15 +28,7 @@ namespace CarRental.Login
 
         private void ValidatingOfTextBoxes(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(((Guna2TextBox)sender).Text.Trim()))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(((Guna2TextBox)sender), "Vui lòng không để trống trường này!");
-            }
-            else
-            {
-                errorProvider1.SetError(((Guna2TextBox)sender), null);
-            }
+            clsValidation.ValidateRequired((Control)sender, errorProvider1, e);
         }
 
         private void TextBox_Enter(object sender, EventArgs e)

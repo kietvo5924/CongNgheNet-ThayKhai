@@ -1,5 +1,6 @@
 ﻿using CarRental.Customers;
 using CarRental.Customers.UserControls;
+using CarRental.GlobalClasses;
 using CarRental_Business;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace CarRental.Vehicles.UserControls
 {
     public partial class ucVehicleCardWithFilter : UserControl
     {
+        private DataTable _dtVehicleSource;
+
         public ucVehicleCardWithFilter()
         {
             InitializeComponent();
@@ -78,9 +81,6 @@ namespace CarRental.Vehicles.UserControls
             {
                 btnFind.PerformClick();
             }
-
-            // to make sure that the user can enter only numbers
-            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
         }
 
         private void btnFind_Click(object sender, EventArgs e)
@@ -93,25 +93,101 @@ namespace CarRental.Vehicles.UserControls
 
             }
 
-            LoadVehicleInfo(int.Parse(txtFilterValue.Text.Trim()));
+            if (!_TryResolveVehicleID(txtFilterValue.Text.Trim(), out int vehicleID))
+            {
+                MessageBox.Show("Không tìm thấy xe theo mã/tên đã nhập.",
+                    "Không tìm thấy", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            LoadVehicleInfo(vehicleID);
         }
 
         private void txtFilterValue_Validating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtFilterValue.Text.Trim()))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(txtFilterValue, "Vui lòng không để trống trường này!");
-            }
-            else
-            {
-                errorProvider1.SetError(txtFilterValue, null);
-            }
+            clsValidation.ValidateRequired(txtFilterValue, errorProvider1, e);
         }
 
         private void ucVehicleCardWithFilter_Load(object sender, EventArgs e)
         {
+            _LoadVehicleAutoComplete();
+            cbSearchBy.SelectedIndex = 0;
             txtFilterValue.Focus();
+        }
+
+        private void _LoadVehicleAutoComplete()
+        {
+            _dtVehicleSource = clsVehicle.GetAllVehicles();
+
+            AutoCompleteStringCollection source = new AutoCompleteStringCollection();
+            if (_dtVehicleSource != null)
+            {
+                foreach (DataRow row in _dtVehicleSource.Rows)
+                {
+                    string id = row.Table.Columns.Contains("VehicleID") ? row["VehicleID"].ToString() : string.Empty;
+                    string name = row.Table.Columns.Contains("VehicleName") ? row["VehicleName"].ToString() : string.Empty;
+
+                    if (!string.IsNullOrWhiteSpace(id))
+                        source.Add(id);
+
+                    if (!string.IsNullOrWhiteSpace(name))
+                        source.Add(name);
+
+                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name))
+                        source.Add($"{id} - {name}");
+                }
+            }
+
+            txtFilterValue.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            txtFilterValue.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            txtFilterValue.AutoCompleteCustomSource = source;
+        }
+
+        private bool _TryResolveVehicleID(string input, out int vehicleID)
+        {
+            vehicleID = -1;
+
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+
+            input = input.Trim();
+            bool allowById = cbSearchBy.SelectedIndex != 2;
+            bool allowByName = cbSearchBy.SelectedIndex != 1;
+
+            if (allowById && int.TryParse(input, out vehicleID))
+                return true;
+
+            int dashIndex = input.IndexOf('-');
+            if (allowById && dashIndex > 0)
+            {
+                string prefix = input.Substring(0, dashIndex).Trim();
+                if (int.TryParse(prefix, out vehicleID))
+                    return true;
+            }
+
+            if (!allowByName)
+                return false;
+
+            if (_dtVehicleSource == null)
+                _dtVehicleSource = clsVehicle.GetAllVehicles();
+
+            if (_dtVehicleSource == null || !_dtVehicleSource.Columns.Contains("VehicleID") || !_dtVehicleSource.Columns.Contains("VehicleName"))
+                return false;
+
+            DataRow matched = _dtVehicleSource.AsEnumerable()
+                .FirstOrDefault(r => string.Equals((r["VehicleName"]?.ToString() ?? string.Empty).Trim(), input, StringComparison.OrdinalIgnoreCase));
+
+            if (matched == null)
+            {
+                matched = _dtVehicleSource.AsEnumerable()
+                    .FirstOrDefault(r => (r["VehicleName"]?.ToString() ?? string.Empty)
+                        .Trim().StartsWith(input, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (matched == null)
+                return false;
+
+            return int.TryParse(matched["VehicleID"].ToString(), out vehicleID);
         }
 
         public void LoadVehicleInfo(int? VehicleID)

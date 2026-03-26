@@ -63,15 +63,7 @@ namespace CarRental.Login
 
         private void txtNewPassword_Validating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtNewPassword.Text.Trim()))
-            {
-                e.Cancel = true;
-                ErrorProvider1.SetError(txtNewPassword, "Mật khẩu mới không được để trống");
-            }
-            else
-            {
-                ErrorProvider1.SetError(txtNewPassword, null);
-            }
+            clsValidation.ValidateRequired(txtNewPassword, ErrorProvider1, e, "Mật khẩu mới không được để trống");
         }
 
         private void txtConfirmPassword_Validating(object sender, CancelEventArgs e)

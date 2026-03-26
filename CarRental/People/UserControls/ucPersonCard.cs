@@ -36,7 +36,9 @@ namespace CarRental.People.UserControls
             lblAddress.Text = _Person.Address;
             lblEmail.Text = _Person.Email;
             lblPhone.Text = _Person.Phone;
-            lblProvince.Text = _Person.ProvinceInfo?.ProvinceName ?? "[????]";
+            lblProvince.Text = !string.IsNullOrWhiteSpace(_Person.ProvinceInfo?.ProvinceName)
+                ? _Person.ProvinceInfo.ProvinceName
+                : "Chưa cập nhật";
             lblCreatedAt.Text = _Person.CreatedAt.ToString("dd/MMM/yyyy hh:mm tt");
             lblUpdatedAt.Text = _Person.UpdatedAt?.ToString("dd/MMM/yyyy hh:mm tt");
         }

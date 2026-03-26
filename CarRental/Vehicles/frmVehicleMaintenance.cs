@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +24,7 @@ namespace CarRental.Vehicles
         public frmVehicleMaintenance()
         {
             InitializeComponent();
+            _ApplyModernUiNoIcons();
 
             dtpMaintenanceDate.MinDate = DateTime.Now;
         }
@@ -32,11 +32,68 @@ namespace CarRental.Vehicles
         public frmVehicleMaintenance(int VehicleID)
         {
             InitializeComponent();
+            _ApplyModernUiNoIcons();
 
             ucVehicleCardWithFilter1.LoadVehicleInfo(VehicleID);
             ucVehicleCardWithFilter1.FilterEnabled = false;
 
             dtpMaintenanceDate.MinDate = DateTime.Now;
+        }
+
+        private void _ApplyModernUiNoIcons()
+        {
+            this.Font = new Font("Segoe UI", 10F);
+            this.BackColor = Color.FromArgb(245, 247, 251);
+
+            lblTitle.Font = new Font("Segoe UI", 28F, FontStyle.Bold);
+            lblTitle.ForeColor = Color.FromArgb(31, 41, 55);
+
+            groupBox1.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
+            groupBox1.ForeColor = Color.FromArgb(55, 65, 81);
+            groupBox1.BackColor = Color.White;
+
+            foreach (Control control in groupBox1.Controls)
+            {
+                if (control is Label lbl)
+                {
+                    lbl.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+                    lbl.ForeColor = Color.FromArgb(107, 114, 128);
+                }
+            }
+
+            lblVehicleID.ForeColor = Color.FromArgb(31, 41, 55);
+            lblMaintenanceID.ForeColor = Color.FromArgb(0, 118, 212);
+
+            btnSave.FillColor = Color.FromArgb(0, 118, 212);
+            btnSave.ForeColor = Color.White;
+            btnSave.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            btnSave.Text = "Lưu";
+
+            btnClose.FillColor = Color.FromArgb(243, 244, 246);
+            btnClose.ForeColor = Color.FromArgb(75, 85, 99);
+            btnClose.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            btnClose.Text = "Đóng";
+
+            txtCost.Font = new Font("Segoe UI", 10F);
+            txtDescription.Font = new Font("Segoe UI", 10F);
+            txtCost.FillColor = Color.White;
+            txtDescription.FillColor = Color.White;
+
+            dtpMaintenanceDate.BorderRadius = 8;
+            dtpMaintenanceDate.FillColor = Color.White;
+            dtpMaintenanceDate.ForeColor = Color.FromArgb(31, 41, 55);
+            dtpMaintenanceDate.Font = new Font("Segoe UI", 10F);
+
+            llShowVehicleMaintenanceHistory.LinkColor = Color.FromArgb(0, 118, 212);
+            llShowVehicleMaintenanceHistory.ActiveLinkColor = Color.FromArgb(0, 118, 212);
+            llShowVehicleMaintenanceHistory.VisitedLinkColor = Color.FromArgb(0, 118, 212);
+            llShowVehicleMaintenanceHistory.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
+
+            pictureBox1.Visible = false;
+            pictureBox2.Visible = false;
+            pictureBox3.Visible = false;
+            pictureBox8.Visible = false;
+            pbGender.Visible = false;
         }
 
         private void txtCost_KeyPress(object sender, KeyPressEventArgs e)
@@ -46,37 +103,21 @@ namespace CarRental.Vehicles
 
         private void txtCost_Validating(object sender, CancelEventArgs e)
         {
-            string rawValue = txtCost.Text.Trim();
-
-            if (string.IsNullOrWhiteSpace(rawValue))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(txtCost, "Chi phí không được để trống!");
-                return;
-            }
-
-            if (!decimal.TryParse(rawValue, NumberStyles.Number, CultureInfo.CurrentCulture, out decimal cost) || cost < 0)
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(txtCost, "Giá trị chi phí không hợp lệ.");
-                return;
-            }
-
-            errorProvider1.SetError(txtCost, null);
-            txtCost.Text = cost.ToString("N0");
+            clsValidation.ValidateMoney(
+                txtCost,
+                errorProvider1,
+                e,
+                out _,
+                required: true,
+                allowNegative: false,
+                formatAfterValidate: true,
+                emptyMessage: "Chi phí không được để trống!",
+                invalidMessage: "Giá trị chi phí không hợp lệ.");
         }
 
         private void txtDescription_Validating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtDescription.Text.Trim()))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(txtDescription, "Vui lòng không để trống trường này!");
-            }
-            else
-            {
-                errorProvider1.SetError(txtDescription, null);
-            }
+            clsValidation.ValidateRequired(txtDescription, errorProvider1, e);
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -111,13 +152,35 @@ namespace CarRental.Vehicles
                 return;
             }
 
+            if (!clsValidation.ValidateDateInRange(
+                dtpMaintenanceDate,
+                dtpMaintenanceDate.Value,
+                errorProvider1,
+                null,
+                minDate: DateTime.Now.Date,
+                maxDate: null,
+                rangeMessage: "Ngày bảo trì không được nhỏ hơn ngày hiện tại."))
+            {
+                MessageBox.Show("Ngày bảo trì không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             if (MessageBox.Show("Bạn có chắc muốn tạo lịch bảo trì cho xe này?", "Xác nhận",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 return;
             }
 
-            if (!decimal.TryParse(txtCost.Text.Trim(), NumberStyles.Number, CultureInfo.CurrentCulture, out decimal cost))
+            if (!clsValidation.ValidateMoney(
+                txtCost,
+                errorProvider1,
+                null,
+                out decimal cost,
+                required: true,
+                allowNegative: false,
+                formatAfterValidate: false,
+                emptyMessage: "Chi phí không được để trống!",
+                invalidMessage: "Giá trị chi phí không hợp lệ."))
             {
                 MessageBox.Show("Giá trị chi phí không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;

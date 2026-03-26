@@ -165,5 +165,15 @@ namespace CarRental_Business
             return clsBookingData.GetBookingHistoryByCustomerID(CustomerID);
         }
 
+        public static int GetActiveRentalBookingsCount()
+        {
+            return clsBookingData.GetActiveRentalBookingsCount();
+        }
+
+        public static DataTable GetActiveRentalBookingsForDashboard()
+        {
+            return clsBookingData.GetActiveRentalBookingsForDashboard();
+        }
+
     }
 }

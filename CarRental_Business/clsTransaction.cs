@@ -111,10 +111,27 @@ namespace CarRental_Business
 
         private bool _AddNewTransaction()
         {
-            this.TransactionID = clsTransactionData.AddNewTransaction(this.BookingID,
-                this.PaymentDetails, this.PaidInitialTotalDueAmount);
+            int? bookingId = this.BookingID;
+            int? transactionId = this.TransactionID;
 
-            return (this.TransactionID.HasValue);
+            bool isSaved = clsTransactionData.AddNewBookingAndTransaction(
+                this.CustomerID,
+                this.VehicleID,
+                this.RentalStartDate,
+                this.RentalEndDate,
+                this.PickupLocation,
+                this.DropoffLocation,
+                this.RentalPricePerDay,
+                this.InitialCheckNotes,
+                this.PaymentDetails,
+                this.PaidInitialTotalDueAmount,
+                ref bookingId,
+                ref transactionId);
+
+            this.BookingID = bookingId;
+            this.TransactionID = transactionId;
+
+            return isSaved && this.BookingID.HasValue && this.TransactionID.HasValue;
         }
 
         private bool _UpdateTransaction()
@@ -126,13 +143,6 @@ namespace CarRental_Business
 
         public bool Save()
         {
-            base.Mode = (clsBooking.enMode)Mode;
-
-            if (!base.Save())
-            {
-                return false;
-            }
-
             switch (Mode)
             {
                 case enMode.AddNew:

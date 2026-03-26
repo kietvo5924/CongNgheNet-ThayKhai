@@ -1,6 +1,7 @@
 ﻿using CarRental.GlobalClasses;
 using CarRental_Business;
 using System;
+using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -24,12 +25,15 @@ namespace CarRental.Dashboard
 
             // 2. Xử lý biểu đồ trạng thái xe
             SetupVehicleChart();
+
+            // 3. Danh sách khách hàng còn đang thuê chưa trả
+            LoadActiveRentalsList();
         }
 
         private void SetupVehicleChart()
         {
-            int AvailableVehiclesCount = clsVehicle.GetAvailableVehiclesCount();
-            int RentedVehiclesCount = _AllVehicles - AvailableVehiclesCount;
+            int RentedVehiclesCount = clsBooking.GetActiveRentalBookingsCount();
+            int AvailableVehiclesCount = Math.Max(0, _AllVehicles - RentedVehiclesCount);
 
             chartVehiclesStatus.Series["s1"].Points.Clear();
 
@@ -52,6 +56,33 @@ namespace CarRental.Dashboard
             // Tinh chỉnh hiệu ứng Doughnut
             chartVehiclesStatus.Series["s1"]["PieLabelStyle"] = "Inside";
             chartVehiclesStatus.Series["s1"]["DoughnutRadius"] = "60";
+        }
+
+        private void LoadActiveRentalsList()
+        {
+            lstActiveRentals.Items.Clear();
+
+            DataTable dt = clsBooking.GetActiveRentalBookingsForDashboard();
+
+            if (dt == null || dt.Rows.Count == 0)
+            {
+                lstActiveRentals.Items.Add("Không có khách hàng nào đang thuê chưa trả.");
+                return;
+            }
+
+            foreach (DataRow row in dt.Rows)
+            {
+                string customerName = row["CustomerName"]?.ToString() ?? "N/A";
+                string customerId = row["CustomerID"]?.ToString() ?? "?";
+                string vehicleId = row["VehicleID"]?.ToString() ?? "?";
+
+                DateTime startDate;
+                string startDateText = DateTime.TryParse(row["RentalStartDate"]?.ToString(), out startDate)
+                    ? startDate.ToString("dd/MM/yyyy")
+                    : "N/A";
+
+                lstActiveRentals.Items.Add($"KH#{customerId} - {customerName} | Xe#{vehicleId} | Nhận: {startDateText}");
+            }
         }
 
         private void CountElements()

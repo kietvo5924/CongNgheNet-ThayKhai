@@ -1,4 +1,5 @@
 ﻿using CarRental.Transaction;
+using CarRental.GlobalClasses;
 using CarRental_Business;
 using Guna.UI2.WinForms;
 using System;
@@ -25,18 +26,7 @@ namespace CarRental.Booking
 
         private void ValidateEmptyTextBox(object sender, CancelEventArgs e)
         {
-            // Sửa lỗi ép kiểu: Chuyển từ TextBox sang Guna2TextBox
-            Guna2TextBox temp = (Guna2TextBox)sender;
-
-            if (string.IsNullOrWhiteSpace(temp.Text.Trim()))
-            {
-                e.Cancel = true;
-                errorProvider1.SetError(temp, "Vui lòng không để trống trường này!");
-            }
-            else
-            {
-                errorProvider1.SetError(temp, null);
-            }
+            clsValidation.ValidateRequired((Control)sender, errorProvider1, e);
         }
 
         private void _UpdateInitialDays()
@@ -70,6 +60,27 @@ namespace CarRental.Booking
                 btnBook.Enabled = false;
                 return;
             }
+
+            string provinceName = Customer.ProvinceInfo?.ProvinceName;
+            string address = Customer.Address;
+            string customerLocation = string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(provinceName) && !string.IsNullOrWhiteSpace(address))
+                customerLocation = provinceName + " - " + address;
+            else if (!string.IsNullOrWhiteSpace(provinceName))
+                customerLocation = provinceName;
+            else if (!string.IsNullOrWhiteSpace(address))
+                customerLocation = address;
+
+            if (!string.IsNullOrWhiteSpace(customerLocation))
+            {
+                if (string.IsNullOrWhiteSpace(txtPickUpLocation.Text.Trim()))
+                    txtPickUpLocation.Text = customerLocation;
+
+                if (string.IsNullOrWhiteSpace(txtDropOffLocation.Text.Trim()))
+                    txtDropOffLocation.Text = customerLocation;
+            }
+
             lblCustomerID.Text = Customer.CustomerID.ToString();
             if (ucSelectedCustomerAndVehicleWithFilter1.VehicleID.HasValue)
             {

@@ -1,0 +1,404 @@
+{
+  "ApplicationPath": "..\\..\\..\\..\\..\\CarRental\\bin\\Debug\\CarRental.exe",
+  "StartupWaitMs": 3000,
+  "WindowSearchTimeoutMs": 15000,
+  "Variables": {
+    "AdminUsername": "admin",
+    "AdminPassword": "admin123",
+    "RestrictedUsername": "limited",
+    "RestrictedPassword": "123456",
+    "TestUserUsername": "autotest_user",
+    "TestUserPassword": "A123456!",
+    "TestCustomerName": "Auto Test Customer",
+    "TestCustomerPhone": "0988888888",
+    "TestCustomerEmail": "autotest.customer@example.com",
+    "TestDriverLicense": "AUTO-DRV-0001"
+  },
+  "Scenarios": [
+    {
+      "Name": "Smoke - ?ng d?ng kh?i ??ng và hi?n th? c?a s?",
+      "Enabled": true,
+      "WindowTitlePattern": "",
+      "Steps": [],
+      "Assertions": [
+        {
+          "Name": "Có ít nh?t m?t window c?a ?ng d?ng",
+          "Type": "WindowExists",
+          "Value": ""
+        }
+      ]
+    },
+    {
+      "Name": "Login th?t b?i hi?n th? thông báo l?i",
+      "Enabled": false,
+      "WindowTitlePattern": "??ng nh?p|login",
+      "Steps": [
+        {
+          "Name": "Nh?p username sai",
+          "Action": "SetText",
+          "Target": "txtUsername",
+          "TargetBy": "AutomationId",
+          "ControlType": "Edit",
+          "Value": "invalid_user"
+        },
+        {
+          "Name": "Nh?p password sai",
+          "Action": "SetText",
+          "Target": "txtPassword",
+          "TargetBy": "AutomationId",
+          "ControlType": "Edit",
+          "Value": "invalid_password"
+        },
+        {
+          "Name": "Click ??ng nh?p",
+          "Action": "Click",
+          "Target": "btnLogin",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        }
+      ],
+      "Assertions": [
+        {
+          "Name": "Message l?i ??ng nh?p xu?t hi?n",
+          "Type": "WindowExists",
+          "Value": "??ng nh?p th?t b?i"
+        },
+        {
+          "Name": "N?i dung l?i ?úng",
+          "Type": "TextContains",
+          "WindowTitlePattern": "??ng nh?p th?t b?i",
+          "Target": "Sai tên ??ng nh?p ho?c m?t kh?u.",
+          "TargetBy": "Name",
+          "ControlType": "Text",
+          "Value": "Sai tên ??ng nh?p ho?c m?t kh?u"
+        }
+      ]
+    },
+    {
+      "Name": "Login thành công vào menu chính",
+      "Enabled": false,
+      "WindowTitlePattern": "??ng nh?p|login",
+      "Steps": [
+        {
+          "Name": "Nh?p username admin",
+          "Action": "SetText",
+          "Target": "txtUsername",
+          "TargetBy": "AutomationId",
+          "ControlType": "Edit",
+          "Value": "{{AdminUsername}}"
+        },
+        {
+          "Name": "Nh?p password admin",
+          "Action": "SetText",
+          "Target": "txtPassword",
+          "TargetBy": "AutomationId",
+          "ControlType": "Edit",
+          "Value": "{{AdminPassword}}"
+        },
+        {
+          "Name": "Click ??ng nh?p",
+          "Action": "Click",
+          "Target": "btnLogin",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        },
+        {
+          "Name": "Chuy?n sang menu chính",
+          "Action": "SwitchWindow",
+          "Value": "menu chính|car rental"
+        }
+      ],
+      "Assertions": [
+        {
+          "Name": "Có nút Khách hàng",
+          "Type": "ControlExists",
+          "Target": "btnCustomers",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        },
+        {
+          "Name": "Có nút Ng??i dùng",
+          "Type": "ControlExists",
+          "Target": "btnUsers",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        }
+      ]
+    },
+    {
+      "Name": "CRUD User + validate l?i",
+      "Enabled": false,
+      "WindowTitlePattern": "??ng nh?p|login",
+      "Steps": [
+        {
+          "Name": "Login admin username",
+          "Action": "SetText",
+          "Target": "txtUsername",
+          "TargetBy": "AutomationId",
+          "ControlType": "Edit",
+          "Value": "{{AdminUsername}}"
+        },
+        {
+          "Name": "Login admin password",
+          "Action": "SetText",
+          "Target": "txtPassword",
+          "TargetBy": "AutomationId",
+          "ControlType": "Edit",
+          "Value": "{{AdminPassword}}"
+        },
+        {
+          "Name": "Click login",
+          "Action": "Click",
+          "Target": "btnLogin",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        },
+        {
+          "Name": "Switch main",
+          "Action": "SwitchWindow",
+          "Value": "menu chính|car rental"
+        },
+        {
+          "Name": "M? màn Users",
+          "Action": "Click",
+          "Target": "btnUsers",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        },
+        {
+          "Name": "Click thêm user m?i",
+          "Action": "Click",
+          "Target": "btnAddNewUser",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        },
+        {
+          "Name": "Chuy?n form Add User",
+          "Action": "SwitchWindow",
+          "Value": "thêm ng??i dùng m?i"
+        },
+        {
+          "Name": "L?u r?ng ?? trigger validate",
+          "Action": "Click",
+          "Target": "btnSave",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        },
+        {
+          "Name": "?óng form add user",
+          "Action": "Click",
+          "Target": "btnClose",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        }
+      ],
+      "Assertions": [
+        {
+          "Name": "Form add user m? thành công",
+          "Type": "WindowExists",
+          "Value": "thêm ng??i dùng m?i|c?p nh?t ng??i dùng"
+        }
+      ]
+    },
+    {
+      "Name": "CRUD Customer + validate l?i",
+      "Enabled": false,
+      "WindowTitlePattern": "??ng nh?p|login",
+      "Steps": [
+        {
+          "Name": "Login admin username",
+          "Action": "SetText",
+          "Target": "txtUsername",
+          "TargetBy": "AutomationId",
+          "ControlType": "Edit",
+          "Value": "{{AdminUsername}}"
+        },
+        {
+          "Name": "Login admin password",
+          "Action": "SetText",
+          "Target": "txtPassword",
+          "TargetBy": "AutomationId",
+          "ControlType": "Edit",
+          "Value": "{{AdminPassword}}"
+        },
+        {
+          "Name": "Click login",
+          "Action": "Click",
+          "Target": "btnLogin",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        },
+        {
+          "Name": "Switch main",
+          "Action": "SwitchWindow",
+          "Value": "menu chính|car rental"
+        },
+        {
+          "Name": "M? màn Customers",
+          "Action": "Click",
+          "Target": "btnCustomers",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        },
+        {
+          "Name": "Click thêm customer",
+          "Action": "Click",
+          "Target": "btnAddNewCustomer",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        },
+        {
+          "Name": "Chuy?n form add customer",
+          "Action": "SwitchWindow",
+          "Value": "thêm/s?a khách hàng"
+        },
+        {
+          "Name": "L?u r?ng ?? trigger validate",
+          "Action": "Click",
+          "Target": "btnSave",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        },
+        {
+          "Name": "?óng form add customer",
+          "Action": "Click",
+          "Target": "btnClose",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        }
+      ],
+      "Assertions": [
+        {
+          "Name": "Form add customer m? thành công",
+          "Type": "WindowExists",
+          "Value": "thêm/s?a khách hàng"
+        }
+      ]
+    },
+    {
+      "Name": "Filter/Search/Sort ? màn danh sách",
+      "Enabled": false,
+      "WindowTitlePattern": "??ng nh?p|login",
+      "Steps": [
+        {
+          "Name": "Login admin username",
+          "Action": "SetText",
+          "Target": "txtUsername",
+          "TargetBy": "AutomationId",
+          "ControlType": "Edit",
+          "Value": "{{AdminUsername}}"
+        },
+        {
+          "Name": "Login admin password",
+          "Action": "SetText",
+          "Target": "txtPassword",
+          "TargetBy": "AutomationId",
+          "ControlType": "Edit",
+          "Value": "{{AdminPassword}}"
+        },
+        {
+          "Name": "Click login",
+          "Action": "Click",
+          "Target": "btnLogin",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        },
+        {
+          "Name": "Switch main",
+          "Action": "SwitchWindow",
+          "Value": "menu chính|car rental"
+        },
+        {
+          "Name": "M? Users list",
+          "Action": "Click",
+          "Target": "btnUsers",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        },
+        {
+          "Name": "Ch?n filter Tên ??ng nh?p",
+          "Action": "SelectComboByText",
+          "Target": "cbFilter",
+          "TargetBy": "AutomationId",
+          "ControlType": "ComboBox",
+          "Value": "Tên ??ng nh?p"
+        },
+        {
+          "Name": "Nh?p text tìm ki?m",
+          "Action": "SetText",
+          "Target": "txtSearch",
+          "TargetBy": "AutomationId",
+          "ControlType": "Edit",
+          "Value": "a"
+        }
+      ],
+      "Assertions": [
+        {
+          "Name": "Grid users có d? li?u sau filter",
+          "Type": "GridRowCountMin",
+          "Target": "dgvUsersList",
+          "TargetBy": "AutomationId",
+          "ControlType": "DataGrid",
+          "Value": "0"
+        }
+      ]
+    },
+    {
+      "Name": "Verify quy?n truy c?p + popup t? ch?i",
+      "Enabled": false,
+      "WindowTitlePattern": "??ng nh?p|login",
+      "Steps": [
+        {
+          "Name": "Login restricted username",
+          "Action": "SetText",
+          "Target": "txtUsername",
+          "TargetBy": "AutomationId",
+          "ControlType": "Edit",
+          "Value": "{{RestrictedUsername}}"
+        },
+        {
+          "Name": "Login restricted password",
+          "Action": "SetText",
+          "Target": "txtPassword",
+          "TargetBy": "AutomationId",
+          "ControlType": "Edit",
+          "Value": "{{RestrictedPassword}}"
+        },
+        {
+          "Name": "Click login",
+          "Action": "Click",
+          "Target": "btnLogin",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        },
+        {
+          "Name": "Switch main",
+          "Action": "SwitchWindow",
+          "Value": "menu chính|car rental"
+        },
+        {
+          "Name": "Click Users ?? ki?m tra quy?n",
+          "Action": "Click",
+          "Target": "btnUsers",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        }
+      ],
+      "Assertions": [
+        {
+          "Name": "Popup t? ch?i quy?n xu?t hi?n",
+          "Type": "WindowExists",
+          "Value": "t? ch?i truy c?p|thông báo quy?n truy c?p"
+        },
+        {
+          "Name": "Nút ??ng ý trên popup ph?i b?t",
+          "Type": "ControlEnabled",
+          "WindowTitlePattern": "t? ch?i truy c?p|thông báo quy?n truy c?p",
+          "Target": "btnOK",
+          "TargetBy": "AutomationId",
+          "ControlType": "Button"
+        }
+      ]
+    }
+  ]
+}
