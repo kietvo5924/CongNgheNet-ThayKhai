@@ -3,13 +3,6 @@ using CarRental.GlobalClasses;
 using CarRental.Transaction;
 using CarRental_Business;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CarRental.Return.UserControls
@@ -29,8 +22,8 @@ namespace CarRental.Return.UserControls
 
         private void _FillReturnInfo()
         {
-            btnShowBookingInfo.Enabled = true;
-            btnShowTransactionInfo.Enabled = true;
+            btnShowBookingInfo.Enabled = _Return?.TransactionInfo?.BookingID.HasValue == true;
+            btnShowTransactionInfo.Enabled = _Return?.TransactionInfo?.TransactionID.HasValue == true;
 
             lblReturnID.Text = _Return.ReturnID?.ToString();
             lblActualReturnDate.Text = clsFormat.DateToShort(_Return.ActualReturnDate);
@@ -91,25 +84,49 @@ namespace CarRental.Return.UserControls
 
         private void llShowBookingInfo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            frmShowBookingDetails ShowBookingDetails = new frmShowBookingDetails(ReturnInfo?.TransactionInfo?.BookingID);
-            ShowBookingDetails.ShowDialog();
+            _ShowBookingInfo();
         }
 
         private void btnShowBookingInfo_Click(object sender, EventArgs e)
         {
-            frmShowBookingDetails ShowBookingDetails = new frmShowBookingDetails(ReturnInfo?.TransactionInfo?.BookingID);
-            ShowBookingDetails.ShowDialog();
+            _ShowBookingInfo();
         }
 
         private void llShowTransactionInfo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            frmShowTransactionDetails ShowTransactionDetails = new frmShowTransactionDetails(ReturnInfo?.TransactionInfo?.TransactionID);
-            ShowTransactionDetails.ShowDialog();
+            _ShowTransactionInfo();
         }
 
         private void btnShowTransactionInfo_Click(object sender, EventArgs e)
         {
-            frmShowTransactionDetails ShowTransactionDetails = new frmShowTransactionDetails(ReturnInfo?.TransactionInfo?.TransactionID);
+            _ShowTransactionInfo();
+        }
+
+        private void _ShowBookingInfo()
+        {
+            int? bookingID = ReturnInfo?.TransactionInfo?.BookingID;
+            if (!bookingID.HasValue)
+            {
+                MessageBox.Show("Phiếu trả xe này chưa có lịch đặt liên quan.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            frmShowBookingDetails ShowBookingDetails = new frmShowBookingDetails(bookingID);
+            ShowBookingDetails.ShowDialog();
+        }
+
+        private void _ShowTransactionInfo()
+        {
+            int? transactionID = ReturnInfo?.TransactionInfo?.TransactionID;
+            if (!transactionID.HasValue)
+            {
+                MessageBox.Show("Phiếu trả xe này chưa có giao dịch liên quan.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            frmShowTransactionDetails ShowTransactionDetails = new frmShowTransactionDetails(transactionID);
             ShowTransactionDetails.ShowDialog();
         }
     }

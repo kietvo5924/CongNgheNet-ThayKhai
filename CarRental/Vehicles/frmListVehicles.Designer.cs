@@ -35,6 +35,7 @@
             this.cbFuelType = new Guna.UI2.WinForms.Guna2ComboBox();
             this.cbMake = new Guna.UI2.WinForms.Guna2ComboBox();
             this.cbFilter = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.lblEmptyState = new System.Windows.Forms.Label();
             this.lblNumberOfRecords = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -91,6 +92,7 @@
             this.guna2Panel1.Controls.Add(this.cbFuelType);
             this.guna2Panel1.Controls.Add(this.cbMake);
             this.guna2Panel1.Controls.Add(this.cbFilter);
+            this.guna2Panel1.Controls.Add(this.lblEmptyState);
             this.guna2Panel1.Controls.Add(this.lblNumberOfRecords);
             this.guna2Panel1.Controls.Add(this.label2);
             this.guna2Panel1.Controls.Add(this.label1);
@@ -229,6 +231,20 @@
             this.cbIsAvailable.Visible = false;
             this.cbIsAvailable.SelectedIndexChanged += new System.EventHandler(this.cbIsAvailable_SelectedIndexChanged);
             // 
+            // lblEmptyState
+            // 
+            this.lblEmptyState.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblEmptyState.AutoSize = true;
+            this.lblEmptyState.BackColor = System.Drawing.Color.White;
+            this.lblEmptyState.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.lblEmptyState.ForeColor = System.Drawing.Color.Gray;
+            this.lblEmptyState.Location = new System.Drawing.Point(522, 395);
+            this.lblEmptyState.Name = "lblEmptyState";
+            this.lblEmptyState.Size = new System.Drawing.Size(278, 21);
+            this.lblEmptyState.TabIndex = 10;
+            this.lblEmptyState.Text = "Không có dữ liệu phù hợp với bộ lọc.";
+            this.lblEmptyState.Visible = false;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -290,6 +306,7 @@
         private Guna.UI2.WinForms.Guna2ComboBox cbMake;
         private Guna.UI2.WinForms.Guna2ComboBox cbFuelType;
         private Guna.UI2.WinForms.Guna2ComboBox cbIsAvailable;
+        private System.Windows.Forms.Label lblEmptyState;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblNumberOfRecords;

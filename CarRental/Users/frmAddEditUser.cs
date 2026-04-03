@@ -352,7 +352,13 @@ namespace CarRental.Users
 
         private void ValidateEmptyTextBox(object sender, CancelEventArgs e)
         {
-            clsValidation.ValidateRequired((Control)sender, errorProvider1, e, "Không được để trống!");
+            Control control = (Control)sender;
+            clsValidation.ValidateRequired(control, errorProvider1, e, "Không được để trống!");
+
+            if (!e.Cancel && control == txtPhone)
+            {
+                clsValidation.ValidateVietnamPhone(txtPhone, errorProvider1, e, required: true);
+            }
         }
 
         private void txtEmail_Validating(object sender, CancelEventArgs e)
@@ -411,7 +417,7 @@ namespace CarRental.Users
 
         private void txtPhone_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+            clsValidation.HandlePhoneKeyPress(txtPhone, e);
         }
 
         private void rbMale_Click(object sender, EventArgs e) { if (pbUserImage.ImageLocation == null) pbUserImage.Image = Resources.DefaultMale; }

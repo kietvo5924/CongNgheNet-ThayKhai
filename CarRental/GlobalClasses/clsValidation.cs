@@ -138,6 +138,63 @@ namespace CarRental.GlobalClasses
             return regex.IsMatch(Number);
         }
 
+        public static bool ValidateVietnamPhone(Control control, ErrorProvider errorProvider,
+            CancelEventArgs e = null, bool required = true)
+        {
+            if (control == null || errorProvider == null)
+                return true;
+
+            string rawValue = control.Text == null ? string.Empty : control.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(rawValue))
+            {
+                if (!required)
+                {
+                    errorProvider.SetError(control, null);
+                    return true;
+                }
+
+                if (e != null)
+                    e.Cancel = true;
+
+                errorProvider.SetError(control, "Vui lòng nhập số điện thoại.");
+                return false;
+            }
+
+            if (!Regex.IsMatch(rawValue, @"^0\d{9}$"))
+            {
+                if (e != null)
+                    e.Cancel = true;
+
+                errorProvider.SetError(control, "Số điện thoại phải gồm đúng 10 số và bắt đầu bằng 0.");
+                return false;
+            }
+
+            errorProvider.SetError(control, null);
+            return true;
+        }
+
+        public static void HandlePhoneKeyPress(Control control, KeyPressEventArgs e, int maxLength = 10)
+        {
+            if (e == null)
+                return;
+
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            if (!char.IsDigit(e.KeyChar))
+                return;
+
+            int currentLength = (control?.Text ?? string.Empty).Length;
+            if (currentLength >= maxLength)
+            {
+                e.Handled = true;
+            }
+        }
+
         public static bool ValidateFloat(string Number)
         {
             var pattern = @"^[0-9]*(?:\.[0-9]*)?$";

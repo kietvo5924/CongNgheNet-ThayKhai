@@ -32,6 +32,7 @@
             this.dgvCustomersList = new Guna.UI2.WinForms.Guna2DataGridView();
             this.txtSearch = new Guna.UI2.WinForms.Guna2TextBox();
             this.cbFilter = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.lblEmptyState = new System.Windows.Forms.Label();
             this.lblNumberOfRecords = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -85,6 +86,7 @@
             this.guna2Panel1.Controls.Add(this.dgvCustomersList);
             this.guna2Panel1.Controls.Add(this.txtSearch);
             this.guna2Panel1.Controls.Add(this.cbFilter);
+            this.guna2Panel1.Controls.Add(this.lblEmptyState);
             this.guna2Panel1.Controls.Add(this.lblNumberOfRecords);
             this.guna2Panel1.Controls.Add(this.label2);
             this.guna2Panel1.Controls.Add(this.label1);
@@ -156,6 +158,7 @@
             this.txtSearch.PlaceholderText = "Tìm kiếm khách hàng...";
             this.txtSearch.Size = new System.Drawing.Size(280, 36);
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
+            this.txtSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSearch_KeyPress);
             // 
             // cbFilter
             // 
@@ -175,6 +178,20 @@
             this.cbFilter.Name = "cbFilter";
             this.cbFilter.Size = new System.Drawing.Size(180, 36);
             this.cbFilter.SelectedIndexChanged += new System.EventHandler(this.cbFilter_SelectedIndexChanged);
+            // 
+            // lblEmptyState
+            // 
+            this.lblEmptyState.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblEmptyState.AutoSize = true;
+            this.lblEmptyState.BackColor = System.Drawing.Color.White;
+            this.lblEmptyState.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.lblEmptyState.ForeColor = System.Drawing.Color.Gray;
+            this.lblEmptyState.Location = new System.Drawing.Point(520, 395);
+            this.lblEmptyState.Name = "lblEmptyState";
+            this.lblEmptyState.Size = new System.Drawing.Size(278, 21);
+            this.lblEmptyState.TabIndex = 8;
+            this.lblEmptyState.Text = "Không có dữ liệu phù hợp với bộ lọc.";
+            this.lblEmptyState.Visible = false;
             // 
             // label1
             // 
@@ -235,6 +252,7 @@
         private Guna.UI2.WinForms.Guna2Button btnAddNewCustomer;
         private Guna.UI2.WinForms.Guna2TextBox txtSearch;
         private Guna.UI2.WinForms.Guna2ComboBox cbFilter;
+        private System.Windows.Forms.Label lblEmptyState;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblNumberOfRecords;

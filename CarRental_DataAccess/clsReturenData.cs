@@ -230,15 +230,28 @@ where TransactionID = @TransactionID and ReturnID is null";
                                 }
                             }
 
-                            string updateVehicleQuery = @"update Vehicles
-set Mileage = @Mileage,
-    IsAvailableForRent = 1
-where VehicleID = @VehicleID";
+                            string updateVehicleQuery = @"UPDATE Vehicles
+SET Mileage = @Mileage,
+    IsAvailableForRent = CASE
+        WHEN EXISTS
+        (
+            SELECT 1
+            FROM RentalBooking b
+            INNER JOIN RentalTransaction t ON t.BookingID = b.BookingID
+            WHERE b.VehicleID = @VehicleID
+                  AND t.ReturnID IS NULL
+                  AND b.RentalStartDate <= @Today
+                  AND b.RentalEndDate >= @Today
+        ) THEN 0
+        ELSE 1
+    END
+WHERE VehicleID = @VehicleID";
 
                             using (SqlCommand updateVehicleCommand = new SqlCommand(updateVehicleQuery, connection, transaction))
                             {
                                 updateVehicleCommand.Parameters.AddWithValue("@Mileage", Mileage);
                                 updateVehicleCommand.Parameters.AddWithValue("@VehicleID", (object)vehicleID ?? DBNull.Value);
+                                updateVehicleCommand.Parameters.AddWithValue("@Today", DateTime.Today);
 
                                 if (updateVehicleCommand.ExecuteNonQuery() == 0)
                                 {

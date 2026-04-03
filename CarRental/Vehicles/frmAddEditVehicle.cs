@@ -1,4 +1,5 @@
 ﻿using CarRental.GlobalClasses;
+using CarRental.GlobalClasses;
 using CarRental.Properties;
 using CarRental_Business;
 using Guna.UI2.WinForms;
@@ -74,6 +75,14 @@ namespace CarRental.Vehicles
             pbVehicleImage.Image = null;
             pbVehicleImage.ImageLocation = null;
             llRemoveImage.Visible = false;
+
+            if (_Mode == enMode.AddNew)
+            {
+                if (cbMake.Items.Count > 0) cbMake.SelectedIndex = 0;
+                if (cbBody.Items.Count > 0) cbBody.SelectedIndex = 0;
+                if (cbFuelType.Items.Count > 0) cbFuelType.SelectedIndex = 0;
+                if (cbDriveType.Items.Count > 0) cbDriveType.SelectedIndex = 0;
+            }
         }
 
         private void _LoadData()
@@ -96,10 +105,10 @@ namespace CarRental.Vehicles
             txtRentalPricePerDay.Text = _Vehicle.RentalPricePerDay.ToString("N0");
             chkIsAvailableForRent.Checked = _Vehicle.IsAvailableForRent;
 
-            cbMake.SelectedIndex = cbMake.FindString(_Vehicle.MakeInfo.Make);
-            cbBody.SelectedIndex = cbBody.FindString(_Vehicle.BodyInfo.BodyName);
-            cbFuelType.SelectedIndex = cbFuelType.FindString(_Vehicle.FuelTypeInfo.FuelTypeName);
-            cbDriveType.SelectedIndex = cbDriveType.FindString(_Vehicle.DriverTypeInfo.DriveTypeName);
+            cbMake.SelectedIndex = cbMake.FindString(_Vehicle.MakeInfo?.Make ?? string.Empty);
+            cbBody.SelectedIndex = cbBody.FindString(_Vehicle.BodyInfo?.BodyName ?? string.Empty);
+            cbFuelType.SelectedIndex = cbFuelType.FindString(_Vehicle.FuelTypeInfo?.FuelTypeName ?? string.Empty);
+            cbDriveType.SelectedIndex = cbDriveType.FindString(_Vehicle.DriverTypeInfo?.DriveTypeName ?? string.Empty);
 
             if (_Vehicle.ImagePath != null)
             {
@@ -130,7 +139,7 @@ namespace CarRental.Vehicles
             }
 
             if (_Mode == enMode.Update && _Vehicle != null)
-                cbModel.SelectedIndex = cbModel.FindString(_Vehicle.ModelInfo.ModelName);
+                cbModel.SelectedIndex = cbModel.FindString(_Vehicle.ModelInfo?.ModelName ?? string.Empty);
         }
 
         private void cbModel_SelectedIndexChanged(object sender, EventArgs e)
@@ -149,7 +158,7 @@ namespace CarRental.Vehicles
             }
 
             if (_Mode == enMode.Update && _Vehicle != null)
-                cbSubModel.SelectedIndex = cbSubModel.FindString(_Vehicle.SubModelInfo.SubModelName);
+                cbSubModel.SelectedIndex = cbSubModel.FindString(_Vehicle.SubModelInfo?.SubModelName ?? string.Empty);
         }
 
         private bool _HandleVehicleImage()
@@ -176,17 +185,71 @@ namespace CarRental.Vehicles
 
             if (!_HandleVehicleImage()) return;
 
-            _Vehicle.VehicleName = txtVehicleName.Text.Trim();
-            _Vehicle.PlateNumber = txtPlateNumber.Text.Trim();
-            _Vehicle.Year = Convert.ToInt16(txtYear.Text.Trim());
-            _Vehicle.Mileage = Convert.ToInt32(txtMileage.Text.Trim());
+            string vehicleName = txtVehicleName.Text.Trim();
+            string plateNumber = txtPlateNumber.Text.Trim().ToUpperInvariant();
+            string engine = txtEngine.Text.Trim();
+
+            if (plateNumber.Length < 6)
+            {
+                MessageBox.Show("Biển số xe không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtPlateNumber.Focus();
+                return;
+            }
+
+            if (!short.TryParse(txtYear.Text.Trim(), out short year))
+            {
+                MessageBox.Show("Năm sản xuất không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtYear.Focus();
+                return;
+            }
+
+            int currentYear = DateTime.Now.Year;
+            if (year < 1980 || year > currentYear + 1)
+            {
+                MessageBox.Show($"Năm sản xuất phải trong khoảng từ 1980 đến {currentYear + 1}.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtYear.Focus();
+                return;
+            }
+
+            if (!int.TryParse(txtMileage.Text.Trim(), out int mileage) || mileage < 0)
+            {
+                MessageBox.Show("Số KM không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtMileage.Focus();
+                return;
+            }
+
             if (!decimal.TryParse(txtRentalPricePerDay.Text.Trim(), NumberStyles.Number, CultureInfo.CurrentCulture, out decimal rentalPricePerDay))
             {
                 MessageBox.Show("Giá thuê mỗi ngày không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtRentalPricePerDay.Focus();
                 return;
             }
+
+            if (rentalPricePerDay <= 0)
+            {
+                MessageBox.Show("Giá thuê mỗi ngày phải lớn hơn 0.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtRentalPricePerDay.Focus();
+                return;
+            }
+
+            bool plateChanged = _Mode == enMode.AddNew ||
+                               !string.Equals(_Vehicle.PlateNumber ?? string.Empty, plateNumber, StringComparison.OrdinalIgnoreCase);
+
+            if (plateChanged && clsVehicle.DoesPlateNumberExist(plateNumber))
+            {
+                MessageBox.Show("Biển số xe đã tồn tại. Vui lòng nhập biển số khác.",
+                    "Trùng dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtPlateNumber.Focus();
+                return;
+            }
+
+            _Vehicle.VehicleName = vehicleName;
+            _Vehicle.PlateNumber = plateNumber;
+            txtPlateNumber.Text = plateNumber;
+            _Vehicle.Year = year;
+            _Vehicle.Mileage = mileage;
             _Vehicle.RentalPricePerDay = rentalPricePerDay;
-            _Vehicle.Engine = txtEngine.Text.Trim();
+            _Vehicle.Engine = engine;
             _Vehicle.IsAvailableForRent = chkIsAvailableForRent.Checked;
 
             // Gán ID từ các ComboBox
@@ -228,21 +291,95 @@ namespace CarRental.Vehicles
         private void ValidateEmptyTextBox(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Guna2TextBox temp = (Guna2TextBox)sender;
+
             if (string.IsNullOrWhiteSpace(temp.Text))
             {
                 e.Cancel = true;
                 errorProvider1.SetError(temp, "Không được để trống!");
+                return;
             }
-            else errorProvider1.SetError(temp, null);
+
+            if (temp == txtYear)
+            {
+                if (!short.TryParse(temp.Text.Trim(), out short year))
+                {
+                    e.Cancel = true;
+                    errorProvider1.SetError(temp, "Năm sản xuất không hợp lệ.");
+                    return;
+                }
+
+                int currentYear = DateTime.Now.Year;
+                if (year < 1980 || year > currentYear + 1)
+                {
+                    e.Cancel = true;
+                    errorProvider1.SetError(temp, $"Năm sản xuất phải từ 1980 đến {currentYear + 1}.");
+                    return;
+                }
+            }
+
+            if (temp == txtMileage)
+            {
+                if (!int.TryParse(temp.Text.Trim(), out int mileage) || mileage < 0)
+                {
+                    e.Cancel = true;
+                    errorProvider1.SetError(temp, "Số KM phải là số nguyên không âm.");
+                    return;
+                }
+            }
+
+            if (temp == txtRentalPricePerDay)
+            {
+                if (!decimal.TryParse(temp.Text.Trim(), NumberStyles.Number, CultureInfo.CurrentCulture, out decimal price) || price <= 0)
+                {
+                    e.Cancel = true;
+                    errorProvider1.SetError(temp, "Giá thuê/ngày phải là số lớn hơn 0.");
+                    return;
+                }
+
+                temp.Text = price.ToString("N0");
+            }
+
+            errorProvider1.SetError(temp, null);
         }
 
         private void frmAddEditVehicle_Load(object sender, EventArgs e)
         {
             _ResetDefaultValues();
             if (_Mode == enMode.Update) _LoadData();
+
+            this.AcceptButton = btnSave;
+            this.CancelButton = btnClose;
+
+            txtYear.KeyPress += NumericTextBox_KeyPress;
+            txtMileage.KeyPress += NumericTextBox_KeyPress;
+            txtRentalPricePerDay.KeyPress += DecimalTextBox_KeyPress;
         }
 
         private void btnClose_Click(object sender, EventArgs e) => this.Close();
+
+        private void NumericTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                e.Handled = true;
+        }
+
+        private void DecimalTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsControl(e.KeyChar))
+                return;
+
+            char decimalSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
+
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != decimalSeparator)
+            {
+                e.Handled = true;
+                return;
+            }
+
+            Guna2TextBox txt = sender as Guna2TextBox;
+            if (txt != null && e.KeyChar == decimalSeparator && txt.Text.Contains(decimalSeparator.ToString()))
+                e.Handled = true;
+        }
 
         private void llSetImage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

@@ -2,13 +2,6 @@
 using CarRental.Transaction;
 using CarRental_Business;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CarRental.Booking.UserControls
@@ -90,6 +83,8 @@ namespace CarRental.Booking.UserControls
                 MessageBox.Show("Không có lịch đặt", "Thiếu dữ liệu",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                Reset();
+
                 return;
             }
 
@@ -102,6 +97,8 @@ namespace CarRental.Booking.UserControls
 
                 _BookingID = null;
 
+                Reset();
+
                 return;
             }
 
@@ -110,7 +107,15 @@ namespace CarRental.Booking.UserControls
 
         private void btnTransactionInfo_Click(object sender, EventArgs e)
         {
-            frmShowTransactionDetails ShowTransactionDetails = new frmShowTransactionDetails(BookingInfo.TransactionInfo.TransactionID);
+            int? transactionID = BookingInfo?.TransactionInfo?.TransactionID;
+            if (!transactionID.HasValue)
+            {
+                MessageBox.Show("Lịch đặt này chưa có giao dịch liên quan.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            frmShowTransactionDetails ShowTransactionDetails = new frmShowTransactionDetails(transactionID);
             ShowTransactionDetails.ShowDialog();
         }
     }

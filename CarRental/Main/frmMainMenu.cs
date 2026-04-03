@@ -11,6 +11,7 @@ using CarRental_Business;
 using FontAwesome.Sharp;
 using Guna.UI2.WinForms;
 using System;
+using System.Data;
 using System.Drawing;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -24,6 +25,8 @@ namespace CarRental.Main
         private Form _ActiveForm;
         private Form _frmLoginForm;
         private Guna2Button _btnMaintenance;
+        private readonly Timer _bookingAlertsTimer = new Timer();
+        private Label _lblBookingAlertsBadge;
         public Form frmDeniedMassage = new frmAccessDeniedMessage();
 
         public frmMainMenu(Form frmLoginForm)
@@ -33,6 +36,69 @@ namespace CarRental.Main
             this.DoubleBuffered = true;
             _EnableDoubleBuffer(panelHeader);
             _EnsureMaintenanceButton();
+            _EnsureBookingAlertBadge();
+
+            _bookingAlertsTimer.Interval = 60000;
+            _bookingAlertsTimer.Tick += _bookingAlertsTimer_Tick;
+            this.FormClosed += frmMainMenu_FormClosed;
+        }
+
+        private void frmMainMenu_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _bookingAlertsTimer.Stop();
+        }
+
+        private void _bookingAlertsTimer_Tick(object sender, EventArgs e)
+        {
+            _RefreshBookingAlertsBadge();
+        }
+
+        private void _EnsureBookingAlertBadge()
+        {
+            if (_lblBookingAlertsBadge != null)
+                return;
+
+            _lblBookingAlertsBadge = new Label
+            {
+                Name = "lblBookingAlertsBadge",
+                AutoSize = false,
+                Size = new Size(30, 20),
+                BackColor = Color.FromArgb(220, 38, 38),
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 8.5F, FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Visible = false,
+                Location = new Point(194, 205)
+            };
+
+            panelMenu.Controls.Add(_lblBookingAlertsBadge);
+            _lblBookingAlertsBadge.BringToFront();
+        }
+
+        private void _RefreshBookingAlertsBadge()
+        {
+            if (_lblBookingAlertsBadge == null)
+                return;
+
+            if (!clsGlobal.CheckAccessDenied(clsUser.enPermissions.ManageBooking))
+            {
+                _lblBookingAlertsBadge.Visible = false;
+                return;
+            }
+
+            int alertsCount = clsBooking.GetOverdueUnreturnedBookingsCount()
+                            + clsBooking.GetDueTodayUnreturnedBookingsCount()
+                            + clsBooking.GetPickupTodayUnreturnedBookingsCount();
+
+            if (alertsCount <= 0)
+            {
+                _lblBookingAlertsBadge.Visible = false;
+                return;
+            }
+
+            _lblBookingAlertsBadge.Text = alertsCount > 99 ? "99+" : alertsCount.ToString();
+            _lblBookingAlertsBadge.Visible = true;
+            _lblBookingAlertsBadge.BringToFront();
         }
 
         private void _EnsureMaintenanceButton()
@@ -191,6 +257,7 @@ namespace CarRental.Main
                 return;
             }
             _OpenChildForm(new frmListBooking(), sender);
+            _RefreshBookingAlertsBadge();
         }
 
         private void btnReturn_Click(object sender, EventArgs e)
@@ -249,6 +316,9 @@ namespace CarRental.Main
 
             // Gán tên người dùng vào nút Tài khoản trên Header thay vì Label cũ
             btnSubMenu.Text = clsGlobal.CurrentUser.Username;
+
+            _RefreshBookingAlertsBadge();
+            _bookingAlertsTimer.Start();
         }
 
         private void signOutToolStripMenuItem_Click(object sender, EventArgs e)

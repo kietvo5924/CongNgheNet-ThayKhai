@@ -162,6 +162,7 @@
             this.txtCost.SelectedText = "";
             this.txtCost.Size = new System.Drawing.Size(200, 36);
             this.txtCost.TabIndex = 164;
+            this.txtCost.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCost_KeyPress);
             this.txtCost.Validating += new System.ComponentModel.CancelEventHandler(this.txtCost_Validating);
             // 
             // dtpMaintenanceDate

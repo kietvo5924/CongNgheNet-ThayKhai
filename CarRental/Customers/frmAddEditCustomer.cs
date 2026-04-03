@@ -1,4 +1,5 @@
 ﻿using CarRental_Business;
+using CarRental.GlobalClasses;
 using Guna.UI2.WinForms;
 using System;
 using System.ComponentModel;
@@ -207,7 +208,7 @@ namespace CarRental.Customers
 
         private void txtPhone_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+            clsValidation.HandlePhoneKeyPress(txtPhone, e);
         }
 
         private void txtEmail_Validating(object sender, CancelEventArgs e)
@@ -240,6 +241,11 @@ namespace CarRental.Customers
             else
             {
                 errorProvider1.SetError(temp, null);
+            }
+
+            if (!e.Cancel && temp == txtPhone)
+            {
+                clsValidation.ValidateVietnamPhone(txtPhone, errorProvider1, e, required: true);
             }
         }
 

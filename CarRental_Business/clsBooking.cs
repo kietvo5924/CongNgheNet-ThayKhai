@@ -175,5 +175,25 @@ namespace CarRental_Business
             return clsBookingData.GetActiveRentalBookingsForDashboard();
         }
 
+        public static int GetOverdueUnreturnedBookingsCount()
+        {
+            return clsBookingData.GetOverdueUnreturnedBookingsCount();
+        }
+
+        public static int GetDueTodayUnreturnedBookingsCount()
+        {
+            return clsBookingData.GetDueTodayUnreturnedBookingsCount();
+        }
+
+        public static int GetPickupTodayUnreturnedBookingsCount()
+        {
+            return clsBookingData.GetPickupTodayUnreturnedBookingsCount();
+        }
+
+        public static int GetCurrentlyActiveUnreturnedBookingsCount()
+        {
+            return clsBookingData.GetCurrentlyActiveUnreturnedBookingsCount();
+        }
+
     }
 }

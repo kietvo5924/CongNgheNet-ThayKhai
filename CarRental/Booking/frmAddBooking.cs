@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -26,7 +27,31 @@ namespace CarRental.Booking
 
         private void ValidateEmptyTextBox(object sender, CancelEventArgs e)
         {
-            clsValidation.ValidateRequired((Control)sender, errorProvider1, e);
+            Control control = (Control)sender;
+            clsValidation.ValidateRequired(control, errorProvider1, e);
+
+            if (e.Cancel)
+                return;
+
+            if (control == txtPaymentDetails)
+            {
+                string paymentText = txtPaymentDetails.Text.Trim();
+                if (paymentText.Length < 3)
+                {
+                    e.Cancel = true;
+                    errorProvider1.SetError(txtPaymentDetails, "Thông tin thanh toán quá ngắn.");
+                    return;
+                }
+
+                if (!Regex.IsMatch(paymentText, @"\d"))
+                {
+                    e.Cancel = true;
+                    errorProvider1.SetError(txtPaymentDetails, "Thông tin thanh toán cần có số tham chiếu (VD: mã giao dịch/số tiền). ");
+                    return;
+                }
+
+                errorProvider1.SetError(txtPaymentDetails, null);
+            }
         }
 
         private void _UpdateInitialDays()
@@ -82,10 +107,7 @@ namespace CarRental.Booking
             }
 
             lblCustomerID.Text = Customer.CustomerID.ToString();
-            if (ucSelectedCustomerAndVehicleWithFilter1.VehicleID.HasValue)
-            {
-                btnBook.Enabled = true;
-            }
+            _UpdateBookButtonState();
         }
 
         private void _FillBookingInfoOnSelectedVehicle(int? VehicleID)
@@ -97,12 +119,23 @@ namespace CarRental.Booking
                 return;
             }
             lblVehicleID.Text = Vehicle.VehicleID.ToString();
-            lblRentalPricePerDay.Text = Vehicle.RentalPricePerDay.ToString("N0");
+            lblRentalPricePerDay.Text = Vehicle.RentalPricePerDay.ToString("N0") + " VNĐ";
 
             decimal initialTotal = _GetInitialTotalDueAmount(Vehicle);
-            lblInitialTotalDueAmount.Text = initialTotal.ToString("N0");
+            lblInitialTotalDueAmount.Text = initialTotal.ToString("N0") + " VNĐ";
 
-            btnBook.Enabled = true;
+            _UpdateBookButtonState();
+        }
+
+        private void _UpdateBookButtonState()
+        {
+            bool hasCustomer = ucSelectedCustomerAndVehicleWithFilter1.CustomerID.HasValue;
+            bool hasVehicle = ucSelectedCustomerAndVehicleWithFilter1.VehicleID.HasValue;
+            bool hasVehicleAvailable = ucSelectedCustomerAndVehicleWithFilter1.SelectedVehicleInfo != null
+                                      && ucSelectedCustomerAndVehicleWithFilter1.SelectedVehicleInfo.IsAvailableForRent;
+            bool hasValidDates = dtpEndDate.Value.Date > dtpStartDate.Value.Date;
+
+            btnBook.Enabled = hasCustomer && hasVehicle && hasVehicleAvailable && hasValidDates;
         }
 
         private decimal _GetInitialTotalDueAmount(clsVehicle vehicle)
@@ -130,6 +163,30 @@ namespace CarRental.Booking
 
         private void _MakeTransactionThenBooking()
         {
+            if (!ucSelectedCustomerAndVehicleWithFilter1.CustomerID.HasValue)
+            {
+                MessageBox.Show("Vui lòng chọn khách hàng trước khi đặt xe.", "Thiếu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!ucSelectedCustomerAndVehicleWithFilter1.VehicleID.HasValue || ucSelectedCustomerAndVehicleWithFilter1.SelectedVehicleInfo == null)
+            {
+                MessageBox.Show("Vui lòng chọn xe hợp lệ trước khi đặt xe.", "Thiếu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (dtpStartDate.Value.Date < DateTime.Today)
+            {
+                MessageBox.Show("Ngày nhận xe không được ở quá khứ.", "Dữ liệu không hợp lệ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (dtpEndDate.Value.Date <= dtpStartDate.Value.Date)
+            {
+                MessageBox.Show("Ngày trả xe phải lớn hơn ngày nhận xe.", "Dữ liệu không hợp lệ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             clsTransaction Transaction = new clsTransaction();
             Transaction.CustomerID = ucSelectedCustomerAndVehicleWithFilter1.CustomerID;
             Transaction.VehicleID = ucSelectedCustomerAndVehicleWithFilter1.VehicleID;
@@ -144,8 +201,7 @@ namespace CarRental.Booking
 
             if (!Transaction.Save())
             {
-                MessageBox.Show("Không thể tạo lịch đặt", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                _Reset();
+                MessageBox.Show("Không thể tạo lịch đặt. Xe có thể đã được đặt trong khoảng thời gian này hoặc không còn sẵn sàng.", "Đặt xe thất bại", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -168,12 +224,14 @@ namespace CarRental.Booking
         {
             _UpdateInitialDays();
             _FillBookingInfoOnSelectedVehicle(ucSelectedCustomerAndVehicleWithFilter1.VehicleID);
+            _UpdateBookButtonState();
         }
 
         private void dtpEndDate_ValueChanged(object sender, EventArgs e)
         {
             _UpdateInitialDays();
             _FillBookingInfoOnSelectedVehicle(ucSelectedCustomerAndVehicleWithFilter1.VehicleID);
+            _UpdateBookButtonState();
         }
 
         private void btnBook_Click(object sender, EventArgs e)

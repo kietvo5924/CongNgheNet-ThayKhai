@@ -406,9 +406,15 @@ where BookingID = @BookingID";
                 {
                     connection.Open();
 
-                    string query = @"SELECT COUNT(*)
-                                     FROM RentalTransaction
-                                     WHERE ReturnID IS NULL";
+                    string query = @"SELECT COUNT(DISTINCT rt.BookingID)
+                                     FROM RentalTransaction rt
+                                     WHERE rt.ReturnID IS NULL
+                                           AND NOT EXISTS (
+                                                SELECT 1
+                                                FROM RentalTransaction rt2
+                                                WHERE rt2.BookingID = rt.BookingID
+                                                      AND rt2.ReturnID IS NOT NULL
+                                           )";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -443,15 +449,21 @@ where BookingID = @BookingID";
                 {
                     connection.Open();
 
-                    string query = @"SELECT BookingID, CustomerID, CustomerName, VehicleID, RentalStartDate, RentalEndDate
-                                     FROM BookingDetails_View
-                                     WHERE BookingID IN
+                    string query = @"SELECT bd.BookingID, bd.CustomerID, bd.CustomerName, bd.VehicleID, bd.RentalStartDate, bd.RentalEndDate
+                                     FROM BookingDetails_View bd
+                                     WHERE bd.BookingID IN
                                      (
-                                         SELECT BookingID
-                                         FROM RentalTransaction
-                                         WHERE ReturnID IS NULL
+                                         SELECT DISTINCT rt.BookingID
+                                         FROM RentalTransaction rt
+                                         WHERE rt.ReturnID IS NULL
+                                               AND NOT EXISTS (
+                                                   SELECT 1
+                                                   FROM RentalTransaction rt2
+                                                   WHERE rt2.BookingID = rt.BookingID
+                                                         AND rt2.ReturnID IS NOT NULL
+                                               )
                                      )
-                                     ORDER BY RentalStartDate DESC";
+                                     ORDER BY bd.RentalStartDate DESC";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -475,6 +487,151 @@ where BookingID = @BookingID";
             }
 
             return dt;
+        }
+
+        public static int GetOverdueUnreturnedBookingsCount()
+        {
+            int count = 0;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString))
+                {
+                    connection.Open();
+
+                    string query = @"SELECT COUNT(1)
+                                     FROM RentalBooking b
+                                     WHERE b.RentalEndDate < CAST(GETDATE() AS date)
+                                           AND EXISTS (SELECT 1 FROM RentalTransaction rt WHERE rt.BookingID = b.BookingID AND rt.ReturnID IS NULL)
+                                           AND NOT EXISTS (SELECT 1 FROM RentalTransaction rt2 WHERE rt2.BookingID = b.BookingID AND rt2.ReturnID IS NOT NULL)";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        object result = command.ExecuteScalar();
+                        if (result != null && int.TryParse(result.ToString(), out int value))
+                            count = value;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                clsLogError.LogError("Database Exception", ex);
+            }
+            catch (Exception ex)
+            {
+                clsLogError.LogError("General Exception", ex);
+            }
+
+            return count;
+        }
+
+        public static int GetDueTodayUnreturnedBookingsCount()
+        {
+            int count = 0;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString))
+                {
+                    connection.Open();
+
+                    string query = @"SELECT COUNT(1)
+                                     FROM RentalBooking b
+                                     WHERE CAST(b.RentalEndDate AS date) = CAST(GETDATE() AS date)
+                                           AND EXISTS (SELECT 1 FROM RentalTransaction rt WHERE rt.BookingID = b.BookingID AND rt.ReturnID IS NULL)
+                                           AND NOT EXISTS (SELECT 1 FROM RentalTransaction rt2 WHERE rt2.BookingID = b.BookingID AND rt2.ReturnID IS NOT NULL)";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        object result = command.ExecuteScalar();
+                        if (result != null && int.TryParse(result.ToString(), out int value))
+                            count = value;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                clsLogError.LogError("Database Exception", ex);
+            }
+            catch (Exception ex)
+            {
+                clsLogError.LogError("General Exception", ex);
+            }
+
+            return count;
+        }
+
+        public static int GetPickupTodayUnreturnedBookingsCount()
+        {
+            int count = 0;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString))
+                {
+                    connection.Open();
+
+                    string query = @"SELECT COUNT(1)
+                                     FROM RentalBooking b
+                                     WHERE CAST(b.RentalStartDate AS date) = CAST(GETDATE() AS date)
+                                           AND EXISTS (SELECT 1 FROM RentalTransaction rt WHERE rt.BookingID = b.BookingID AND rt.ReturnID IS NULL)
+                                           AND NOT EXISTS (SELECT 1 FROM RentalTransaction rt2 WHERE rt2.BookingID = b.BookingID AND rt2.ReturnID IS NOT NULL)";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        object result = command.ExecuteScalar();
+                        if (result != null && int.TryParse(result.ToString(), out int value))
+                            count = value;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                clsLogError.LogError("Database Exception", ex);
+            }
+            catch (Exception ex)
+            {
+                clsLogError.LogError("General Exception", ex);
+            }
+
+            return count;
+        }
+
+        public static int GetCurrentlyActiveUnreturnedBookingsCount()
+        {
+            int count = 0;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString))
+                {
+                    connection.Open();
+
+                    string query = @"SELECT COUNT(1)
+                                     FROM RentalBooking b
+                                     WHERE b.RentalStartDate <= CAST(GETDATE() AS date)
+                                           AND b.RentalEndDate >= CAST(GETDATE() AS date)
+                                           AND EXISTS (SELECT 1 FROM RentalTransaction rt WHERE rt.BookingID = b.BookingID AND rt.ReturnID IS NULL)
+                                           AND NOT EXISTS (SELECT 1 FROM RentalTransaction rt2 WHERE rt2.BookingID = b.BookingID AND rt2.ReturnID IS NOT NULL)";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        object result = command.ExecuteScalar();
+                        if (result != null && int.TryParse(result.ToString(), out int value))
+                            count = value;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                clsLogError.LogError("Database Exception", ex);
+            }
+            catch (Exception ex)
+            {
+                clsLogError.LogError("General Exception", ex);
+            }
+
+            return count;
         }
 
     }

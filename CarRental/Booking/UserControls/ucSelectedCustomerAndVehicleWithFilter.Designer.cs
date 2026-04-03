@@ -118,6 +118,7 @@
             // 
             // tpSelectVehicle
             // 
+            this.tpSelectVehicle.AutoScroll = true;
             this.tpSelectVehicle.BackColor = System.Drawing.Color.White;
             this.tpSelectVehicle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tpSelectVehicle.Controls.Add(this.ucVehicleCardWithFilter1);
@@ -137,7 +138,7 @@
             this.ucVehicleCardWithFilter1.Location = new System.Drawing.Point(5, 6);
             this.ucVehicleCardWithFilter1.Name = "ucVehicleCardWithFilter1";
             this.ucVehicleCardWithFilter1.ShowAddVehicleButton = true;
-            this.ucVehicleCardWithFilter1.Size = new System.Drawing.Size(773, 500);
+            this.ucVehicleCardWithFilter1.Size = new System.Drawing.Size(773, 725);
             this.ucVehicleCardWithFilter1.TabIndex = 0;
             this.ucVehicleCardWithFilter1.OnVehicleSelected += new System.EventHandler<CarRental.Vehicles.UserControls.ucVehicleCardWithFilter.VehicleSelectedEventArgs>(this.ucVehicleCardWithFilter1_OnVehicleSelected);
             // 

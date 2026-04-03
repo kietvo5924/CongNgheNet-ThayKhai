@@ -16,6 +16,7 @@ namespace CarRental.Booking.UserControls
     public partial class ucBookingCardWithFilter : UserControl
     {
         private DataTable _dtBookingSource;
+        private readonly HashSet<string> _autoCompleteValues = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         public ucBookingCardWithFilter()
         {
@@ -109,6 +110,7 @@ namespace CarRental.Booking.UserControls
         private void _LoadBookingAutoComplete()
         {
             _dtBookingSource = clsBooking.GetAllRentalBooking();
+            _autoCompleteValues.Clear();
 
             AutoCompleteStringCollection source = new AutoCompleteStringCollection();
             if (_dtBookingSource != null)
@@ -118,14 +120,15 @@ namespace CarRental.Booking.UserControls
                     string id = row.Table.Columns.Contains("BookingID") ? row["BookingID"].ToString() : string.Empty;
                     string name = row.Table.Columns.Contains("CustomerName") ? row["CustomerName"].ToString() : string.Empty;
 
-                    if (!string.IsNullOrWhiteSpace(id))
+                    if (!string.IsNullOrWhiteSpace(id) && _autoCompleteValues.Add(id))
                         source.Add(id);
 
-                    if (!string.IsNullOrWhiteSpace(name))
+                    if (!string.IsNullOrWhiteSpace(name) && _autoCompleteValues.Add(name))
                         source.Add(name);
 
-                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name))
-                        source.Add($"{id} - {name}");
+                    string composite = $"{id} - {name}";
+                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name) && _autoCompleteValues.Add(composite))
+                        source.Add(composite);
                 }
             }
 
@@ -215,6 +218,7 @@ namespace CarRental.Booking.UserControls
             // Check if the pressed key is Enter (character code 13)
             if (e.KeyChar == (char)13)
             {
+                e.Handled = true;
                 btnFind.PerformClick();
             }
         }

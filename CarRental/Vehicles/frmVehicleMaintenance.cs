@@ -21,23 +21,41 @@ namespace CarRental.Vehicles
 
         private int? _SelectedVehicleID = null;
 
+        private void _UpdateActionsState(bool hasVehicle)
+        {
+            btnSave.Enabled = hasVehicle;
+            llShowVehicleMaintenanceHistory.Enabled = hasVehicle;
+            lblVehicleID.Text = hasVehicle && _SelectedVehicleID.HasValue ? _SelectedVehicleID.ToString() : "[????]";
+        }
+
         public frmVehicleMaintenance()
         {
             InitializeComponent();
             _ApplyModernUiNoIcons();
+            this.AcceptButton = btnSave;
+            this.CancelButton = btnClose;
+
+            _UpdateActionsState(false);
 
             dtpMaintenanceDate.MinDate = DateTime.Now;
+            dtpMaintenanceDate.Value = DateTime.Now;
         }
 
         public frmVehicleMaintenance(int VehicleID)
         {
             InitializeComponent();
             _ApplyModernUiNoIcons();
+            this.AcceptButton = btnSave;
+            this.CancelButton = btnClose;
 
             ucVehicleCardWithFilter1.LoadVehicleInfo(VehicleID);
             ucVehicleCardWithFilter1.FilterEnabled = false;
 
+            _SelectedVehicleID = ucVehicleCardWithFilter1.VehicleID;
+            _UpdateActionsState(_SelectedVehicleID.HasValue);
+
             dtpMaintenanceDate.MinDate = DateTime.Now;
+            dtpMaintenanceDate.Value = DateTime.Now;
         }
 
         private void _ApplyModernUiNoIcons()
@@ -98,7 +116,16 @@ namespace CarRental.Vehicles
 
         private void txtCost_KeyPress(object sender, KeyPressEventArgs e)
         {
+            if (char.IsControl(e.KeyChar))
+                return;
 
+            char decimalSeparator = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
+
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != decimalSeparator)
+                e.Handled = true;
+
+            if (e.KeyChar == decimalSeparator && txtCost.Text.Contains(decimalSeparator.ToString()))
+                e.Handled = true;
         }
 
         private void txtCost_Validating(object sender, CancelEventArgs e)
@@ -128,23 +155,17 @@ namespace CarRental.Vehicles
         private void ucVehicleCardWithFilter1_OnVehicleSelected(object sender, VehicleSelectedEventArgs e)
         {
             _SelectedVehicleID = e.VehicleID;
-
-            if (!_SelectedVehicleID.HasValue)
-            {
-                btnSave.Enabled = false;
-                llShowVehicleMaintenanceHistory.Enabled = false;
-                lblVehicleID.Text = "[????]";
-                return;
-            }
-
-            btnSave.Enabled = true;
-            llShowVehicleMaintenanceHistory.Enabled = true;
-
-            lblVehicleID.Text = _SelectedVehicleID.ToString();
+            _UpdateActionsState(_SelectedVehicleID.HasValue);
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            if (!_SelectedVehicleID.HasValue || ucVehicleCardWithFilter1.SelectedVehicleInfo == null)
+            {
+                MessageBox.Show("Vui lòng chọn xe trước khi tạo lịch bảo trì.", "Thiếu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (!this.ValidateChildren())
             {
                 MessageBox.Show("Một số trường chưa hợp lệ, hãy di chuột lên biểu tượng màu đỏ để xem chi tiết lỗi.",
@@ -199,7 +220,7 @@ namespace CarRental.Vehicles
             }
 
             lblMaintenanceID.Text = _MaintenanceID.ToString();
-            MessageBox.Show("Tạo bảo trì thành công với mã = " + _MaintenanceID,
+            MessageBox.Show($"Tạo lịch bảo trì thành công. Mã bảo trì: {_MaintenanceID}",
                 "Hoàn tất", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             btnSave.Enabled = false;
@@ -215,6 +236,12 @@ namespace CarRental.Vehicles
 
         private void llShowVehicleMaintenanceHistory_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            if (!_SelectedVehicleID.HasValue)
+            {
+                MessageBox.Show("Vui lòng chọn xe trước khi xem lịch sử bảo trì.", "Thiếu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             frmShowVehicleMaintenanceHistory ShowVehicleMaintenanceHistory = new frmShowVehicleMaintenanceHistory(_SelectedVehicleID);
             ShowVehicleMaintenanceHistory.ShowDialog();
         }

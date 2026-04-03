@@ -12,6 +12,17 @@ namespace CarRental.Users
     {
         private DataTable _dtAllUsers;
 
+        private static string _LocalizeGender(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return value;
+
+            string normalized = value.Trim().ToLowerInvariant();
+            if (normalized == "male") return "Nam";
+            if (normalized == "female") return "Nữ";
+            return value;
+        }
+
         public frmListUsers()
         {
             InitializeComponent();
@@ -119,9 +130,22 @@ namespace CarRental.Users
 
         private void frmListUsers_Load(object sender, EventArgs e)
         {
+            dgvUsersList.CellFormatting += dgvUsersList_CellFormatting;
             _RefreshUsersList();
             _FillCountryComboBox();
             cbFilter.SelectedIndex = 0;
+        }
+
+        private void dgvUsersList_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0 || e.Value == null)
+                return;
+
+            if (!dgvUsersList.Columns[e.ColumnIndex].Name.Equals("Gender", StringComparison.OrdinalIgnoreCase))
+                return;
+
+            e.Value = _LocalizeGender(e.Value.ToString());
+            e.FormattingApplied = true;
         }
 
         private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)

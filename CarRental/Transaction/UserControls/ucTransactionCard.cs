@@ -93,7 +93,7 @@ namespace CarRental.Transaction.UserControls
 
             if (_Transaction == null)
             {
-                MessageBox.Show($"Không tìm thấy giao dịch với mã = {TransactionID}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Không tìm thấy giao dịch với mã = {TransactionID}", "Không tìm thấy", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Reset();
                 return;
             }

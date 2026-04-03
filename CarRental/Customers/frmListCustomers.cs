@@ -1,5 +1,8 @@
 ﻿using CarRental_Business;
+using CarRental_Business;
+using CarRental.GlobalClasses;
 using System;
+using System.ComponentModel;
 using System.Data;
 using System.Windows.Forms;
 
@@ -8,6 +11,55 @@ namespace CarRental.Customers
     public partial class frmListCustomers : Form
     {
         private DataTable _dtAllCustomers;
+        private const string ExportMenuItemName = "miExportCustomersData";
+
+        private static string _LocalizeGender(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return value;
+
+            string normalized = value.Trim().ToLowerInvariant();
+            if (normalized == "male") return "Nam";
+            if (normalized == "female") return "Nữ";
+            return value;
+        }
+
+        private static string _EscapeRowFilterValue(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return string.Empty;
+
+            return value.Replace("'", "''").Replace("[", "[[]").Replace("%", "[%]").Replace("*", "[*]");
+        }
+
+        private void _UpdateRecordsCount()
+        {
+            lblNumberOfRecords.Text = (_dtAllCustomers == null) ? "0" : _dtAllCustomers.DefaultView.Count.ToString();
+            _UpdateEmptyState();
+        }
+
+        private void _UpdateEmptyState()
+        {
+            if (lblEmptyState == null)
+                return;
+
+            bool hasData = _dtAllCustomers != null && _dtAllCustomers.DefaultView.Count > 0;
+            lblEmptyState.Visible = !hasData;
+
+            if (!hasData)
+                lblEmptyState.BringToFront();
+        }
+
+        private bool _TryGetSelectedCustomerID(out int customerID)
+        {
+            customerID = -1;
+
+            if (dgvCustomersList.CurrentRow == null || dgvCustomersList.CurrentRow.Cells["CustomerID"] == null)
+                return false;
+
+            object value = dgvCustomersList.CurrentRow.Cells["CustomerID"].Value;
+            return value != null && int.TryParse(value.ToString(), out customerID);
+        }
 
         public frmListCustomers()
         {
@@ -30,7 +82,7 @@ namespace CarRental.Customers
         {
             _dtAllCustomers = clsCustomer.GetAllCustomers();
             dgvCustomersList.DataSource = _dtAllCustomers;
-            lblNumberOfRecords.Text = dgvCustomersList.Rows.Count.ToString();
+            _UpdateRecordsCount();
 
             if (dgvCustomersList.Rows.Count > 0)
             {
@@ -54,8 +106,57 @@ namespace CarRental.Customers
 
         private void frmListCustomers_Load(object sender, EventArgs e)
         {
+            cmsEditProfile.Opening += cmsEditProfile_Opening;
+            dgvCustomersList.CellMouseDown += dgvCustomersList_CellMouseDown;
+            dgvCustomersList.CellFormatting += dgvCustomersList_CellFormatting;
+            _EnsureExportMenuItem();
+
             _RefreshCustomersList();
             cbFilter.SelectedIndex = 0;
+        }
+
+        private void dgvCustomersList_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0 || e.Value == null)
+                return;
+
+            if (!dgvCustomersList.Columns[e.ColumnIndex].Name.Equals("Gender", StringComparison.OrdinalIgnoreCase))
+                return;
+
+            e.Value = _LocalizeGender(e.Value.ToString());
+            e.FormattingApplied = true;
+        }
+
+        private void _EnsureExportMenuItem()
+        {
+            if (cmsEditProfile.Items[ExportMenuItemName] != null)
+                return;
+
+            cmsEditProfile.Items.Add(new ToolStripSeparator());
+            ToolStripMenuItem exportItem = new ToolStripMenuItem("Xuất dữ liệu (CSV/Excel/PDF)")
+            {
+                Name = ExportMenuItemName
+            };
+            exportItem.Click += (s, e) => clsUtil.ExportDataGridView(dgvCustomersList, "DanhSachKhachHang", "Danh sách khách hàng");
+            cmsEditProfile.Items.Add(exportItem);
+        }
+
+        private void cmsEditProfile_Opening(object sender, CancelEventArgs e)
+        {
+            e.Cancel = !_TryGetSelectedCustomerID(out _);
+        }
+
+        private void dgvCustomersList_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+
+            if (e.Button == MouseButtons.Right)
+            {
+                dgvCustomersList.ClearSelection();
+                dgvCustomersList.Rows[e.RowIndex].Selected = true;
+                dgvCustomersList.CurrentCell = dgvCustomersList.Rows[e.RowIndex].Cells[0];
+            }
         }
 
         private void cbFilter_SelectedIndexChanged(object sender, EventArgs e)
@@ -68,7 +169,7 @@ namespace CarRental.Customers
             }
             if (_dtAllCustomers != null)
                 _dtAllCustomers.DefaultView.RowFilter = "";
-            lblNumberOfRecords.Text = dgvCustomersList.Rows.Count.ToString();
+            _UpdateRecordsCount();
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
@@ -83,11 +184,22 @@ namespace CarRental.Customers
             else
             {
                 if (ColumnName == "CustomerID")
-                    _dtAllCustomers.DefaultView.RowFilter = string.Format("[{0}] = {1}", ColumnName, FilterValue);
+                {
+                    if (int.TryParse(FilterValue, out int customerID))
+                        _dtAllCustomers.DefaultView.RowFilter = string.Format("[{0}] = {1}", ColumnName, customerID);
+                    else
+                        _dtAllCustomers.DefaultView.RowFilter = "1 = 0";
+                }
                 else
-                    _dtAllCustomers.DefaultView.RowFilter = string.Format("[{0}] like '{1}%'", ColumnName, FilterValue);
+                    _dtAllCustomers.DefaultView.RowFilter = string.Format("[{0}] like '{1}%'", ColumnName, _EscapeRowFilterValue(FilterValue));
             }
-            lblNumberOfRecords.Text = dgvCustomersList.Rows.Count.ToString();
+            _UpdateRecordsCount();
+        }
+
+        private void txtSearch_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (cbFilter.Text == "Mã khách hàng")
+                e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
         }
 
         private void btnAddNewCustomer_Click(object sender, EventArgs e)
@@ -99,14 +211,24 @@ namespace CarRental.Customers
 
         private void showDetailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int CustomerID = (int)dgvCustomersList.CurrentRow.Cells["CustomerID"].Value;
+            if (!_TryGetSelectedCustomerID(out int CustomerID))
+            {
+                MessageBox.Show("Vui lòng chọn khách hàng cần xem.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             frmShowCustomerDetails frm = new frmShowCustomerDetails(CustomerID);
             frm.ShowDialog();
         }
 
         private void editCustomerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int CustomerID = (int)dgvCustomersList.CurrentRow.Cells["CustomerID"].Value;
+            if (!_TryGetSelectedCustomerID(out int CustomerID))
+            {
+                MessageBox.Show("Vui lòng chọn khách hàng cần chỉnh sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             frmAddEditCustomer frm = new frmAddEditCustomer(CustomerID);
             frm.ShowDialog();
             _RefreshCustomersList();
@@ -114,12 +236,17 @@ namespace CarRental.Customers
 
         private void deleteCustomerToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!_TryGetSelectedCustomerID(out int CustomerID))
+            {
+                MessageBox.Show("Vui lòng chọn khách hàng cần xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             if (MessageBox.Show("Bạn có chắc chắn muốn xóa khách hàng này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                int CustomerID = (int)dgvCustomersList.CurrentRow.Cells["CustomerID"].Value;
                 if (clsCustomer.DeleteCustomer(CustomerID))
                 {
-                    MessageBox.Show("Xóa khách hàng thành công!", "Thông báo");
+                    MessageBox.Show("Xóa khách hàng thành công!", "Hoàn tất", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     _RefreshCustomersList();
                 }
                 else
@@ -129,7 +256,8 @@ namespace CarRental.Customers
 
         private void dgvCustomersList_DoubleClick(object sender, EventArgs e)
         {
-            showDetailsToolStripMenuItem.PerformClick();
+            if (dgvCustomersList.Rows.Count > 0)
+                showDetailsToolStripMenuItem.PerformClick();
         }
     }
 }

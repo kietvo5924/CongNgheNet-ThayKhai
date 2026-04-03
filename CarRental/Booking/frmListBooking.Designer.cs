@@ -35,6 +35,13 @@
             this.btnAddNewBooking = new Guna.UI2.WinForms.Guna2Button();
             this.dgvBookingList = new Guna.UI2.WinForms.Guna2DataGridView();
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            this.lblEmptyState = new System.Windows.Forms.Label();
+            this.lblAlerts = new System.Windows.Forms.Label();
+            this.btnQuickClearAlerts = new Guna.UI2.WinForms.Guna2Button();
+            this.btnQuickPickupToday = new Guna.UI2.WinForms.Guna2Button();
+            this.btnQuickDueToday = new Guna.UI2.WinForms.Guna2Button();
+            this.btnQuickOverdue = new Guna.UI2.WinForms.Guna2Button();
+            this.btnToggleAutoRefresh = new Guna.UI2.WinForms.Guna2Button();
             this.cmsEditProfile.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBookingList)).BeginInit();
             this.guna2Panel1.SuspendLayout();
@@ -249,6 +256,13 @@
             this.guna2Panel1.Controls.Add(this.dgvBookingList);
             this.guna2Panel1.Controls.Add(this.txtSearch);
             this.guna2Panel1.Controls.Add(this.dtpDate);
+            this.guna2Panel1.Controls.Add(this.btnQuickClearAlerts);
+            this.guna2Panel1.Controls.Add(this.btnQuickPickupToday);
+            this.guna2Panel1.Controls.Add(this.btnQuickDueToday);
+            this.guna2Panel1.Controls.Add(this.btnQuickOverdue);
+            this.guna2Panel1.Controls.Add(this.btnToggleAutoRefresh);
+            this.guna2Panel1.Controls.Add(this.lblAlerts);
+            this.guna2Panel1.Controls.Add(this.lblEmptyState);
             this.guna2Panel1.Controls.Add(this.lblNumberOfRecords);
             this.guna2Panel1.Controls.Add(this.cbFilter);
             this.guna2Panel1.Controls.Add(this.label2);
@@ -258,6 +272,103 @@
             this.guna2Panel1.Name = "guna2Panel1";
             this.guna2Panel1.Size = new System.Drawing.Size(1326, 780);
             this.guna2Panel1.TabIndex = 194;
+            // 
+            // lblEmptyState
+            // 
+            this.lblEmptyState.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblEmptyState.AutoSize = true;
+            this.lblEmptyState.BackColor = System.Drawing.Color.White;
+            this.lblEmptyState.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.lblEmptyState.ForeColor = System.Drawing.Color.Gray;
+            this.lblEmptyState.Location = new System.Drawing.Point(506, 395);
+            this.lblEmptyState.Name = "lblEmptyState";
+            this.lblEmptyState.Size = new System.Drawing.Size(315, 21);
+            this.lblEmptyState.TabIndex = 195;
+            this.lblEmptyState.Text = "Không có dữ liệu phù hợp với bộ lọc hiện tại.";
+            this.lblEmptyState.Visible = false;
+            // 
+            // lblAlerts
+            // 
+            this.lblAlerts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblAlerts.BackColor = System.Drawing.Color.White;
+            this.lblAlerts.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
+            this.lblAlerts.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(83)))), ((int)(((byte)(9)))));
+            this.lblAlerts.Location = new System.Drawing.Point(20, 66);
+            this.lblAlerts.Name = "lblAlerts";
+            this.lblAlerts.Size = new System.Drawing.Size(950, 20);
+            this.lblAlerts.TabIndex = 196;
+            this.lblAlerts.Text = "";
+            // 
+            // btnQuickClearAlerts
+            // 
+            this.btnQuickClearAlerts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnQuickClearAlerts.BorderRadius = 6;
+            this.btnQuickClearAlerts.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(232)))), ((int)(((byte)(240)))));
+            this.btnQuickClearAlerts.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnQuickClearAlerts.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(65)))), ((int)(((byte)(85)))));
+            this.btnQuickClearAlerts.Location = new System.Drawing.Point(1140, 72);
+            this.btnQuickClearAlerts.Name = "btnQuickClearAlerts";
+            this.btnQuickClearAlerts.Size = new System.Drawing.Size(160, 24);
+            this.btnQuickClearAlerts.TabIndex = 200;
+            this.btnQuickClearAlerts.Text = "Bỏ lọc cảnh báo";
+            this.btnQuickClearAlerts.Click += new System.EventHandler(this.btnQuickClearAlerts_Click);
+            // 
+            // btnQuickPickupToday
+            // 
+            this.btnQuickPickupToday.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnQuickPickupToday.BorderRadius = 6;
+            this.btnQuickPickupToday.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(132)))), ((int)(((byte)(199)))));
+            this.btnQuickPickupToday.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnQuickPickupToday.ForeColor = System.Drawing.Color.White;
+            this.btnQuickPickupToday.Location = new System.Drawing.Point(996, 72);
+            this.btnQuickPickupToday.Name = "btnQuickPickupToday";
+            this.btnQuickPickupToday.Size = new System.Drawing.Size(140, 24);
+            this.btnQuickPickupToday.TabIndex = 199;
+            this.btnQuickPickupToday.Text = "Nhận hôm nay";
+            this.btnQuickPickupToday.Click += new System.EventHandler(this.btnQuickPickupToday_Click);
+            // 
+            // btnQuickDueToday
+            // 
+            this.btnQuickDueToday.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnQuickDueToday.BorderRadius = 6;
+            this.btnQuickDueToday.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(88)))), ((int)(((byte)(12)))));
+            this.btnQuickDueToday.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnQuickDueToday.ForeColor = System.Drawing.Color.White;
+            this.btnQuickDueToday.Location = new System.Drawing.Point(850, 72);
+            this.btnQuickDueToday.Name = "btnQuickDueToday";
+            this.btnQuickDueToday.Size = new System.Drawing.Size(140, 24);
+            this.btnQuickDueToday.TabIndex = 198;
+            this.btnQuickDueToday.Text = "Đến hạn hôm nay";
+            this.btnQuickDueToday.Click += new System.EventHandler(this.btnQuickDueToday_Click);
+            // 
+            // btnQuickOverdue
+            // 
+            this.btnQuickOverdue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnQuickOverdue.BorderRadius = 6;
+            this.btnQuickOverdue.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
+            this.btnQuickOverdue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnQuickOverdue.ForeColor = System.Drawing.Color.White;
+            this.btnQuickOverdue.Location = new System.Drawing.Point(704, 72);
+            this.btnQuickOverdue.Name = "btnQuickOverdue";
+            this.btnQuickOverdue.Size = new System.Drawing.Size(140, 24);
+            this.btnQuickOverdue.TabIndex = 197;
+            this.btnQuickOverdue.Text = "Quá hạn trả";
+            this.btnQuickOverdue.Click += new System.EventHandler(this.btnQuickOverdue_Click);
+            // 
+            // btnToggleAutoRefresh
+            // 
+            this.btnToggleAutoRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnToggleAutoRefresh.BorderRadius = 8;
+            this.btnToggleAutoRefresh.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(163)))), ((int)(((byte)(74)))));
+            this.btnToggleAutoRefresh.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnToggleAutoRefresh.ForeColor = System.Drawing.Color.White;
+            this.btnToggleAutoRefresh.Location = new System.Drawing.Point(980, 25);
+            this.btnToggleAutoRefresh.Name = "btnToggleAutoRefresh";
+            this.btnToggleAutoRefresh.Size = new System.Drawing.Size(164, 27);
+            this.btnToggleAutoRefresh.TabIndex = 201;
+            this.btnToggleAutoRefresh.Text = "Tự làm mới: Bật";
+            this.btnToggleAutoRefresh.Click += new System.EventHandler(this.btnToggleAutoRefresh_Click);
             // 
             // frmListBooking
             // 
@@ -293,5 +404,12 @@
         private Guna.UI2.WinForms.Guna2DataGridView dgvBookingList;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel1;
+        private System.Windows.Forms.Label lblEmptyState;
+        private System.Windows.Forms.Label lblAlerts;
+        private Guna.UI2.WinForms.Guna2Button btnQuickClearAlerts;
+        private Guna.UI2.WinForms.Guna2Button btnQuickPickupToday;
+        private Guna.UI2.WinForms.Guna2Button btnQuickDueToday;
+        private Guna.UI2.WinForms.Guna2Button btnQuickOverdue;
+        private Guna.UI2.WinForms.Guna2Button btnToggleAutoRefresh;
     }
 }

@@ -28,6 +28,8 @@
             this.dgvTransactionsList = new Guna.UI2.WinForms.Guna2DataGridView();
             this.txtSearch = new Guna.UI2.WinForms.Guna2TextBox();
             this.cbFilter = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.dtpTransactionDate = new Guna.UI2.WinForms.Guna2DateTimePicker();
+            this.lblEmptyState = new System.Windows.Forms.Label();
             this.lblNumberOfRecords = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -63,6 +65,8 @@
             this.guna2Panel1.Controls.Add(this.dgvTransactionsList);
             this.guna2Panel1.Controls.Add(this.txtSearch);
             this.guna2Panel1.Controls.Add(this.cbFilter);
+            this.guna2Panel1.Controls.Add(this.dtpTransactionDate);
+            this.guna2Panel1.Controls.Add(this.lblEmptyState);
             this.guna2Panel1.Controls.Add(this.lblNumberOfRecords);
             this.guna2Panel1.Controls.Add(this.label2);
             this.guna2Panel1.Controls.Add(this.label1);
@@ -149,6 +153,35 @@
             this.cbFilter.TabIndex = 174;
             this.cbFilter.SelectedIndexChanged += new System.EventHandler(this.cbFilter_SelectedIndexChanged);
             // 
+            // dtpTransactionDate
+            // 
+            this.dtpTransactionDate.BorderRadius = 8;
+            this.dtpTransactionDate.Checked = true;
+            this.dtpTransactionDate.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
+            this.dtpTransactionDate.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.dtpTransactionDate.ForeColor = System.Drawing.Color.White;
+            this.dtpTransactionDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpTransactionDate.Location = new System.Drawing.Point(305, 25);
+            this.dtpTransactionDate.Name = "dtpTransactionDate";
+            this.dtpTransactionDate.Size = new System.Drawing.Size(180, 36);
+            this.dtpTransactionDate.TabIndex = 196;
+            this.dtpTransactionDate.Visible = false;
+            this.dtpTransactionDate.ValueChanged += new System.EventHandler(this.dtpTransactionDate_ValueChanged);
+            // 
+            // lblEmptyState
+            // 
+            this.lblEmptyState.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblEmptyState.AutoSize = true;
+            this.lblEmptyState.BackColor = System.Drawing.Color.White;
+            this.lblEmptyState.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.lblEmptyState.ForeColor = System.Drawing.Color.Gray;
+            this.lblEmptyState.Location = new System.Drawing.Point(506, 395);
+            this.lblEmptyState.Name = "lblEmptyState";
+            this.lblEmptyState.Size = new System.Drawing.Size(315, 21);
+            this.lblEmptyState.TabIndex = 195;
+            this.lblEmptyState.Text = "Không có dữ liệu phù hợp với bộ lọc hiện tại.";
+            this.lblEmptyState.Visible = false;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -208,6 +241,8 @@
         private Guna.UI2.WinForms.Guna2DataGridView dgvTransactionsList;
         private Guna.UI2.WinForms.Guna2TextBox txtSearch;
         private Guna.UI2.WinForms.Guna2ComboBox cbFilter;
+        private Guna.UI2.WinForms.Guna2DateTimePicker dtpTransactionDate;
+        private System.Windows.Forms.Label lblEmptyState;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblNumberOfRecords;

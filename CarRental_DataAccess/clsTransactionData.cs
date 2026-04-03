@@ -257,17 +257,42 @@ select scope_identity()";
                     {
                         try
                         {
-                            string lockVehicleQuery = @"update Vehicles
-set IsAvailableForRent = 0
-where VehicleID = @VehicleID and IsAvailableForRent = 1";
+                            string overlapQuery = @"SELECT COUNT(1)
+                                                    FROM RentalBooking b
+                                                    INNER JOIN RentalTransaction t ON t.BookingID = b.BookingID
+                                                    WHERE b.VehicleID = @VehicleID
+                                                          AND t.ReturnID IS NULL
+                                                          AND b.RentalStartDate < @RentalEndDate
+                                                          AND b.RentalEndDate > @RentalStartDate";
 
-                            using (SqlCommand lockVehicleCommand = new SqlCommand(lockVehicleQuery, connection, transaction))
+                            using (SqlCommand overlapCommand = new SqlCommand(overlapQuery, connection, transaction))
                             {
-                                lockVehicleCommand.Parameters.AddWithValue("@VehicleID", (object)VehicleID ?? DBNull.Value);
-                                if (lockVehicleCommand.ExecuteNonQuery() == 0)
+                                overlapCommand.Parameters.AddWithValue("@VehicleID", (object)VehicleID ?? DBNull.Value);
+                                overlapCommand.Parameters.AddWithValue("@RentalStartDate", RentalStartDate);
+                                overlapCommand.Parameters.AddWithValue("@RentalEndDate", RentalEndDate);
+
+                                object overlapResult = overlapCommand.ExecuteScalar();
+                                if (overlapResult != null && int.TryParse(overlapResult.ToString(), out int overlapCount) && overlapCount > 0)
                                 {
                                     transaction.Rollback();
                                     return false;
+                                }
+                            }
+
+                            if (RentalStartDate.Date <= DateTime.Today)
+                            {
+                                string lockVehicleQuery = @"update Vehicles
+set IsAvailableForRent = 0
+where VehicleID = @VehicleID and IsAvailableForRent = 1";
+
+                                using (SqlCommand lockVehicleCommand = new SqlCommand(lockVehicleQuery, connection, transaction))
+                                {
+                                    lockVehicleCommand.Parameters.AddWithValue("@VehicleID", (object)VehicleID ?? DBNull.Value);
+                                    if (lockVehicleCommand.ExecuteNonQuery() == 0)
+                                    {
+                                        transaction.Rollback();
+                                        return false;
+                                    }
                                 }
                             }
 
@@ -623,8 +648,11 @@ where TransactionID = @TransactionID";
                 {
                     connection.Open();
 
-                    string query = @"select RentalTransaction.ReturnID from RentalTransaction
-                                     where RentalTransaction.BookingID = @BookingID";
+                    string query = @"SELECT TOP 1 RentalTransaction.ReturnID
+                                     FROM RentalTransaction
+                                     WHERE RentalTransaction.BookingID = @BookingID
+                                           AND RentalTransaction.ReturnID IS NOT NULL
+                                     ORDER BY RentalTransaction.ReturnID DESC";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {

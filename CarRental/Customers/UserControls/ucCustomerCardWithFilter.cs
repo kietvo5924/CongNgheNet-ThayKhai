@@ -15,6 +15,7 @@ namespace CarRental.Customers.UserControls
     public partial class ucCustomerCardWithFilter : UserControl
     {
         private DataTable _dtCustomerSource;
+        private readonly HashSet<string> _autoCompleteValues = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         public ucCustomerCardWithFilter()
         {
@@ -74,11 +75,26 @@ namespace CarRental.Customers.UserControls
 
         private void txtFilterValue_KeyPress(object sender, KeyPressEventArgs e)
         {
+            if (cbSearchBy.SelectedIndex == 1)
+            {
+                e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+                if (e.Handled)
+                    return;
+            }
+
             // Check if the pressed key is Enter (character code 13)
             if (e.KeyChar == (char)13)
             {
+                e.Handled = true;
                 btnFind.PerformClick();
             }
+        }
+
+        private void cbSearchBy_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtFilterValue.Clear();
+            errorProvider1.SetError(txtFilterValue, null);
+            txtFilterValue.Focus();
         }
 
         private void btnFind_Click(object sender, EventArgs e)
@@ -117,6 +133,7 @@ namespace CarRental.Customers.UserControls
         private void _LoadCustomerAutoComplete()
         {
             _dtCustomerSource = clsCustomer.GetAllCustomers();
+            _autoCompleteValues.Clear();
 
             AutoCompleteStringCollection source = new AutoCompleteStringCollection();
             if (_dtCustomerSource != null)
@@ -126,14 +143,15 @@ namespace CarRental.Customers.UserControls
                     string id = row.Table.Columns.Contains("CustomerID") ? row["CustomerID"].ToString() : string.Empty;
                     string name = row.Table.Columns.Contains("Name") ? row["Name"].ToString() : string.Empty;
 
-                    if (!string.IsNullOrWhiteSpace(id))
+                    if (!string.IsNullOrWhiteSpace(id) && _autoCompleteValues.Add(id))
                         source.Add(id);
 
-                    if (!string.IsNullOrWhiteSpace(name))
+                    if (!string.IsNullOrWhiteSpace(name) && _autoCompleteValues.Add(name))
                         source.Add(name);
 
-                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name))
-                        source.Add($"{id} - {name}");
+                    string composite = $"{id} - {name}";
+                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name) && _autoCompleteValues.Add(composite))
+                        source.Add(composite);
                 }
             }
 
@@ -191,14 +209,10 @@ namespace CarRental.Customers.UserControls
 
         public void LoadCustomerInfo(int? CustomerID)
         {
-            txtFilterValue.Text = CustomerID.ToString();
+            txtFilterValue.Text = CustomerID.HasValue ? CustomerID.Value.ToString() : string.Empty;
             ucCustomerCard1.LoadCustomerInfo(CustomerID);
            
-            if (OnCustomerSelected != null)
-            {
-                // Raise the event with a parameter
-                RaiseOnCustomerSelected(ucCustomerCard1.CustomerID);
-            }
+            RaiseOnCustomerSelected(ucCustomerCard1.CustomerID);
         }
 
         private void btnAddNew_Click(object sender, EventArgs e)

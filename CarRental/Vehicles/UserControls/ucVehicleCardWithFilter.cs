@@ -17,6 +17,7 @@ namespace CarRental.Vehicles.UserControls
     public partial class ucVehicleCardWithFilter : UserControl
     {
         private DataTable _dtVehicleSource;
+        private readonly HashSet<string> _autoCompleteValues = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         public ucVehicleCardWithFilter()
         {
@@ -79,6 +80,7 @@ namespace CarRental.Vehicles.UserControls
             // Check if the pressed key is Enter (character code 13)
             if (e.KeyChar == (char)13)
             {
+                e.Handled = true;
                 btnFind.PerformClick();
             }
         }
@@ -118,6 +120,7 @@ namespace CarRental.Vehicles.UserControls
         private void _LoadVehicleAutoComplete()
         {
             _dtVehicleSource = clsVehicle.GetAllVehicles();
+            _autoCompleteValues.Clear();
 
             AutoCompleteStringCollection source = new AutoCompleteStringCollection();
             if (_dtVehicleSource != null)
@@ -127,14 +130,15 @@ namespace CarRental.Vehicles.UserControls
                     string id = row.Table.Columns.Contains("VehicleID") ? row["VehicleID"].ToString() : string.Empty;
                     string name = row.Table.Columns.Contains("VehicleName") ? row["VehicleName"].ToString() : string.Empty;
 
-                    if (!string.IsNullOrWhiteSpace(id))
+                    if (!string.IsNullOrWhiteSpace(id) && _autoCompleteValues.Add(id))
                         source.Add(id);
 
-                    if (!string.IsNullOrWhiteSpace(name))
+                    if (!string.IsNullOrWhiteSpace(name) && _autoCompleteValues.Add(name))
                         source.Add(name);
 
-                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name))
-                        source.Add($"{id} - {name}");
+                    string composite = $"{id} - {name}";
+                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name) && _autoCompleteValues.Add(composite))
+                        source.Add(composite);
                 }
             }
 

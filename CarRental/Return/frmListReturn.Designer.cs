@@ -37,6 +37,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.dgvReturnList = new Guna.UI2.WinForms.Guna2DataGridView();
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            this.lblEmptyState = new System.Windows.Forms.Label();
             this.cmsEditProfile.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvReturnList)).BeginInit();
             this.guna2Panel1.SuspendLayout();
@@ -285,6 +286,7 @@
             this.guna2Panel1.Controls.Add(this.dgvReturnList);
             this.guna2Panel1.Controls.Add(this.txtSearch);
             this.guna2Panel1.Controls.Add(this.dtpActualReturnDate);
+            this.guna2Panel1.Controls.Add(this.lblEmptyState);
             this.guna2Panel1.Controls.Add(this.lblNumberOfRecords);
             this.guna2Panel1.Controls.Add(this.cbFilter);
             this.guna2Panel1.Controls.Add(this.label2);
@@ -294,6 +296,20 @@
             this.guna2Panel1.Name = "guna2Panel1";
             this.guna2Panel1.Size = new System.Drawing.Size(1326, 780);
             this.guna2Panel1.TabIndex = 193;
+            // 
+            // lblEmptyState
+            // 
+            this.lblEmptyState.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblEmptyState.AutoSize = true;
+            this.lblEmptyState.BackColor = System.Drawing.Color.White;
+            this.lblEmptyState.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.lblEmptyState.ForeColor = System.Drawing.Color.Gray;
+            this.lblEmptyState.Location = new System.Drawing.Point(506, 395);
+            this.lblEmptyState.Name = "lblEmptyState";
+            this.lblEmptyState.Size = new System.Drawing.Size(315, 21);
+            this.lblEmptyState.TabIndex = 194;
+            this.lblEmptyState.Text = "Không có dữ liệu phù hợp với bộ lọc hiện tại.";
+            this.lblEmptyState.Visible = false;
             // 
             // frmListReturn
             // 
@@ -331,5 +347,6 @@
         private Guna.UI2.WinForms.Guna2DataGridView dgvReturnList;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.Label lblEmptyState;
     }
 }

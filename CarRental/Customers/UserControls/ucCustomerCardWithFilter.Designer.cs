@@ -68,6 +68,7 @@
             this.cbSearchBy.Name = "cbSearchBy";
             this.cbSearchBy.Size = new System.Drawing.Size(130, 25);
             this.cbSearchBy.TabIndex = 16;
+            this.cbSearchBy.SelectedIndexChanged += new System.EventHandler(this.cbSearchBy_SelectedIndexChanged);
             // 
             // label22
             // 

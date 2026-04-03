@@ -26,7 +26,7 @@ namespace CarRental_Business
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
-        public string GenderName => (this.Gender == enGender.Male) ? "Male" : "Female";
+        public string GenderName => (this.Gender == enGender.Male) ? "Nam" : "Nữ";
         public clsProvince ProvinceInfo { get; set; }
 
         public clsPerson()
