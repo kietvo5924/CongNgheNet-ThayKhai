@@ -11,6 +11,7 @@ namespace CarRental.GlobalClasses
     internal static class clsGlobal
     {
         public static clsUser CurrentUser;
+        private static readonly string _cryptoKey = _LoadCryptoKey();
 
         public static bool RememberUsernameAndPassword(string Username, string Password)
         {
@@ -128,7 +129,29 @@ namespace CarRental.GlobalClasses
             }
         }
 
-        public static string Encrypt(string plainText, string key = "1234567890123456")
+        private static string _LoadCryptoKey()
+        {
+            string keyFromEnvironment = Environment.GetEnvironmentVariable("CARRRENTAL_CRYPTO_KEY");
+            if (_IsValidAesKeyLength(keyFromEnvironment))
+                return keyFromEnvironment;
+
+            string keyFromConfig = ConfigurationManager.AppSettings["AppCryptoKey"];
+            if (_IsValidAesKeyLength(keyFromConfig))
+                return keyFromConfig;
+
+            throw new InvalidOperationException("Encryption key is missing or invalid. Configure AppCryptoKey (16/24/32 chars) or CARRRENTAL_CRYPTO_KEY.");
+        }
+
+        private static bool _IsValidAesKeyLength(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                return false;
+
+            int length = Encoding.UTF8.GetByteCount(key);
+            return length == 16 || length == 24 || length == 32;
+        }
+
+        public static string Encrypt(string plainText)
         {
             if (plainText == null)
             {
@@ -138,7 +161,7 @@ namespace CarRental.GlobalClasses
             using (Aes aesAlg = Aes.Create())
             {
                 // Set the key and IV for AES encryption
-                aesAlg.Key = Encoding.UTF8.GetBytes(key);
+                aesAlg.Key = Encoding.UTF8.GetBytes(_cryptoKey);
                 aesAlg.IV = new byte[aesAlg.BlockSize / 8];
 
 
@@ -162,7 +185,7 @@ namespace CarRental.GlobalClasses
             }
         }
 
-        public static string Decrypt(string cipherText, string key = "1234567890123456")
+        public static string Decrypt(string cipherText)
         {
             if (cipherText == null)
             {
@@ -172,7 +195,7 @@ namespace CarRental.GlobalClasses
             using (Aes aesAlg = Aes.Create())
             {
                 // Set the key and IV for AES decryption
-                aesAlg.Key = Encoding.UTF8.GetBytes(key);
+                aesAlg.Key = Encoding.UTF8.GetBytes(_cryptoKey);
                 aesAlg.IV = new byte[aesAlg.BlockSize / 8];
 
 

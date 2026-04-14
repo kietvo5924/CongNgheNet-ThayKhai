@@ -55,7 +55,7 @@
             this.lblSecurityQuestion.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSecurityQuestion.Location = new System.Drawing.Point(176, 84);
             this.lblSecurityQuestion.Name = "lblSecurityQuestion";
-            this.lblSecurityQuestion.Size = new System.Drawing.Size(292, 49);
+            this.lblSecurityQuestion.Size = new System.Drawing.Size(292, 40);
             this.lblSecurityQuestion.TabIndex = 1;
             this.lblSecurityQuestion.Text = "[????]";
             // 
@@ -63,9 +63,9 @@
             // 
             this.txtAnswer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtAnswer.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtAnswer.Location = new System.Drawing.Point(94, 144);
+            this.txtAnswer.Location = new System.Drawing.Point(16, 160);
             this.txtAnswer.Name = "txtAnswer";
-            this.txtAnswer.Size = new System.Drawing.Size(306, 29);
+            this.txtAnswer.Size = new System.Drawing.Size(442, 29);
             this.txtAnswer.TabIndex = 180;
             this.txtAnswer.Validating += new System.ComponentModel.CancelEventHandler(this.txtAnswer_Validating);
             // 
@@ -73,7 +73,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 149);
+            this.label2.Location = new System.Drawing.Point(12, 136);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(97, 19);
             this.label2.TabIndex = 179;
@@ -100,7 +100,7 @@
             this.btnSubmit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSubmit.Image = global::CarRental.Properties.Resources.Save_32;
             this.btnSubmit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSubmit.Location = new System.Drawing.Point(338, 217);
+            this.btnSubmit.Location = new System.Drawing.Point(328, 217);
             this.btnSubmit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(130, 37);
@@ -116,7 +116,7 @@
             this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.Image = global::CarRental.Properties.Resources.Close_32;
             this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(200, 217);
+            this.btnClose.Location = new System.Drawing.Point(190, 217);
             this.btnClose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(130, 37);
@@ -139,7 +139,9 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lblSecurityQuestion);
             this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmRestorePasswordUsingSecurityQuestion";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Khôi phục mật khẩu bằng câu hỏi bảo mật";

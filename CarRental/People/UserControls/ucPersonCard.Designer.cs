@@ -196,7 +196,7 @@
             // 
             this.lblProvince.AutoSize = true;
             this.lblProvince.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.lblProvince.Location = new System.Drawing.Point(495, 135);
+            this.lblProvince.Location = new System.Drawing.Point(530, 135);
             this.lblProvince.Name = "lblProvince";
             this.lblProvince.Size = new System.Drawing.Size(41, 19);
             this.lblProvince.Text = "[????]";

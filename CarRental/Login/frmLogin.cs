@@ -97,6 +97,15 @@ namespace CarRental.Login
             this.Hide();
             frmMainMenu OpenMainMenu = new frmMainMenu(this);
             OpenMainMenu.ShowDialog();
+
+            if (clsGlobal.CurrentUser == null)
+            {
+                txtPassword.Clear();
+                txtUsername.Focus();
+                this.Show();
+                return;
+            }
+
             this.Close();
         }
 

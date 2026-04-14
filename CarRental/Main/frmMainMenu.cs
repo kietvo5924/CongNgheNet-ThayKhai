@@ -283,7 +283,6 @@ namespace CarRental.Main
         private void btnLogOut_Click(object sender, EventArgs e)
         {
             clsGlobal.CurrentUser = null;
-            _frmLoginForm.Show();
             this.Close();
         }
 
@@ -324,7 +323,6 @@ namespace CarRental.Main
         private void signOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             clsGlobal.CurrentUser = null;
-            _frmLoginForm.Show();
             this.Close();
         }
     }

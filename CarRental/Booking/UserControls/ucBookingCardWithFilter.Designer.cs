@@ -86,11 +86,12 @@
             this.btnAddNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAddNew.Image = global::CarRental.Properties.Resources.add_booking32;
             this.btnAddNew.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAddNew.Location = new System.Drawing.Point(421, 23);
+            this.btnAddNew.Location = new System.Drawing.Point(485, 23);
             this.btnAddNew.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnAddNew.Name = "btnAddNew";
-            this.btnAddNew.Size = new System.Drawing.Size(44, 37);
+            this.btnAddNew.Size = new System.Drawing.Size(120, 37);
             this.btnAddNew.TabIndex = 20;
+            this.btnAddNew.Text = "  Thêm";
             this.btnAddNew.UseVisualStyleBackColor = true;
             this.btnAddNew.Click += new System.EventHandler(this.btnAddNew_Click);
             // 
@@ -98,10 +99,14 @@
             // 
             this.btnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFind.Image = global::CarRental.Properties.Resources.search_booking32;
-            this.btnFind.Location = new System.Drawing.Point(368, 23);
+            this.btnFind.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnFind.Location = new System.Drawing.Point(365, 23);
             this.btnFind.Name = "btnFind";
-            this.btnFind.Size = new System.Drawing.Size(44, 37);
+            this.btnFind.Size = new System.Drawing.Size(105, 37);
             this.btnFind.TabIndex = 18;
+            this.btnFind.Text = "  Tìm";
+            this.btnFind.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnFind.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnFind.UseVisualStyleBackColor = true;
             this.btnFind.Click += new System.EventHandler(this.btnFind_Click);
             // 

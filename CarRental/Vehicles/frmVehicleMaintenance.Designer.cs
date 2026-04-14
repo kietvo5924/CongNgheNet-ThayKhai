@@ -75,6 +75,7 @@
             this.lblTitle.TabIndex = 122;
             this.lblTitle.Text = "Bảo trì xe";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblTitle.Visible = false;
             // 
             // ucVehicleCardWithFilter1
             // 
@@ -361,20 +362,20 @@
             // guna2PanelMain
             // 
             this.guna2PanelMain.AutoScroll = true;
-            this.guna2PanelMain.AutoScrollMinSize = new System.Drawing.Size(0, 1040);
+            this.guna2PanelMain.AutoScrollMinSize = new System.Drawing.Size(0, 1080);
             this.guna2PanelMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.guna2PanelMain.BorderRadius = 15;
+            this.guna2PanelMain.BorderRadius = 20;
             this.guna2PanelMain.Controls.Add(this.llShowVehicleMaintenanceHistory);
             this.guna2PanelMain.Controls.Add(this.btnSave);
             this.guna2PanelMain.Controls.Add(this.btnClose);
             this.guna2PanelMain.Controls.Add(this.groupBox1);
             this.guna2PanelMain.Controls.Add(this.ucVehicleCardWithFilter1);
             this.guna2PanelMain.FillColor = System.Drawing.Color.White;
-            this.guna2PanelMain.Location = new System.Drawing.Point(16, 74);
+            this.guna2PanelMain.Location = new System.Drawing.Point(16, 12);
             this.guna2PanelMain.Name = "guna2PanelMain";
-            this.guna2PanelMain.Size = new System.Drawing.Size(1033, 741);
+            this.guna2PanelMain.Size = new System.Drawing.Size(1033, 791);
             this.guna2PanelMain.TabIndex = 236;
             // 
             // frmVehicleMaintenance

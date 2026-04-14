@@ -225,9 +225,9 @@
             this.cbProvince.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cbProvince.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
             this.cbProvince.ItemHeight = 30;
-            this.cbProvince.Location = new System.Drawing.Point(175, 347);
+            this.cbProvince.Location = new System.Drawing.Point(185, 347);
             this.cbProvince.Name = "cbProvince";
-            this.cbProvince.Size = new System.Drawing.Size(260, 36);
+            this.cbProvince.Size = new System.Drawing.Size(250, 36);
             this.cbProvince.TabIndex = 9;
             // 
             // label6
