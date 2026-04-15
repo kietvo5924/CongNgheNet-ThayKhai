@@ -27,6 +27,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.editVehicleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteVehicleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cancelUpcomingBookingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             this.btnAddNewVehicle = new Guna.UI2.WinForms.Guna2Button();
             this.dgvVehiclesList = new Guna.UI2.WinForms.Guna2DataGridView();
@@ -52,11 +53,12 @@
             this.showVehicleDetailsToolStripMenuItem,
             this.toolStripSeparator1,
             this.editVehicleToolStripMenuItem,
-            this.deleteVehicleToolStripMenuItem});
+            this.deleteVehicleToolStripMenuItem,
+            this.cancelUpcomingBookingToolStripMenuItem});
             this.cmsEditProfile.Name = "cmsEditProfile";
             this.cmsEditProfile.RenderStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(118)))), ((int)(((byte)(212)))));
             this.cmsEditProfile.RenderStyle.SelectionForeColor = System.Drawing.Color.White;
-            this.cmsEditProfile.Size = new System.Drawing.Size(155, 82);
+            this.cmsEditProfile.Size = new System.Drawing.Size(243, 106);
             // 
             // showVehicleDetailsToolStripMenuItem
             // 
@@ -75,9 +77,16 @@
             // deleteVehicleToolStripMenuItem
             // 
             this.deleteVehicleToolStripMenuItem.Name = "deleteVehicleToolStripMenuItem";
-            this.deleteVehicleToolStripMenuItem.Size = new System.Drawing.Size(154, 24);
+            this.deleteVehicleToolStripMenuItem.Size = new System.Drawing.Size(242, 24);
             this.deleteVehicleToolStripMenuItem.Text = "Xóa xe";
             this.deleteVehicleToolStripMenuItem.Click += new System.EventHandler(this.deleteVehicleToolStripMenuItem_Click);
+            // 
+            // cancelUpcomingBookingToolStripMenuItem
+            // 
+            this.cancelUpcomingBookingToolStripMenuItem.Name = "cancelUpcomingBookingToolStripMenuItem";
+            this.cancelUpcomingBookingToolStripMenuItem.Size = new System.Drawing.Size(242, 24);
+            this.cancelUpcomingBookingToolStripMenuItem.Text = "Hủy lịch đặt xe sắp tới";
+            this.cancelUpcomingBookingToolStripMenuItem.Click += new System.EventHandler(this.cancelUpcomingBookingToolStripMenuItem_Click);
             // 
             // guna2Panel1
             // 
@@ -315,5 +324,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem editVehicleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteVehicleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cancelUpcomingBookingToolStripMenuItem;
     }
 }

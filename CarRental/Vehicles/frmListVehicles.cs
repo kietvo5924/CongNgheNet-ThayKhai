@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace CarRental.Vehicles
@@ -69,6 +70,67 @@ namespace CarRental.Vehicles
                 // Bảng Makes có cột tên là "Make" (không phải "MakeName")
                 cbMake.Items.Add(row["Make"].ToString());
             }
+        }
+
+        private void cancelUpcomingBookingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!_TryGetSelectedVehicleID(out int vehicleID))
+            {
+                MessageBox.Show("Vui lòng chọn xe để hủy lịch đặt.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            DataTable dtBookings = clsBooking.GetAllRentalBooking();
+            if (dtBookings == null || dtBookings.Rows.Count == 0 || !dtBookings.Columns.Contains("BookingID") || !dtBookings.Columns.Contains("VehicleID"))
+            {
+                MessageBox.Show("Không có dữ liệu lịch đặt để xử lý.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            int? targetBookingID = dtBookings.AsEnumerable()
+                .Where(r => int.TryParse(r["VehicleID"]?.ToString(), out int rowVehicleID) && rowVehicleID == vehicleID)
+                .Select(r =>
+                {
+                    int.TryParse(r["BookingID"]?.ToString(), out int bId);
+                    return clsBooking.Find(bId);
+                })
+                .Where(b => b != null && !b.IsBookingReturned && b.RentalStartDate.Date > DateTime.Today)
+                .OrderBy(b => b.RentalStartDate)
+                .Select(b => b.BookingID)
+                .FirstOrDefault();
+
+            if (!targetBookingID.HasValue)
+            {
+                MessageBox.Show("Xe này hiện không có lịch đặt sắp tới để hủy.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            clsBooking booking = clsBooking.Find(targetBookingID.Value);
+            if (booking == null)
+            {
+                MessageBox.Show("Không tìm thấy lịch đặt để hủy.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (MessageBox.Show(
+                $"Hủy lịch đặt #{booking.BookingID} cho xe #{vehicleID} (ngày nhận: {booking.RentalStartDate:dd/MM/yyyy})?",
+                "Xác nhận hủy lịch đặt",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            clsTransaction transaction = clsTransaction.FindByBookingID(booking.BookingID);
+            bool cancelled = transaction != null ? transaction.DeleteTransaction() : booking.DeleteBooking();
+
+            if (cancelled)
+            {
+                MessageBox.Show("Hủy lịch đặt xe thành công.", "Hoàn tất", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _RefreshVehiclesList();
+            }
+            else
+                MessageBox.Show("Không thể hủy lịch đặt xe này.", "Không thể hủy", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private void _FillFuelTypeComboBox()

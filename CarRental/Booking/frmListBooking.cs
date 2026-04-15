@@ -668,6 +668,60 @@ namespace CarRental.Booking
             _RefreshBookingList();
         }
 
+        private void cancelBookingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!_TryGetSelectedBookingID(out int bookingID))
+            {
+                MessageBox.Show("Vui lòng chọn lịch đặt cần hủy.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            clsBooking booking = clsBooking.Find(bookingID);
+            if (booking == null)
+            {
+                MessageBox.Show("Không tìm thấy lịch đặt để hủy.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (booking.IsBookingReturned)
+            {
+                MessageBox.Show("Lịch đặt đã hoàn tất trả xe nên không thể hủy.", "Không thể hủy", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (booking.RentalStartDate.Date <= DateTime.Today)
+            {
+                MessageBox.Show("Đơn đã đến ngày nhận xe hoặc đang thuê. Vui lòng xử lý theo luồng trả xe, không hủy đăng ký.",
+                    "Không thể hủy", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (MessageBox.Show("Bạn có chắc muốn hủy lịch đặt xe này?", "Xác nhận hủy đặt xe",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            bool cancelled = false;
+            clsTransaction transaction = clsTransaction.FindByBookingID(bookingID);
+
+            if (transaction != null)
+                cancelled = transaction.DeleteTransaction();
+            else
+                cancelled = booking.DeleteBooking();
+
+            if (cancelled)
+            {
+                MessageBox.Show("Hủy đăng ký đặt xe thành công.", "Hoàn tất", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _RefreshBookingList();
+            }
+            else
+            {
+                MessageBox.Show("Không thể hủy đăng ký đặt xe. Có thể đơn đã phát sinh dữ liệu liên quan.",
+                    "Không thể hủy", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
         private void ShowBookingDetailsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (!_TryGetSelectedBookingID(out int bookingID))
@@ -710,6 +764,7 @@ namespace CarRental.Booking
 
             clsBooking Booking = clsBooking.Find(bookingID);
             ReturnToolStripMenuItem.Enabled = (Booking != null && !Booking.IsBookingReturned);
+            cancelBookingToolStripMenuItem.Enabled = (Booking != null && !Booking.IsBookingReturned && Booking.RentalStartDate.Date > DateTime.Today);
         }
     }
 }

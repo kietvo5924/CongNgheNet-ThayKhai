@@ -25,6 +25,7 @@
             this.cmsEditProfile = new Guna.UI2.WinForms.Guna2ContextMenuStrip();
             this.ShowBookingDetailsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.cancelBookingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ReturnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblNumberOfRecords = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -54,6 +55,7 @@
             this.cmsEditProfile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ShowBookingDetailsToolStripMenuItem1,
             this.toolStripSeparator1,
+            this.cancelBookingToolStripMenuItem,
             this.ReturnToolStripMenuItem});
             this.cmsEditProfile.Name = "guna2ContextMenuStrip1";
             this.cmsEditProfile.RenderStyle.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(151)))), ((int)(((byte)(143)))), ((int)(((byte)(255)))));
@@ -63,7 +65,7 @@
             this.cmsEditProfile.RenderStyle.SelectionForeColor = System.Drawing.Color.White;
             this.cmsEditProfile.RenderStyle.SeparatorColor = System.Drawing.Color.Gainsboro;
             this.cmsEditProfile.RenderStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            this.cmsEditProfile.Size = new System.Drawing.Size(193, 60);
+            this.cmsEditProfile.Size = new System.Drawing.Size(193, 84);
             // 
             // ShowBookingDetailsToolStripMenuItem1
             // 
@@ -71,6 +73,13 @@
             this.ShowBookingDetailsToolStripMenuItem1.Size = new System.Drawing.Size(192, 24);
             this.ShowBookingDetailsToolStripMenuItem1.Text = "Xem chi tiết đặt xe";
             this.ShowBookingDetailsToolStripMenuItem1.Click += new System.EventHandler(this.ShowBookingDetailsToolStripMenuItem1_Click);
+            // 
+            // cancelBookingToolStripMenuItem
+            // 
+            this.cancelBookingToolStripMenuItem.Name = "cancelBookingToolStripMenuItem";
+            this.cancelBookingToolStripMenuItem.Size = new System.Drawing.Size(192, 24);
+            this.cancelBookingToolStripMenuItem.Text = "Hủy đặt xe";
+            this.cancelBookingToolStripMenuItem.Click += new System.EventHandler(this.cancelBookingToolStripMenuItem_Click);
             // 
             // ReturnToolStripMenuItem
             // 
@@ -393,6 +402,7 @@
         #endregion
         private Guna.UI2.WinForms.Guna2ContextMenuStrip cmsEditProfile;
         private System.Windows.Forms.ToolStripMenuItem ShowBookingDetailsToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem cancelBookingToolStripMenuItem;
         private Guna.UI2.WinForms.Guna2Button btnAddNewBooking;
         private System.Windows.Forms.Label lblNumberOfRecords;
         private System.Windows.Forms.Label label2;
