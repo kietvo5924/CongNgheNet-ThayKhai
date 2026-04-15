@@ -6,6 +6,7 @@ using Guna.UI2.WinForms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
@@ -19,6 +20,8 @@ namespace CarRental.Return
 {
     public partial class frmReturnVehicle : Form
     {
+        private static readonly decimal _overdueFeePerDay = _GetConfigDecimal("OverdueFeePerDay", 200000m, 0m);
+
         public Action<int?> GetReturnByDelegate;
 
         private int? _SelectedBookingID = null;
@@ -62,6 +65,7 @@ namespace CarRental.Return
             // Inputs
             _StyleTextBox(txtMileage, "Nhập số KM hiện tại...");
             _StyleTextBox(txtAdditionalCharges, "Nhập phí phát sinh (nếu có)...");
+            _StyleTextBox(txtPaidAtReturn, "Nhập số tiền khách thanh toán khi trả...");
             _StyleTextBox(txtFinalCheckNotes, "Ghi chú kiểm tra xe...");
 
             dtpActualReturnDate.BorderRadius = 8;
@@ -139,23 +143,66 @@ namespace CarRental.Return
             return 0;
         }
 
+        private static decimal _GetConfigDecimal(string key, decimal defaultValue, decimal minValue)
+        {
+            string raw = ConfigurationManager.AppSettings[key];
+            if (!decimal.TryParse(raw, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal value))
+                return defaultValue;
+
+            return value < minValue ? minValue : value;
+        }
+
+        private decimal _GetManualAdditionalCharges()
+        {
+            if (string.IsNullOrWhiteSpace(txtAdditionalCharges.Text.Trim()))
+                return 0m;
+
+            return decimal.TryParse(txtAdditionalCharges.Text.Trim(), NumberStyles.Number, CultureInfo.CurrentCulture, out decimal parsed)
+                ? parsed
+                : 0m;
+        }
+
+        private int _CalculateOverdueDays()
+        {
+            if (ucBookingCardWithFilter1.SelectedBookingInfo == null)
+                return 0;
+
+            int overdueDays = (dtpActualReturnDate.Value.Date - ucBookingCardWithFilter1.SelectedBookingInfo.RentalEndDate.Date).Days;
+            return overdueDays > 0 ? overdueDays : 0;
+        }
+
+        private decimal _CalculateOverduePenaltyAmount()
+        {
+            return _CalculateOverdueDays() * _overdueFeePerDay;
+        }
+
+        private decimal _GetPaidAmountAtReturn()
+        {
+            if (string.IsNullOrWhiteSpace(txtPaidAtReturn.Text.Trim()))
+                return 0m;
+
+            return decimal.TryParse(txtPaidAtReturn.Text.Trim(), NumberStyles.Number, CultureInfo.CurrentCulture, out decimal parsed)
+                ? parsed
+                : 0m;
+        }
+
         private decimal _CalculateActualTotalDueAmount()
         {
             if (ucBookingCardWithFilter1.SelectedBookingInfo == null) return 0m;
 
             decimal RentalPricePerDay = ucBookingCardWithFilter1.SelectedBookingInfo.RentalPricePerDay;
             int ActualRentalDays = _CalculateActualRentalDays();
-            decimal AdditionalCharges = 0m;
+            decimal AdditionalCharges = _GetManualAdditionalCharges();
+            decimal overduePenaltyAmount = _CalculateOverduePenaltyAmount();
 
-            decimal.TryParse(txtAdditionalCharges.Text.Trim(), NumberStyles.Number, CultureInfo.CurrentCulture, out AdditionalCharges);
-
-            return (ActualRentalDays * RentalPricePerDay) + AdditionalCharges;
+            return (ActualRentalDays * RentalPricePerDay) + AdditionalCharges + overduePenaltyAmount;
         }
 
         private void _Reset()
         {
             ucBookingCardWithFilter1.FilterEnabled = false;
             txtAdditionalCharges.Enabled = false;
+            txtPaidAtReturn.Enabled = false;
             txtFinalCheckNotes.Enabled = false;
             txtMileage.Enabled = false;
             btnReturn.Enabled = false;
@@ -183,10 +230,10 @@ namespace CarRental.Return
 
             _Return.FinalCheckNotes = txtFinalCheckNotes.Text.Trim();
 
-            decimal additionalCharges = 0m;
-            if (decimal.TryParse(txtAdditionalCharges.Text.Trim(), NumberStyles.Number, CultureInfo.CurrentCulture, out decimal parsedCharges))
-                additionalCharges = parsedCharges;
-            _Return.AdditionalCharges = additionalCharges;
+            decimal additionalCharges = _GetManualAdditionalCharges();
+            decimal overduePenaltyAmount = _CalculateOverduePenaltyAmount();
+            _Return.AdditionalCharges = additionalCharges + overduePenaltyAmount;
+            _Return.PaidAmountAtReturn = _GetPaidAmountAtReturn();
 
             _Return.ConsumedMileage = (int)_CalculateConsumedMileage();
             _Return.ActualRentalDays = _CalculateActualRentalDays();
@@ -210,7 +257,13 @@ namespace CarRental.Return
             lblConsumedMileage.Text = _Return.ConsumedMileage.ToString();
             lblActualTotalDueAmount.Text = _Return.ActualTotalDueAmount.ToString("N");
 
-            MessageBox.Show("Trả xe thành công!\nSố KM hiện tại đã được cập nhật vào xe và dùng cho lịch sử/bảo trì.", "Hoàn tất",
+            int overdueDays = _CalculateOverdueDays();
+            string overdueSummary = overdueDays > 0
+                ? $"\nPhí trễ hạn ({overdueDays} ngày x {_overdueFeePerDay:N0}) = {overduePenaltyAmount:N0}."
+                : "\nKhông phát sinh phí trễ hạn.";
+
+            MessageBox.Show("Trả xe thành công!\nSố KM hiện tại đã được cập nhật vào xe và dùng cho lịch sử/bảo trì."
+                + overdueSummary, "Hoàn tất",
                    MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             _ReturnID = _Return.ReturnID;
@@ -280,6 +333,21 @@ namespace CarRental.Return
                 return false;
             }
 
+            if (!string.IsNullOrWhiteSpace(txtPaidAtReturn.Text.Trim()))
+            {
+                if (!decimal.TryParse(txtPaidAtReturn.Text.Trim(), NumberStyles.Number, CultureInfo.CurrentCulture, out decimal paidAtReturn))
+                {
+                    errorMessage = "Số tiền thanh toán khi trả xe không hợp lệ.";
+                    return false;
+                }
+
+                if (paidAtReturn < 0)
+                {
+                    errorMessage = "Số tiền thanh toán khi trả xe không được âm.";
+                    return false;
+                }
+            }
+
             return true;
         }
 
@@ -320,6 +388,7 @@ namespace CarRental.Return
             // Reset fields
             txtMileage.Text = "";
             txtAdditionalCharges.Text = "";
+            txtPaidAtReturn.Text = "";
             txtFinalCheckNotes.Text = "";
             lblActualTotalDueAmount.Text = "N/A";
             lblConsumedMileage.Text = "N/A";
@@ -341,6 +410,19 @@ namespace CarRental.Return
             {
                 lblActualTotalDueAmount.Text = _CalculateActualTotalDueAmount().ToString("N");
             }
+        }
+
+        private void txtPaidAtReturn_Validating(object sender, CancelEventArgs e)
+        {
+            clsValidation.ValidateMoney(
+                (Control)sender,
+                errorProvider1,
+                e,
+                out _,
+                required: false,
+                allowNegative: false,
+                formatAfterValidate: false,
+                invalidMessage: "Vui lòng nhập số tiền hợp lệ.");
         }
 
         private void txtMileage_Validating(object sender, CancelEventArgs e)

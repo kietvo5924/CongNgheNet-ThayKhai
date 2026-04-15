@@ -27,6 +27,7 @@
             this.guna2PanelReturnInfo = new Guna.UI2.WinForms.Guna2Panel();
             this.labelHeaderGroup = new System.Windows.Forms.Label();
             this.txtFinalCheckNotes = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtPaidAtReturn = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtAdditionalCharges = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtMileage = new Guna.UI2.WinForms.Guna2TextBox();
             this.dtpActualReturnDate = new Guna.UI2.WinForms.Guna2DateTimePicker();
@@ -35,6 +36,7 @@
             this.lblConsumedMileage = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.labelPaidAtReturn = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
@@ -156,6 +158,7 @@
             this.guna2PanelReturnInfo.BorderThickness = 1;
             this.guna2PanelReturnInfo.Controls.Add(this.labelHeaderGroup);
             this.guna2PanelReturnInfo.Controls.Add(this.txtFinalCheckNotes);
+            this.guna2PanelReturnInfo.Controls.Add(this.txtPaidAtReturn);
             this.guna2PanelReturnInfo.Controls.Add(this.txtAdditionalCharges);
             this.guna2PanelReturnInfo.Controls.Add(this.txtMileage);
             this.guna2PanelReturnInfo.Controls.Add(this.dtpActualReturnDate);
@@ -164,6 +167,7 @@
             this.guna2PanelReturnInfo.Controls.Add(this.lblConsumedMileage);
             this.guna2PanelReturnInfo.Controls.Add(this.label26);
             this.guna2PanelReturnInfo.Controls.Add(this.label9);
+            this.guna2PanelReturnInfo.Controls.Add(this.labelPaidAtReturn);
             this.guna2PanelReturnInfo.Controls.Add(this.label10);
             this.guna2PanelReturnInfo.Controls.Add(this.label6);
             this.guna2PanelReturnInfo.Controls.Add(this.label27);
@@ -208,13 +212,29 @@
             this.txtFinalCheckNotes.TabIndex = 232;
             this.txtFinalCheckNotes.Validating += new System.ComponentModel.CancelEventHandler(this.txtFinalCheckNotes_Validating);
             // 
+            // txtPaidAtReturn
+            // 
+            this.txtPaidAtReturn.BorderRadius = 8;
+            this.txtPaidAtReturn.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtPaidAtReturn.DefaultText = "";
+            this.txtPaidAtReturn.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.txtPaidAtReturn.Location = new System.Drawing.Point(770, 22);
+            this.txtPaidAtReturn.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.txtPaidAtReturn.Name = "txtPaidAtReturn";
+            this.txtPaidAtReturn.PasswordChar = '\0';
+            this.txtPaidAtReturn.PlaceholderText = "";
+            this.txtPaidAtReturn.SelectedText = "";
+            this.txtPaidAtReturn.Size = new System.Drawing.Size(223, 44);
+            this.txtPaidAtReturn.TabIndex = 233;
+            this.txtPaidAtReturn.Validating += new System.ComponentModel.CancelEventHandler(this.txtPaidAtReturn_Validating);
+            // 
             // txtAdditionalCharges
             // 
             this.txtAdditionalCharges.BorderRadius = 8;
             this.txtAdditionalCharges.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtAdditionalCharges.DefaultText = "";
             this.txtAdditionalCharges.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.txtAdditionalCharges.Location = new System.Drawing.Point(753, 68);
+            this.txtAdditionalCharges.Location = new System.Drawing.Point(753, 76);
             this.txtAdditionalCharges.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.txtAdditionalCharges.Name = "txtAdditionalCharges";
             this.txtAdditionalCharges.PasswordChar = '\0';
@@ -320,13 +340,26 @@
             this.label9.TabIndex = 191;
             this.label9.Text = "Tổng tiền thanh toán:";
             // 
+            // labelPaidAtReturn
+            // 
+            this.labelPaidAtReturn.AutoSize = true;
+            this.labelPaidAtReturn.BackColor = System.Drawing.Color.Transparent;
+            this.labelPaidAtReturn.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
+            this.labelPaidAtReturn.ForeColor = System.Drawing.Color.Gray;
+            this.labelPaidAtReturn.Location = new System.Drawing.Point(533, 31);
+            this.labelPaidAtReturn.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelPaidAtReturn.Name = "labelPaidAtReturn";
+            this.labelPaidAtReturn.Size = new System.Drawing.Size(207, 23);
+            this.labelPaidAtReturn.TabIndex = 183;
+            this.labelPaidAtReturn.Text = "Khách thanh toán khi trả:";
+            // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.BackColor = System.Drawing.Color.Transparent;
             this.label10.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.label10.ForeColor = System.Drawing.Color.Gray;
-            this.label10.Location = new System.Drawing.Point(533, 80);
+            this.label10.Location = new System.Drawing.Point(533, 88);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(114, 23);
@@ -471,6 +504,7 @@
         private System.Windows.Forms.Label lblConsumedMileage;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label labelPaidAtReturn;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label27;
@@ -480,6 +514,7 @@
         private System.Windows.Forms.Label lblReturnID;
         private Guna.UI2.WinForms.Guna2DateTimePicker dtpActualReturnDate;
         private Guna.UI2.WinForms.Guna2TextBox txtFinalCheckNotes;
+        private Guna.UI2.WinForms.Guna2TextBox txtPaidAtReturn;
         private Guna.UI2.WinForms.Guna2TextBox txtAdditionalCharges;
         private Guna.UI2.WinForms.Guna2TextBox txtMileage;
         private Guna.UI2.WinForms.Guna2Button btnReturn;

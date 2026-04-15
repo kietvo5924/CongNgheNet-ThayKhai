@@ -20,6 +20,7 @@ namespace CarRental_Business
         public int ConsumedMileage { get; set; }
         public string FinalCheckNotes { get; set; }
         public decimal AdditionalCharges { get; set; }
+        public decimal PaidAmountAtReturn { get; set; }
         public decimal ActualTotalDueAmount { get; set; }
         public string LastError { get; private set; }
 
@@ -34,6 +35,7 @@ namespace CarRental_Business
             this.ConsumedMileage = 0;
             this.FinalCheckNotes = string.Empty;
             this.AdditionalCharges = -1m;
+            this.PaidAmountAtReturn = 0m;
             this.ActualTotalDueAmount = 0m;
 
             Mode = enMode.AddNew;
@@ -174,6 +176,12 @@ namespace CarRental_Business
                 return false;
             }
 
+            if (this.PaidAmountAtReturn < 0)
+            {
+                LastError = "Số tiền khách thanh toán khi trả xe không hợp lệ.";
+                return false;
+            }
+
             int? returnID = this.ReturnID;
             decimal? totalRemaining = null;
             decimal? totalRefundedAmount = null;
@@ -188,6 +196,7 @@ namespace CarRental_Business
                 this.FinalCheckNotes,
                 this.AdditionalCharges,
                 this.ActualTotalDueAmount,
+                this.PaidAmountAtReturn,
                 ref returnID,
                 ref totalRemaining,
                 ref totalRefundedAmount,

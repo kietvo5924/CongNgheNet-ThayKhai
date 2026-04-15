@@ -121,6 +121,7 @@ select scope_identity()";
         public static bool CompleteReturnWithTransactionAndVehicleUpdate(int? TransactionID,
             DateTime ActualReturnDate, int ActualRentalDays, int Mileage, int ConsumedMileage,
             string FinalCheckNotes, decimal AdditionalCharges, decimal ActualTotalDueAmount,
+            decimal PaidAmountAtReturn,
             ref int? ReturenID, ref decimal? TotalRemaining, ref decimal? TotalRefundedAmount,
             out string failureReason)
         {
@@ -202,14 +203,27 @@ select scope_identity()";
                                 return false;
                             }
 
-                            TotalRemaining = ActualTotalDueAmount - paidInitialAmount;
+                            decimal totalPaid = paidInitialAmount + (PaidAmountAtReturn < 0 ? 0 : PaidAmountAtReturn);
+                            TotalRemaining = ActualTotalDueAmount - totalPaid;
                             TotalRefundedAmount = TotalRemaining < 0 ? Math.Abs(TotalRemaining.Value) : 0m;
+                            byte transactionType = 0;
+
+                            if (TotalRemaining.HasValue)
+                            {
+                                if (TotalRemaining.Value > 0)
+                                    transactionType = 0;
+                                else if (TotalRemaining.Value == 0)
+                                    transactionType = 1;
+                                else
+                                    transactionType = 2;
+                            }
 
                             string updateTransactionQuery = @"update RentalTransaction
 set ReturnID = @ReturnID,
     ActualTotalDueAmount = @ActualTotalDueAmount,
     TotalRemaining = @TotalRemaining,
     TotalRefundedAmount = @TotalRefundedAmount,
+    TransactionType = @TransactionType,
     UpdatedTransactionDate = @UpdatedTransactionDate
 where TransactionID = @TransactionID and ReturnID is null";
 
@@ -219,6 +233,7 @@ where TransactionID = @TransactionID and ReturnID is null";
                                 updateTransactionCommand.Parameters.AddWithValue("@ActualTotalDueAmount", ActualTotalDueAmount);
                                 updateTransactionCommand.Parameters.AddWithValue("@TotalRemaining", (object)TotalRemaining ?? DBNull.Value);
                                 updateTransactionCommand.Parameters.AddWithValue("@TotalRefundedAmount", (object)TotalRefundedAmount ?? DBNull.Value);
+                                updateTransactionCommand.Parameters.AddWithValue("@TransactionType", transactionType);
                                 updateTransactionCommand.Parameters.AddWithValue("@UpdatedTransactionDate", DateTime.Now);
                                 updateTransactionCommand.Parameters.AddWithValue("@TransactionID", (object)TransactionID ?? DBNull.Value);
 
