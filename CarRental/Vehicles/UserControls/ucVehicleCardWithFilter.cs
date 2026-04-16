@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,10 +19,14 @@ namespace CarRental.Vehicles.UserControls
     {
         private DataTable _dtVehicleSource;
         private readonly HashSet<string> _autoCompleteValues = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private AutoCompleteStringCollection _defaultAutoCompleteSource;
+        private ToolStripDropDown _suggestionsMenu;
+        private ListBox _suggestionsListBox;
 
         public ucVehicleCardWithFilter()
         {
             InitializeComponent();
+            _InitializeSuggestionsDropDown();
         }
 
         #region Declare Event
@@ -95,12 +100,26 @@ namespace CarRental.Vehicles.UserControls
 
             }
 
-            if (!_TryResolveVehicleID(txtFilterValue.Text.Trim(), out int vehicleID))
+            if (_defaultAutoCompleteSource != null)
+                txtFilterValue.AutoCompleteCustomSource = _defaultAutoCompleteSource;
+
+            string filterValue = txtFilterValue.Text.Trim();
+
+            if (!_TryResolveVehicleID(filterValue, out int vehicleID))
             {
+                if (_TrySuggestVehicleSelection(filterValue, out List<string> suggestionsPreview))
+                {
+                    _ShowSuggestionsDropDown(suggestionsPreview);
+                    return;
+                }
+
+                _HideSuggestionsDropDown();
                 MessageBox.Show("Không tìm thấy xe theo mã/tên đã nhập.",
                     "Không tìm thấy", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
+            _HideSuggestionsDropDown();
 
             LoadVehicleInfo(vehicleID);
         }
@@ -130,21 +149,26 @@ namespace CarRental.Vehicles.UserControls
                     string id = row.Table.Columns.Contains("VehicleID") ? row["VehicleID"].ToString() : string.Empty;
                     string name = row.Table.Columns.Contains("VehicleName") ? row["VehicleName"].ToString() : string.Empty;
 
-                    if (!string.IsNullOrWhiteSpace(id) && _autoCompleteValues.Add(id))
-                        source.Add(id);
-
                     if (!string.IsNullOrWhiteSpace(name) && _autoCompleteValues.Add(name))
                         source.Add(name);
 
-                    string composite = $"{id} - {name}";
-                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name) && _autoCompleteValues.Add(composite))
-                        source.Add(composite);
+                    if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(name))
+                    {
+                        string composite = $"{id} - {name}";
+                        if (_autoCompleteValues.Add(composite))
+                            source.Add(composite);
+                    }
+                    else if (!string.IsNullOrWhiteSpace(id) && _autoCompleteValues.Add(id))
+                    {
+                        source.Add(id);
+                    }
                 }
             }
 
             txtFilterValue.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             txtFilterValue.AutoCompleteSource = AutoCompleteSource.CustomSource;
             txtFilterValue.AutoCompleteCustomSource = source;
+            _defaultAutoCompleteSource = source;
         }
 
         private bool _TryResolveVehicleID(string input, out int vehicleID)
@@ -155,6 +179,7 @@ namespace CarRental.Vehicles.UserControls
                 return false;
 
             input = input.Trim();
+            string normalizedInput = _NormalizeSearchText(input);
             bool allowById = cbSearchBy.SelectedIndex != 2;
             bool allowByName = cbSearchBy.SelectedIndex != 1;
 
@@ -179,19 +204,109 @@ namespace CarRental.Vehicles.UserControls
                 return false;
 
             DataRow matched = _dtVehicleSource.AsEnumerable()
-                .FirstOrDefault(r => string.Equals((r["VehicleName"]?.ToString() ?? string.Empty).Trim(), input, StringComparison.OrdinalIgnoreCase));
-
-            if (matched == null)
-            {
-                matched = _dtVehicleSource.AsEnumerable()
-                    .FirstOrDefault(r => (r["VehicleName"]?.ToString() ?? string.Empty)
-                        .Trim().StartsWith(input, StringComparison.OrdinalIgnoreCase));
-            }
+                .FirstOrDefault(r => _IsExactNameMatch(r["VehicleName"]?.ToString(), normalizedInput));
 
             if (matched == null)
                 return false;
 
             return int.TryParse(matched["VehicleID"].ToString(), out vehicleID);
+        }
+
+        private bool _TrySuggestVehicleSelection(string input, out List<string> suggestionsPreview)
+        {
+            suggestionsPreview = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+
+            if (_dtVehicleSource == null)
+                _dtVehicleSource = clsVehicle.GetAllVehicles();
+
+            if (_dtVehicleSource == null || !_dtVehicleSource.Columns.Contains("VehicleID") || !_dtVehicleSource.Columns.Contains("VehicleName"))
+                return false;
+
+            string normalizedInput = _NormalizeSearchText(input);
+            List<DataRow> matches = _dtVehicleSource.AsEnumerable()
+                .Where(r => _IsNameSuggestionMatch(r["VehicleName"]?.ToString(), normalizedInput))
+                .Take(20)
+                .ToList();
+
+            if (matches.Count == 0)
+                return false;
+
+            AutoCompleteStringCollection suggestions = new AutoCompleteStringCollection();
+            HashSet<string> distinct = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            HashSet<string> distinctPreview = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (DataRow row in matches)
+            {
+                string id = row["VehicleID"]?.ToString();
+                string name = row["VehicleName"]?.ToString();
+                string composite = $"{id} - {name}";
+
+                if (!string.IsNullOrWhiteSpace(name) && distinct.Add(name))
+                    suggestions.Add(name);
+
+                if (!string.IsNullOrWhiteSpace(composite) && distinct.Add(composite))
+                    suggestions.Add(composite);
+
+                if (!string.IsNullOrWhiteSpace(composite))
+                    distinctPreview.Add(composite);
+            }
+
+            txtFilterValue.AutoCompleteCustomSource = suggestions;
+            txtFilterValue.SelectionStart = txtFilterValue.TextLength;
+            txtFilterValue.SelectionLength = 0;
+
+            suggestionsPreview = distinctPreview.Take(8).ToList();
+
+            txtFilterValue.Focus();
+            return true;
+        }
+
+        private static string _NormalizeSearchText(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return string.Empty;
+
+            string trimmed = value.Trim();
+            string normalized = trimmed.Normalize(NormalizationForm.FormD);
+            StringBuilder sb = new StringBuilder(normalized.Length);
+
+            foreach (char c in normalized)
+            {
+                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (uc != UnicodeCategory.NonSpacingMark)
+                    sb.Append(char.ToUpperInvariant(c));
+            }
+
+            return sb.ToString()
+                .Replace('Đ', 'D')
+                .Replace('đ', 'd')
+                .Normalize(NormalizationForm.FormC);
+        }
+
+        private static bool _IsExactNameMatch(string sourceName, string normalizedInput)
+        {
+            if (string.IsNullOrWhiteSpace(sourceName) || string.IsNullOrWhiteSpace(normalizedInput))
+                return false;
+
+            string normalizedName = _NormalizeSearchText(sourceName);
+            return normalizedName == normalizedInput;
+        }
+
+        private static bool _IsNameSuggestionMatch(string sourceName, string normalizedInput)
+        {
+            if (string.IsNullOrWhiteSpace(sourceName) || string.IsNullOrWhiteSpace(normalizedInput))
+                return false;
+
+            string normalizedName = _NormalizeSearchText(sourceName);
+            if (normalizedName.Contains(normalizedInput))
+                return true;
+
+            string[] nameParts = normalizedName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] inputParts = normalizedInput.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            return inputParts.All(inputPart => nameParts.Any(namePart => namePart.Contains(inputPart)));
         }
 
         public void LoadVehicleInfo(int? VehicleID)
@@ -203,6 +318,105 @@ namespace CarRental.Vehicles.UserControls
             {
                 // Raise the event with a parameter
                 RaiseOnVehicleSelected(ucVehicleCard1.VehicleID);
+            }
+        }
+
+        private void _InitializeSuggestionsDropDown()
+        {
+            _suggestionsListBox = new ListBox
+            {
+                BorderStyle = BorderStyle.None,
+                IntegralHeight = true,
+                DrawMode = DrawMode.OwnerDrawFixed,
+                ItemHeight = 22
+            };
+
+            _suggestionsListBox.Click += (s, e) => _ApplySelectedSuggestion();
+            _suggestionsListBox.DrawItem += _suggestionsListBox_DrawItem;
+            _suggestionsListBox.KeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.Handled = true;
+                    _ApplySelectedSuggestion();
+                }
+            };
+
+            ToolStripControlHost host = new ToolStripControlHost(_suggestionsListBox)
+            {
+                Margin = Padding.Empty,
+                Padding = Padding.Empty,
+                AutoSize = false
+            };
+
+            _suggestionsMenu = new ToolStripDropDown
+            {
+                AutoSize = false,
+                Padding = Padding.Empty,
+                Margin = Padding.Empty
+            };
+
+            _suggestionsMenu.Items.Add(host);
+        }
+
+        private void _ShowSuggestionsDropDown(List<string> suggestions)
+        {
+            if (_suggestionsMenu == null || _suggestionsListBox == null || suggestions == null || suggestions.Count == 0)
+                return;
+
+            _suggestionsListBox.BeginUpdate();
+            _suggestionsListBox.Items.Clear();
+            foreach (string suggestion in suggestions)
+                _suggestionsListBox.Items.Add(suggestion);
+            _suggestionsListBox.EndUpdate();
+
+            int width = txtFilterValue.Width;
+            int visibleItems = Math.Min(8, _suggestionsListBox.Items.Count);
+            int height = visibleItems * _suggestionsListBox.ItemHeight + 22;
+
+            _suggestionsListBox.Size = new Size(width, height);
+            _suggestionsMenu.Size = new Size(width, height);
+
+            if (_suggestionsMenu.Visible)
+                _suggestionsMenu.Close();
+
+            _suggestionsMenu.Show(txtFilterValue.PointToScreen(new Point(0, txtFilterValue.Height)));
+            _suggestionsListBox.Focus();
+        }
+
+        private void _HideSuggestionsDropDown()
+        {
+            if (_suggestionsMenu != null && _suggestionsMenu.Visible)
+                _suggestionsMenu.Close();
+        }
+
+        private void _ApplySelectedSuggestion()
+        {
+            if (_suggestionsListBox.SelectedItem == null)
+                return;
+
+            txtFilterValue.Text = _suggestionsListBox.SelectedItem.ToString();
+            txtFilterValue.SelectionStart = txtFilterValue.TextLength;
+            txtFilterValue.SelectionLength = 0;
+            _HideSuggestionsDropDown();
+            txtFilterValue.Focus();
+        }
+
+        private void _suggestionsListBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0 || e.Index >= _suggestionsListBox.Items.Count)
+                return;
+
+            bool isSelected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
+            Color backColor = isSelected ? SystemColors.Highlight : SystemColors.Window;
+            Color textColor = isSelected ? SystemColors.HighlightText : SystemColors.WindowText;
+
+            using (SolidBrush backBrush = new SolidBrush(backColor))
+            using (SolidBrush textBrush = new SolidBrush(textColor))
+            {
+                e.Graphics.FillRectangle(backBrush, e.Bounds);
+                Rectangle textRect = new Rectangle(e.Bounds.Left + 6, e.Bounds.Top + 2, e.Bounds.Width - 8, e.Bounds.Height - 4);
+                e.Graphics.DrawString(_suggestionsListBox.Items[e.Index].ToString(), e.Font, textBrush, textRect);
             }
         }
 
