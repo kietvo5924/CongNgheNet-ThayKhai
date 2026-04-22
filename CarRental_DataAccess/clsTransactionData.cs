@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
 
@@ -677,6 +678,47 @@ where TransactionID = @TransactionID";
             }
 
             return ReturnID;
+        }
+
+        public static HashSet<int> GetReturnedBookingIDs()
+        {
+            HashSet<int> returnedBookingIDs = new HashSet<int>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString))
+                {
+                    connection.Open();
+
+                    string query = @"SELECT DISTINCT BookingID
+                                     FROM RentalTransaction
+                                     WHERE ReturnID IS NOT NULL
+                                       AND BookingID IS NOT NULL";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            if (reader["BookingID"] != DBNull.Value
+                                && int.TryParse(reader["BookingID"].ToString(), out int bookingID))
+                            {
+                                returnedBookingIDs.Add(bookingID);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                clsLogError.LogError("Database Exception", ex);
+            }
+            catch (Exception ex)
+            {
+                clsLogError.LogError("General Exception", ex);
+            }
+
+            return returnedBookingIDs;
         }
 
     }

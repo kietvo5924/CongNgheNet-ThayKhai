@@ -52,6 +52,11 @@ namespace CarRental_Business
             Mode = enMode.AddNew;
         }
 
+        public static HashSet<int> GetReturnedBookingIDs()
+        {
+            return clsTransactionData.GetReturnedBookingIDs();
+        }
+
         private clsTransaction(int? BookingID, int? CustomerID, int? VehicleID, DateTime RentalStartDate,
             DateTime RentalEndDate, int? InitialRentalDays, string PickupLocation,
             string DropoffLocation, decimal RentalPricePerDay, decimal? InitialTotalDueAmount,
@@ -148,6 +153,8 @@ namespace CarRental_Business
                 case enMode.AddNew:
                     if (_AddNewTransaction())
                     {
+                        clsBooking.InvalidateBookingCache();
+                        clsVehicle.InvalidateVehiclesCache();
                         Mode = enMode.Update;
                         return true;
                     }
@@ -157,7 +164,13 @@ namespace CarRental_Business
                     }
 
                 case enMode.Update:
-                    return _UpdateTransaction();
+                    if (_UpdateTransaction())
+                    {
+                        clsBooking.InvalidateBookingCache();
+                        return true;
+                    }
+
+                    return false;
             }
 
             return false;

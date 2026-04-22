@@ -10,6 +10,9 @@ namespace CarRental_Business
 {
     public class clsBooking
     {
+        private static readonly object _bookingCacheLock = new object();
+        private static DataTable _cachedAllRentalBookings;
+
         public enum enMode { AddNew = 0, Update = 1 };
         public enMode Mode = enMode.AddNew;
 
@@ -95,6 +98,7 @@ namespace CarRental_Business
                 case enMode.AddNew:
                     if (_AddNewBooking())
                     {
+                        InvalidateBookingCache();
                         Mode = enMode.Update;
                         return true;
                     }
@@ -104,7 +108,13 @@ namespace CarRental_Business
                     }
 
                 case enMode.Update:
-                    return _UpdateBooking();
+                    if (_UpdateBooking())
+                    {
+                        InvalidateBookingCache();
+                        return true;
+                    }
+
+                    return false;
             }
 
             return false;
@@ -142,7 +152,11 @@ namespace CarRental_Business
 
         public bool DeleteBooking()
         {
-            return clsBookingData.DeleteBooking(this.BookingID);
+            bool isDeleted = clsBookingData.DeleteBooking(this.BookingID);
+            if (isDeleted)
+                InvalidateBookingCache();
+
+            return isDeleted;
         }
 
         public static bool DoesBookingExist(int? BookingID)
@@ -152,7 +166,21 @@ namespace CarRental_Business
 
         public static DataTable GetAllRentalBooking()
         {
-            return clsBookingData.GetAllRentalBooking();
+            lock (_bookingCacheLock)
+            {
+                if (_cachedAllRentalBookings == null)
+                    _cachedAllRentalBookings = clsBookingData.GetAllRentalBooking();
+
+                return _cachedAllRentalBookings?.Copy();
+            }
+        }
+
+        public static void InvalidateBookingCache()
+        {
+            lock (_bookingCacheLock)
+            {
+                _cachedAllRentalBookings = null;
+            }
         }
 
         public static int GetBookingCount()

@@ -189,6 +189,7 @@
             this.dtpStartDate.Name = "dtpStartDate";
             this.dtpStartDate.Size = new System.Drawing.Size(180, 36);
             this.dtpStartDate.TabIndex = 171;
+            this.dtpStartDate.ValueChanged += new System.EventHandler(this.dtpStartDate_ValueChanged);
             // 
             // label5 (Ngày trả)
             // 
@@ -212,6 +213,7 @@
             this.dtpEndDate.Name = "dtpEndDate";
             this.dtpEndDate.Size = new System.Drawing.Size(180, 36);
             this.dtpEndDate.TabIndex = 172;
+            this.dtpEndDate.ValueChanged += new System.EventHandler(this.dtpEndDate_ValueChanged);
             // 
             // label6 (Số ngày)
             // 
@@ -350,8 +352,8 @@
             this.label4.ForeColor = System.Drawing.Color.Gray;
             this.label4.Location = new System.Drawing.Point(400, 223);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(83, 19);
-            this.label4.Text = "Thanh toán:";
+            this.label4.Size = new System.Drawing.Size(144, 19);
+            this.label4.Text = "Chi tiết thanh toán:";
             // 
             // txtPaymentDetails
             // 
@@ -360,6 +362,7 @@
             this.txtPaymentDetails.DefaultText = "";
             this.txtPaymentDetails.Location = new System.Drawing.Point(580, 215);
             this.txtPaymentDetails.Name = "txtPaymentDetails";
+            this.txtPaymentDetails.PlaceholderText = "VD: CK VCB mã GD 123456";
             this.txtPaymentDetails.Size = new System.Drawing.Size(180, 32);
             this.txtPaymentDetails.TabIndex = 204;
             this.txtPaymentDetails.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateEmptyTextBox);

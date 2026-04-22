@@ -10,6 +10,9 @@ namespace CarRental_Business
 {
     public class clsCustomer : clsPerson
     {
+        private static readonly object _customersCacheLock = new object();
+        private static DataTable _cachedAllCustomers;
+
         public enum enMode { AddNew = 0, Update = 1 };
         public enMode Mode = enMode.AddNew;
 
@@ -75,6 +78,7 @@ namespace CarRental_Business
                 case enMode.AddNew:
                     if (_AddNewCustomer())
                     {
+                        InvalidateCustomersCache();
                         Mode = enMode.Update;
                         return true;
                     }
@@ -84,7 +88,13 @@ namespace CarRental_Business
                     }
 
                 case enMode.Update:
-                    return _UpdateCustomer();
+                    if (_UpdateCustomer())
+                    {
+                        InvalidateCustomersCache();
+                        return true;
+                    }
+
+                    return false;
             }
 
             return false;
@@ -133,7 +143,11 @@ namespace CarRental_Business
 
             if (clsCustomerData.DeleteCustomer(CustomerID))
             {
-                return clsPerson.DeletePerson(PersonID);
+                bool isDeleted = clsPerson.DeletePerson(PersonID);
+                if (isDeleted)
+                    InvalidateCustomersCache();
+
+                return isDeleted;
             }
 
             return false;
@@ -151,7 +165,21 @@ namespace CarRental_Business
 
         public static DataTable GetAllCustomers()
         {
-            return clsCustomerData.GetAllCustomers();
+            lock (_customersCacheLock)
+            {
+                if (_cachedAllCustomers == null)
+                    _cachedAllCustomers = clsCustomerData.GetAllCustomers();
+
+                return _cachedAllCustomers?.Copy();
+            }
+        }
+
+        public static void InvalidateCustomersCache()
+        {
+            lock (_customersCacheLock)
+            {
+                _cachedAllCustomers = null;
+            }
         }
 
         public static int GetCustomersCount()

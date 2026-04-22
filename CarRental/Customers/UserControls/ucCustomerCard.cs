@@ -39,50 +39,74 @@ namespace CarRental.Customers.UserControls
             btnEditCustomerInfo.Enabled = false;
         }
 
-        private void _FillCustomerInfo()
+        private async Task _FillCustomerInfoAsync()
         {
             btnEditCustomerInfo.Enabled = true;
 
-            ucPersonCard1.LoadPersonInfo(_Customer.PersonID);
+            await ucPersonCard1.LoadPersonInfoAsync(_Customer.PersonID);
 
             lblCustomerID.Text = _Customer.CustomerID.ToString();
             lblDriverLicenseNumber.Text = _Customer.DriverLicenseNumber;
         }
 
-        public void LoadCustomerInfo(int? CustomerID)
+        public async Task LoadCustomerInfoAsync(int? CustomerID)
         {
-            _CustomerID = CustomerID;
+            this.Cursor = Cursors.WaitCursor;
+            btnEditCustomerInfo.Enabled = false;
 
-            if (!_CustomerID.HasValue)
+            try
             {
-                MessageBox.Show("Không có thông tin khách hàng.", "Thiếu dữ liệu",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _CustomerID = CustomerID;
 
-                Reset();
+                if (!_CustomerID.HasValue)
+                {
+                    MessageBox.Show("Không có thông tin khách hàng.", "Thiếu dữ liệu",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                return;
+                    Reset();
+
+                    return;
+                }
+
+                var customer = await Task.Run(() => clsCustomer.Find(_CustomerID));
+
+                _Customer = customer;
+
+                if (_Customer == null)
+                {
+                    MessageBox.Show($"Không tìm thấy khách hàng với ID = {CustomerID}", "Thiếu dữ liệu",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    Reset();
+
+                    return;
+                }
+
+                await _FillCustomerInfoAsync();
             }
-
-            _Customer = clsCustomer.Find(_CustomerID);
-
-            if (_Customer == null)
+            catch (Exception ex)
             {
-                MessageBox.Show($"Không tìm thấy khách hàng với ID = {CustomerID}", "Thiếu dữ liệu",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                Reset();
-
-                return;
+                MessageBox.Show($"Không thể tải dữ liệu từ máy chủ. Vui lòng kiểm tra kết nối mạng.\nChi tiết: {ex.Message}",
+                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            _FillCustomerInfo();
+            finally
+            {
+                this.Cursor = Cursors.Default;
+                btnEditCustomerInfo.Enabled = _Customer != null;
+            }
         }
 
-        private void llEditCustomerInfo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        public async void LoadCustomerInfo(int? CustomerID)
+        {
+            await LoadCustomerInfoAsync(CustomerID);
+        }
+
+        private async void llEditCustomerInfo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             frmAddEditCustomer EditCustomer = new frmAddEditCustomer(_CustomerID);
             EditCustomer.GetCustomerIDByDelegate += LoadCustomerInfo;
             EditCustomer.ShowDialog();
+            await LoadCustomerInfoAsync(_CustomerID);
         }
 
         private void btnEditCustomerInfo_Click(object sender, EventArgs e)

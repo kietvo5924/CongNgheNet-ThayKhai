@@ -8,7 +8,6 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -39,14 +38,7 @@ namespace CarRental.Booking
                 if (paymentText.Length < 3)
                 {
                     e.Cancel = true;
-                    errorProvider1.SetError(txtPaymentDetails, "Thông tin thanh toán quá ngắn.");
-                    return;
-                }
-
-                if (!Regex.IsMatch(paymentText, @"\d"))
-                {
-                    e.Cancel = true;
-                    errorProvider1.SetError(txtPaymentDetails, "Thông tin thanh toán cần có số tham chiếu (VD: mã giao dịch/số tiền). ");
+                    errorProvider1.SetError(txtPaymentDetails, "Chi tiết thanh toán quá ngắn.");
                     return;
                 }
 
@@ -76,55 +68,91 @@ namespace CarRental.Booking
             ucSelectedCustomerAndVehicleWithFilter1.SendVehicleID += _FillBookingInfoOnSelectedVehicle;
         }
 
-        private void _FillBookingInfoOnSelectedCustomer(int? CustomerID)
+        private async void _FillBookingInfoOnSelectedCustomer(int? CustomerID)
         {
-            clsCustomer Customer = clsCustomer.Find(CustomerID);
-            if (Customer == null)
+            this.Cursor = Cursors.WaitCursor;
+            btnBook.Enabled = false;
+
+            try
             {
-                lblCustomerID.Text = "[????]";
-                btnBook.Enabled = false;
-                return;
+                clsCustomer Customer = await Task.Run(() => clsCustomer.Find(CustomerID));
+                if (Customer == null)
+                {
+                    lblCustomerID.Text = "[????]";
+                    btnBook.Enabled = false;
+                    return;
+                }
+
+                string provinceName = Customer.ProvinceInfo?.ProvinceName;
+                string address = Customer.Address;
+                string customerLocation = string.Empty;
+
+                if (!string.IsNullOrWhiteSpace(provinceName) && !string.IsNullOrWhiteSpace(address))
+                    customerLocation = provinceName + " - " + address;
+                else if (!string.IsNullOrWhiteSpace(provinceName))
+                    customerLocation = provinceName;
+                else if (!string.IsNullOrWhiteSpace(address))
+                    customerLocation = address;
+
+                if (!string.IsNullOrWhiteSpace(customerLocation))
+                {
+                    if (string.IsNullOrWhiteSpace(txtPickUpLocation.Text.Trim()))
+                        txtPickUpLocation.Text = customerLocation;
+
+                    if (string.IsNullOrWhiteSpace(txtDropOffLocation.Text.Trim()))
+                        txtDropOffLocation.Text = customerLocation;
+                }
+
+                lblCustomerID.Text = Customer.CustomerID.ToString();
+                _UpdateBookButtonState();
             }
-
-            string provinceName = Customer.ProvinceInfo?.ProvinceName;
-            string address = Customer.Address;
-            string customerLocation = string.Empty;
-
-            if (!string.IsNullOrWhiteSpace(provinceName) && !string.IsNullOrWhiteSpace(address))
-                customerLocation = provinceName + " - " + address;
-            else if (!string.IsNullOrWhiteSpace(provinceName))
-                customerLocation = provinceName;
-            else if (!string.IsNullOrWhiteSpace(address))
-                customerLocation = address;
-
-            if (!string.IsNullOrWhiteSpace(customerLocation))
+            catch (Exception ex)
             {
-                if (string.IsNullOrWhiteSpace(txtPickUpLocation.Text.Trim()))
-                    txtPickUpLocation.Text = customerLocation;
-
-                if (string.IsNullOrWhiteSpace(txtDropOffLocation.Text.Trim()))
-                    txtDropOffLocation.Text = customerLocation;
+                MessageBox.Show($"Không thể tải dữ liệu từ máy chủ. Vui lòng kiểm tra kết nối mạng.\nChi tiết: {ex.Message}",
+                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            lblCustomerID.Text = Customer.CustomerID.ToString();
-            _UpdateBookButtonState();
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
         }
 
-        private void _FillBookingInfoOnSelectedVehicle(int? VehicleID)
+        private async Task _FillBookingInfoOnSelectedVehicleAsync(int? VehicleID)
         {
-            clsVehicle Vehicle = clsVehicle.Find(VehicleID);
-            if (Vehicle == null)
+            this.Cursor = Cursors.WaitCursor;
+            btnBook.Enabled = false;
+
+            try
             {
-                btnBook.Enabled = false;
-                return;
+                clsVehicle Vehicle = await Task.Run(() => clsVehicle.Find(VehicleID));
+                if (Vehicle == null)
+                {
+                    btnBook.Enabled = false;
+                    return;
+                }
+
+                lblVehicleID.Text = Vehicle.VehicleID.ToString();
+                lblRentalPricePerDay.Text = Vehicle.RentalPricePerDay.ToString("N0") + " VNĐ";
+
+                decimal initialTotal = _GetInitialTotalDueAmount(Vehicle);
+                lblInitialTotalDueAmount.Text = initialTotal.ToString("N0") + " VNĐ";
+
+                _UpdateBookButtonState();
             }
-            lblVehicleID.Text = Vehicle.VehicleID.ToString();
-            lblRentalPricePerDay.Text = Vehicle.RentalPricePerDay.ToString("N0") + " VNĐ";
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải dữ liệu từ máy chủ. Vui lòng kiểm tra kết nối mạng.\nChi tiết: {ex.Message}",
+                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
+        }
 
-            decimal initialTotal = _GetInitialTotalDueAmount(Vehicle);
-            lblInitialTotalDueAmount.Text = initialTotal.ToString("N0") + " VNĐ";
-
-            _UpdateBookButtonState();
+        private async void _FillBookingInfoOnSelectedVehicle(int? VehicleID)
+        {
+            await _FillBookingInfoOnSelectedVehicleAsync(VehicleID);
         }
 
         private void _UpdateBookButtonState()
@@ -220,17 +248,17 @@ namespace CarRental.Booking
             ucSelectedCustomerAndVehicleWithFilter1.FilterFocus();
         }
 
-        private void dtpStartDate_ValueChanged(object sender, EventArgs e)
+        private async void dtpStartDate_ValueChanged(object sender, EventArgs e)
         {
             _UpdateInitialDays();
-            _FillBookingInfoOnSelectedVehicle(ucSelectedCustomerAndVehicleWithFilter1.VehicleID);
+            await _FillBookingInfoOnSelectedVehicleAsync(ucSelectedCustomerAndVehicleWithFilter1.VehicleID);
             _UpdateBookButtonState();
         }
 
-        private void dtpEndDate_ValueChanged(object sender, EventArgs e)
+        private async void dtpEndDate_ValueChanged(object sender, EventArgs e)
         {
             _UpdateInitialDays();
-            _FillBookingInfoOnSelectedVehicle(ucSelectedCustomerAndVehicleWithFilter1.VehicleID);
+            await _FillBookingInfoOnSelectedVehicleAsync(ucSelectedCustomerAndVehicleWithFilter1.VehicleID);
             _UpdateBookButtonState();
         }
 

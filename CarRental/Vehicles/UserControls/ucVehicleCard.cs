@@ -1,6 +1,7 @@
 ﻿using CarRental_Business;
 using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CarRental.Vehicles.UserControls
@@ -82,34 +83,57 @@ namespace CarRental.Vehicles.UserControls
                 pbVehicleImage.ImageLocation = null;
         }
 
-        public void LoadVehicleInfo(int? VehicleID)
+        public async Task LoadVehicleInfoAsync(int? VehicleID)
         {
-            _VehicleID = VehicleID;
+            this.Cursor = Cursors.WaitCursor;
+            btnEditVehicleInfo.Enabled = false;
 
-            if (!_VehicleID.HasValue)
+            try
             {
-                Reset();
-                return;
+                _VehicleID = VehicleID;
+
+                if (!_VehicleID.HasValue)
+                {
+                    Reset();
+                    return;
+                }
+
+                var vehicle = await Task.Run(() => clsVehicle.Find(_VehicleID));
+
+                _Vehicle = vehicle;
+
+                if (_Vehicle == null)
+                {
+                    MessageBox.Show($"Không tìm thấy xe với mã ID = {VehicleID}", "Lỗi dữ liệu",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Reset();
+                    return;
+                }
+
+                _FillVehicleInfo();
             }
-
-            _Vehicle = clsVehicle.Find(_VehicleID);
-
-            if (_Vehicle == null)
+            catch (Exception ex)
             {
-                MessageBox.Show($"Không tìm thấy xe với mã ID = {VehicleID}", "Lỗi dữ liệu",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Reset();
-                return;
+                MessageBox.Show($"Không thể tải dữ liệu từ máy chủ. Vui lòng kiểm tra kết nối mạng.\nChi tiết: {ex.Message}",
+                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            _FillVehicleInfo();
+            finally
+            {
+                this.Cursor = Cursors.Default;
+                btnEditVehicleInfo.Enabled = _Vehicle != null;
+            }
         }
 
-        private void llEditVehicleInfo_LinkClicked(object sender, EventArgs e)
+        public async void LoadVehicleInfo(int? VehicleID)
+        {
+            await LoadVehicleInfoAsync(VehicleID);
+        }
+
+        private async void llEditVehicleInfo_LinkClicked(object sender, EventArgs e)
         {
             frmAddEditVehicle EditVehicle = new frmAddEditVehicle(_VehicleID);
             EditVehicle.ShowDialog();
-            LoadVehicleInfo(_VehicleID);
+            await LoadVehicleInfoAsync(_VehicleID);
         }
     }
 }

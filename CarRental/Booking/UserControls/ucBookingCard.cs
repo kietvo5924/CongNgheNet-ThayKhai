@@ -2,6 +2,7 @@
 using CarRental.Transaction;
 using CarRental_Business;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CarRental.Booking.UserControls
@@ -74,35 +75,58 @@ namespace CarRental.Booking.UserControls
             btnTransactionInfo.Enabled = false;
         }
 
-        public void LoadBookingInfo(int? BookingID)
+        public async Task LoadBookingInfoAsync(int? BookingID)
         {
-            _BookingID = BookingID;
+            this.Cursor = Cursors.WaitCursor;
+            btnTransactionInfo.Enabled = false;
 
-            if (!_BookingID.HasValue)
+            try
             {
-                MessageBox.Show("Không có lịch đặt", "Thiếu dữ liệu",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _BookingID = BookingID;
 
-                Reset();
+                if (!_BookingID.HasValue)
+                {
+                    MessageBox.Show("Không có lịch đặt", "Thiếu dữ liệu",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                return;
+                    Reset();
+
+                    return;
+                }
+
+                var booking = await Task.Run(() => clsBooking.Find(_BookingID.Value));
+
+                _Booking = booking;
+
+                if (_Booking == null)
+                {
+                    MessageBox.Show($"Không tìm thấy lịch đặt với ID = {BookingID}", "Thiếu dữ liệu",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    _BookingID = null;
+
+                    Reset();
+
+                    return;
+                }
+
+                _FillBookingInfo();
             }
-
-            _Booking = clsBooking.Find(_BookingID.Value);
-
-            if (_Booking == null)
+            catch (Exception ex)
             {
-                MessageBox.Show($"Không tìm thấy lịch đặt với ID = {BookingID}", "Thiếu dữ liệu",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                _BookingID = null;
-
-                Reset();
-
-                return;
+                MessageBox.Show($"Không thể tải dữ liệu từ máy chủ. Vui lòng kiểm tra kết nối mạng.\nChi tiết: {ex.Message}",
+                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+                btnTransactionInfo.Enabled = _Booking != null;
+            }
+        }
 
-            _FillBookingInfo();
+        public async void LoadBookingInfo(int? BookingID)
+        {
+            await LoadBookingInfoAsync(BookingID);
         }
 
         private void btnTransactionInfo_Click(object sender, EventArgs e)

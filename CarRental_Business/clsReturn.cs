@@ -124,7 +124,11 @@ namespace CarRental_Business
 
         public static bool DeleteReturn(int? ReturnID)
         {
-            return clsReturnData.DeleteReturn(ReturnID);
+            bool isDeleted = clsReturnData.DeleteReturn(ReturnID);
+            if (isDeleted)
+                clsBooking.InvalidateBookingCache();
+
+            return isDeleted;
         }
 
         public static bool DoesReturnExist(int? ReturnID)
@@ -206,6 +210,8 @@ namespace CarRental_Business
             {
                 this.ReturnID = returnID;
                 this.Mode = enMode.Update;
+                clsBooking.InvalidateBookingCache();
+                clsVehicle.InvalidateVehiclesCache();
             }
             else
             {

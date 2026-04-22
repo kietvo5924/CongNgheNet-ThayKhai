@@ -24,6 +24,12 @@ namespace CarRental.Booking.UserControls
             InitializeComponent();
         }
 
+        public async Task LoadCustomerVehicleInfoAsync(int? CustomerID, int? VehicleID)
+        {
+            await ucCustomerCard1.LoadCustomerInfoAsync(CustomerID);
+            await ucVehicleCard1.LoadVehicleInfoAsync(VehicleID);
+        }
+
         public void LoadCustomerVehicleInfo(int? CustomerID, int? VehicleID)
         {
             ucCustomerCard1.LoadCustomerInfo(CustomerID);

@@ -10,6 +10,9 @@ namespace CarRental_Business
 {
     public class clsVehicle
     {
+        private static readonly object _vehiclesCacheLock = new object();
+        private static DataTable _cachedAllVehicles;
+
         public enum enMode { AddNew = 0, Update = 1 };
         public enMode Mode = enMode.AddNew;
 
@@ -116,6 +119,7 @@ namespace CarRental_Business
                 case enMode.AddNew:
                     if (_AddNewVehicle())
                     {
+                        InvalidateVehiclesCache();
                         Mode = enMode.Update;
                         return true;
                     }
@@ -125,7 +129,13 @@ namespace CarRental_Business
                     }
 
                 case enMode.Update:
-                    return _UpdateVehicle();
+                    if (_UpdateVehicle())
+                    {
+                        InvalidateVehiclesCache();
+                        return true;
+                    }
+
+                    return false;
             }
 
             return false;
@@ -168,7 +178,11 @@ namespace CarRental_Business
 
         public static bool DeleteVehicle(int? VehicleID)
         {
-            return clsVehicleData.DeleteVehicle(VehicleID);
+            bool isDeleted = clsVehicleData.DeleteVehicle(VehicleID);
+            if (isDeleted)
+                InvalidateVehiclesCache();
+
+            return isDeleted;
         }
 
         public static bool DoesVehicleExist(int? VehicleID)
@@ -183,7 +197,21 @@ namespace CarRental_Business
 
         public static DataTable GetAllVehicles()
         {
-            return clsVehicleData.GetAllVehicles();
+            lock (_vehiclesCacheLock)
+            {
+                if (_cachedAllVehicles == null)
+                    _cachedAllVehicles = clsVehicleData.GetAllVehicles();
+
+                return _cachedAllVehicles?.Copy();
+            }
+        }
+
+        public static void InvalidateVehiclesCache()
+        {
+            lock (_vehiclesCacheLock)
+            {
+                _cachedAllVehicles = null;
+            }
         }
 
         public static DataTable GetAllVehiclesInPages(short PageNumber, short RowsPerPage)
@@ -217,17 +245,29 @@ namespace CarRental_Business
 
         public bool UpdateMileage(int NewMileage)
         {
-            return clsVehicleData.UpdateMileage(this.VehicleID, NewMileage);
+            bool isUpdated = clsVehicleData.UpdateMileage(this.VehicleID, NewMileage);
+            if (isUpdated)
+                InvalidateVehiclesCache();
+
+            return isUpdated;
         }
 
         public bool SetAvailableForRent()
         {
-            return clsVehicleData.UpdateAvailableForRent(this.VehicleID, true);
+            bool isUpdated = clsVehicleData.UpdateAvailableForRent(this.VehicleID, true);
+            if (isUpdated)
+                InvalidateVehiclesCache();
+
+            return isUpdated;
         }
 
         public bool SetUnAvailableForRent()
         {
-            return clsVehicleData.UpdateAvailableForRent(this.VehicleID, false);
+            bool isUpdated = clsVehicleData.UpdateAvailableForRent(this.VehicleID, false);
+            if (isUpdated)
+                InvalidateVehiclesCache();
+
+            return isUpdated;
         }
 
         public static int GetAvailableVehiclesCount()

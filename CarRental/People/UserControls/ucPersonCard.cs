@@ -60,36 +60,54 @@ namespace CarRental.People.UserControls
             lblUpdatedAt.Text = "[????]";
         }
 
-        public void LoadPersonInfo(int? PersonID)
+        public async Task LoadPersonInfoAsync(int? PersonID)
         {
-            _PersonID = PersonID;
+            this.Cursor = Cursors.WaitCursor;
 
-            if (!PersonID.HasValue)
+            try
             {
-                MessageBox.Show("There is no person", "Missing Customer",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _PersonID = PersonID;
 
-                Reset();
+                if (!PersonID.HasValue)
+                {
+                    MessageBox.Show("There is no person", "Missing Customer",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                return;
+                    Reset();
+
+                    return;
+                }
+
+                var person = await Task.Run(() => clsPerson.Find(_PersonID));
+
+                _Person = person;
+
+                if (_Person == null)
+                {
+                    MessageBox.Show($"There is no person with id = {PersonID}", "Missing Customer",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    Reset();
+
+                    return;
+                }
+
+                _FillPersonInfo();
             }
-
-            _Person = clsPerson.Find(_PersonID);
-
-            if (_Person == null)
+            catch (Exception ex)
             {
-                MessageBox.Show($"There is no person with id = {PersonID}", "Missing Customer",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                Reset();
-
-                return;
+                MessageBox.Show($"Không thể tải dữ liệu từ máy chủ. Vui lòng kiểm tra kết nối mạng.\nChi tiết: {ex.Message}",
+                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
+        }
 
-            _FillPersonInfo();
-
-
-
+        public async void LoadPersonInfo(int? PersonID)
+        {
+            await LoadPersonInfoAsync(PersonID);
         }
 
     }

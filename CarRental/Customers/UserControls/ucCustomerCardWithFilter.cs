@@ -102,8 +102,13 @@ namespace CarRental.Customers.UserControls
             txtFilterValue.Focus();
         }
 
-        private void btnFind_Click(object sender, EventArgs e)
+        private async void btnFind_Click(object sender, EventArgs e)
         {
+            this.Cursor = Cursors.WaitCursor;
+            btnFind.Enabled = false;
+
+            try
+            {
             if (!this.ValidateChildren())
             {
                 //Here we don't continue because the form is not valid
@@ -115,6 +120,8 @@ namespace CarRental.Customers.UserControls
 
             if (_defaultAutoCompleteSource != null)
                 txtFilterValue.AutoCompleteCustomSource = _defaultAutoCompleteSource;
+
+            await _EnsureCustomerSourceLoadedAsync();
 
             string filterValue = txtFilterValue.Text.Trim();
 
@@ -134,7 +141,18 @@ namespace CarRental.Customers.UserControls
 
             _HideSuggestionsDropDown();
 
-            LoadCustomerInfo(customerID);
+            await LoadCustomerInfoAsync(customerID);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải dữ liệu từ máy chủ. Vui lòng kiểm tra kết nối mạng.\nChi tiết: {ex.Message}",
+                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+                btnFind.Enabled = true;
+            }
         }
 
         private void txtFilterValue_Validating(object sender, CancelEventArgs e)
@@ -142,16 +160,38 @@ namespace CarRental.Customers.UserControls
             clsValidation.ValidateRequired(txtFilterValue, errorProvider1, e);
         }
 
-        private void ucCustomerCardWithFilter_Load(object sender, EventArgs e)
+        private async void ucCustomerCardWithFilter_Load(object sender, EventArgs e)
         {
-            _LoadCustomerAutoComplete();
-            cbSearchBy.SelectedIndex = 0;
-            txtFilterValue.Focus();
+            this.Cursor = Cursors.WaitCursor;
+            btnFind.Enabled = false;
+
+            try
+            {
+                await _LoadCustomerAutoCompleteAsync();
+                cbSearchBy.SelectedIndex = 0;
+                txtFilterValue.Focus();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải dữ liệu từ máy chủ. Vui lòng kiểm tra kết nối mạng.\nChi tiết: {ex.Message}",
+                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+                btnFind.Enabled = true;
+            }
         }
 
-        private void _LoadCustomerAutoComplete()
+        private async Task _EnsureCustomerSourceLoadedAsync()
         {
-            _dtCustomerSource = clsCustomer.GetAllCustomers();
+            if (_dtCustomerSource == null)
+                _dtCustomerSource = await Task.Run(() => clsCustomer.GetAllCustomers());
+        }
+
+        private async Task _LoadCustomerAutoCompleteAsync()
+        {
+            await _EnsureCustomerSourceLoadedAsync();
             _autoCompleteValues.Clear();
 
             AutoCompleteStringCollection source = new AutoCompleteStringCollection();
@@ -210,9 +250,6 @@ namespace CarRental.Customers.UserControls
             if (!allowByName)
                 return false;
 
-            if (_dtCustomerSource == null)
-                _dtCustomerSource = clsCustomer.GetAllCustomers();
-
             if (_dtCustomerSource == null || !_dtCustomerSource.Columns.Contains("CustomerID") || !_dtCustomerSource.Columns.Contains("Name"))
                 return false;
 
@@ -231,9 +268,6 @@ namespace CarRental.Customers.UserControls
 
             if (string.IsNullOrWhiteSpace(input))
                 return false;
-
-            if (_dtCustomerSource == null)
-                _dtCustomerSource = clsCustomer.GetAllCustomers();
 
             if (_dtCustomerSource == null || !_dtCustomerSource.Columns.Contains("CustomerID") || !_dtCustomerSource.Columns.Contains("Name"))
                 return false;
@@ -322,12 +356,33 @@ namespace CarRental.Customers.UserControls
             return inputParts.All(inputPart => nameParts.Any(namePart => namePart.Contains(inputPart)));
         }
 
-        public void LoadCustomerInfo(int? CustomerID)
+        public async Task LoadCustomerInfoAsync(int? CustomerID)
         {
-            txtFilterValue.Text = CustomerID.HasValue ? CustomerID.Value.ToString() : string.Empty;
-            ucCustomerCard1.LoadCustomerInfo(CustomerID);
-           
-            RaiseOnCustomerSelected(ucCustomerCard1.CustomerID);
+            this.Cursor = Cursors.WaitCursor;
+            btnFind.Enabled = false;
+
+            try
+            {
+                txtFilterValue.Text = CustomerID.HasValue ? CustomerID.Value.ToString() : string.Empty;
+                await ucCustomerCard1.LoadCustomerInfoAsync(CustomerID);
+
+                RaiseOnCustomerSelected(ucCustomerCard1.CustomerID);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải dữ liệu từ máy chủ. Vui lòng kiểm tra kết nối mạng.\nChi tiết: {ex.Message}",
+                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+                btnFind.Enabled = true;
+            }
+        }
+
+        public async void LoadCustomerInfo(int? CustomerID)
+        {
+            await LoadCustomerInfoAsync(CustomerID);
         }
 
         private void _InitializeSuggestionsDropDown()

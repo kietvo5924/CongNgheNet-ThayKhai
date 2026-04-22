@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CarRental.Booking
@@ -156,33 +157,35 @@ namespace CarRental.Booking
             return "Đang thuê";
         }
 
-        private void _BuildBookingStatusColumn()
+        private static void _BuildBookingStatusColumn(DataTable bookingTable)
         {
-            if (_dtAllBooking == null)
+            if (bookingTable == null)
                 return;
 
-            if (!_dtAllBooking.Columns.Contains(BookingStatusColumnName))
-                _dtAllBooking.Columns.Add(BookingStatusColumnName, typeof(string));
+            HashSet<int> returnedBookingIDs = clsTransaction.GetReturnedBookingIDs();
 
-            if (!_dtAllBooking.Columns.Contains(BookingRealStatusColumnName))
-                _dtAllBooking.Columns.Add(BookingRealStatusColumnName, typeof(string));
+            if (!bookingTable.Columns.Contains(BookingStatusColumnName))
+                bookingTable.Columns.Add(BookingStatusColumnName, typeof(string));
 
-            if (!_dtAllBooking.Columns.Contains(BookingAlertPriorityColumnName))
-                _dtAllBooking.Columns.Add(BookingAlertPriorityColumnName, typeof(int));
+            if (!bookingTable.Columns.Contains(BookingRealStatusColumnName))
+                bookingTable.Columns.Add(BookingRealStatusColumnName, typeof(string));
 
-            foreach (DataRow row in _dtAllBooking.Rows)
+            if (!bookingTable.Columns.Contains(BookingAlertPriorityColumnName))
+                bookingTable.Columns.Add(BookingAlertPriorityColumnName, typeof(int));
+
+            foreach (DataRow row in bookingTable.Rows)
             {
                 if (!int.TryParse(row["BookingID"]?.ToString(), out int bookingID))
                 {
                     row[BookingStatusColumnName] = "Không xác định";
+                    row[BookingRealStatusColumnName] = "Không xác định";
+                    row[BookingAlertPriorityColumnName] = _ResolveBookingAlertPriority("Không xác định");
                     continue;
                 }
 
                 DateTime rentalStart = row["RentalStartDate"] is DateTime startDate ? startDate : DateTime.Today;
                 DateTime rentalEnd = row["RentalEndDate"] is DateTime endDate ? endDate : DateTime.Today;
-
-                clsBooking booking = clsBooking.Find(bookingID);
-                bool isReturned = booking != null && booking.IsBookingReturned;
+                bool isReturned = returnedBookingIDs.Contains(bookingID);
 
                 string status = _ResolveBookingStatus(isReturned, rentalStart, rentalEnd);
                 string realStatus = _ResolveBookingRealStatus(isReturned, rentalStart, rentalEnd);
@@ -191,6 +194,23 @@ namespace CarRental.Booking
                 row[BookingRealStatusColumnName] = realStatus;
                 row[BookingAlertPriorityColumnName] = _ResolveBookingAlertPriority(status);
             }
+        }
+
+        private void _SetLoadingState(bool isLoading)
+        {
+            this.Cursor = isLoading ? Cursors.WaitCursor : Cursors.Default;
+
+            if (btnAddNewBooking != null)
+                btnAddNewBooking.Enabled = !isLoading;
+
+            if (btnToggleAutoRefresh != null)
+                btnToggleAutoRefresh.Enabled = !isLoading;
+
+            if (cbFilter != null)
+                cbFilter.Enabled = !isLoading;
+
+            if (txtSearch != null)
+                txtSearch.Enabled = !isLoading;
         }
 
         private void _ApplyAlertPrioritySort()
@@ -430,64 +450,89 @@ namespace CarRental.Booking
             }
         }
 
-        private void _RefreshBookingList()
+        private async Task _RefreshBookingListAsync()
         {
-            _dtAllBooking = clsBooking.GetAllRentalBooking();
-            _BuildBookingStatusColumn();
-            dgvBookingList.DataSource = _dtAllBooking;
-            _ApplyAlertPrioritySort();
-            _UpdateRecordsCount();
-            _UpdateAlertSummary();
+            _SetLoadingState(true);
 
-            if (dgvBookingList.Rows.Count > 0)
+            try
             {
-                dgvBookingList.Columns[0].HeaderText = "Mã đặt";
-                dgvBookingList.Columns[1].HeaderText = "Khách hàng";
-                dgvBookingList.Columns[2].HeaderText = "Mã KH";
-                dgvBookingList.Columns[3].HeaderText = "Mã xe";
-                dgvBookingList.Columns[4].HeaderText = "Ngày thuê";
-                dgvBookingList.Columns[5].HeaderText = "Ngày trả";
-                dgvBookingList.Columns[6].HeaderText = "Điểm nhận";
-                dgvBookingList.Columns[7].HeaderText = "Điểm trả";
-                dgvBookingList.Columns[8].HeaderText = "Giá/Ngày";
-                dgvBookingList.Columns[9].HeaderText = "Số ngày";
-                dgvBookingList.Columns[10].HeaderText = "Tổng tiền";
-                if (dgvBookingList.Columns.Contains(BookingStatusColumnName))
-                    dgvBookingList.Columns[BookingStatusColumnName].HeaderText = "Trạng thái";
-                if (dgvBookingList.Columns.Contains(BookingRealStatusColumnName))
-                    dgvBookingList.Columns[BookingRealStatusColumnName].HeaderText = "Tình trạng thuê";
-                if (dgvBookingList.Columns.Contains(BookingAlertPriorityColumnName))
-                    dgvBookingList.Columns[BookingAlertPriorityColumnName].Visible = false;
+                DataTable loadedBookings = await Task.Run(() =>
+                {
+                    DataTable bookings = clsBooking.GetAllRentalBooking();
+                    _BuildBookingStatusColumn(bookings);
+                    return bookings;
+                });
 
-                var rentalPriceColumn = dgvBookingList.Columns["RentalPricePerDay"];
-                if (rentalPriceColumn != null)
-                {
-                    rentalPriceColumn.DefaultCellStyle.Format = "N0";
-                    rentalPriceColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                }
-                else if (dgvBookingList.Columns.Count > 8)
-                {
-                    dgvBookingList.Columns[8].DefaultCellStyle.Format = "N0";
-                    dgvBookingList.Columns[8].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                }
+                _dtAllBooking = loadedBookings;
+                dgvBookingList.DataSource = _dtAllBooking;
+                _ApplyAlertPrioritySort();
+                _UpdateRecordsCount();
+                _UpdateAlertSummary();
 
-                var initialTotalColumn = dgvBookingList.Columns["InitialTotalDueAmount"];
-                if (initialTotalColumn != null)
+                if (dgvBookingList.Rows.Count > 0)
                 {
-                    initialTotalColumn.DefaultCellStyle.Format = "N0";
-                    initialTotalColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                }
-                else if (dgvBookingList.Columns.Count > 10)
-                {
-                    dgvBookingList.Columns[10].DefaultCellStyle.Format = "N0";
-                    dgvBookingList.Columns[10].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                }
+                    dgvBookingList.Columns[0].HeaderText = "Mã đặt";
+                    dgvBookingList.Columns[1].HeaderText = "Khách hàng";
+                    dgvBookingList.Columns[2].HeaderText = "Mã KH";
+                    dgvBookingList.Columns[3].HeaderText = "Mã xe";
+                    dgvBookingList.Columns[4].HeaderText = "Ngày thuê";
+                    dgvBookingList.Columns[5].HeaderText = "Ngày trả";
+                    dgvBookingList.Columns[6].HeaderText = "Điểm nhận";
+                    dgvBookingList.Columns[7].HeaderText = "Điểm trả";
+                    dgvBookingList.Columns[8].HeaderText = "Giá/Ngày";
+                    dgvBookingList.Columns[9].HeaderText = "Số ngày";
+                    dgvBookingList.Columns[10].HeaderText = "Tổng tiền";
+                    if (dgvBookingList.Columns.Contains(BookingStatusColumnName))
+                        dgvBookingList.Columns[BookingStatusColumnName].HeaderText = "Trạng thái";
+                    if (dgvBookingList.Columns.Contains(BookingRealStatusColumnName))
+                        dgvBookingList.Columns[BookingRealStatusColumnName].HeaderText = "Tình trạng thuê";
+                    if (dgvBookingList.Columns.Contains(BookingAlertPriorityColumnName))
+                        dgvBookingList.Columns[BookingAlertPriorityColumnName].Visible = false;
 
-                dgvBookingList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    var rentalPriceColumn = dgvBookingList.Columns["RentalPricePerDay"];
+                    if (rentalPriceColumn != null)
+                    {
+                        rentalPriceColumn.DefaultCellStyle.Format = "N0";
+                        rentalPriceColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    }
+                    else if (dgvBookingList.Columns.Count > 8)
+                    {
+                        dgvBookingList.Columns[8].DefaultCellStyle.Format = "N0";
+                        dgvBookingList.Columns[8].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    }
+
+                    var initialTotalColumn = dgvBookingList.Columns["InitialTotalDueAmount"];
+                    if (initialTotalColumn != null)
+                    {
+                        initialTotalColumn.DefaultCellStyle.Format = "N0";
+                        initialTotalColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    }
+                    else if (dgvBookingList.Columns.Count > 10)
+                    {
+                        dgvBookingList.Columns[10].DefaultCellStyle.Format = "N0";
+                        dgvBookingList.Columns[10].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    }
+
+                    dgvBookingList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải dữ liệu từ máy chủ. Vui lòng kiểm tra kết nối mạng.\nChi tiết: {ex.Message}",
+                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                _SetLoadingState(false);
             }
         }
 
-        private void frmListBooking_Load(object sender, EventArgs e)
+        private async void _RefreshBookingList()
+        {
+            await _RefreshBookingListAsync();
+        }
+
+        private async void frmListBooking_Load(object sender, EventArgs e)
         {
             dgvBookingList.CellMouseDown += dgvBookingList_CellMouseDown;
             dgvBookingList.CellFormatting += dgvBookingList_CellFormatting;
@@ -503,7 +548,7 @@ namespace CarRental.Booking
             if (!cbFilter.Items.Contains("Quá hạn")) cbFilter.Items.Add("Quá hạn");
             if (!cbFilter.Items.Contains("Đã hoàn tất")) cbFilter.Items.Add("Đã hoàn tất");
 
-            _RefreshBookingList();
+            await _RefreshBookingListAsync();
             cbFilter.SelectedIndex = 0;
             _UpdateQuickFilterButtonsVisualState();
 
@@ -661,14 +706,14 @@ namespace CarRental.Booking
             cbFilter.SelectedItem = "Không lọc";
         }
 
-        private void btnAddNewBooking_Click(object sender, EventArgs e)
+        private async void btnAddNewBooking_Click(object sender, EventArgs e)
         {
             frmAddBooking frm = new frmAddBooking();
             frm.ShowDialog();
-            _RefreshBookingList();
+            await _RefreshBookingListAsync();
         }
 
-        private void cancelBookingToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void cancelBookingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!_TryGetSelectedBookingID(out int bookingID))
             {
@@ -713,7 +758,7 @@ namespace CarRental.Booking
             if (cancelled)
             {
                 MessageBox.Show("Hủy đăng ký đặt xe thành công.", "Hoàn tất", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                _RefreshBookingList();
+                await _RefreshBookingListAsync();
             }
             else
             {
@@ -722,7 +767,7 @@ namespace CarRental.Booking
             }
         }
 
-        private void ShowBookingDetailsToolStripMenuItem1_Click(object sender, EventArgs e)
+        private async void ShowBookingDetailsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (!_TryGetSelectedBookingID(out int bookingID))
             {
@@ -732,10 +777,10 @@ namespace CarRental.Booking
 
             frmShowBookingDetailsWithCustomerAndVehicle frm = new frmShowBookingDetailsWithCustomerAndVehicle(bookingID);
             frm.ShowDialog();
-            _RefreshBookingList();
+            await _RefreshBookingListAsync();
         }
 
-        private void ReturnToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void ReturnToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!_TryGetSelectedBookingID(out int bookingID))
             {
@@ -745,7 +790,7 @@ namespace CarRental.Booking
 
             frmReturnVehicle frm = new frmReturnVehicle(bookingID);
             frm.ShowDialog();
-            _RefreshBookingList();
+            await _RefreshBookingListAsync();
         }
 
         private void dgvBookingList_DoubleClick(object sender, EventArgs e)

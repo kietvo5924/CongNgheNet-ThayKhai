@@ -37,7 +37,40 @@ namespace CarRental.Booking.UserControls
         {
             ucBookingCard1.LoadBookingInfo(BookingID);
 
+            if (BookingInfo == null)
+            {
+                ucSelectedCustomerAndVehicleCard1.Clear();
+                return;
+            }
+
             ucSelectedCustomerAndVehicleCard1.LoadCustomerVehicleInfo(BookingInfo.CustomerID, BookingInfo.VehicleID);
+        }
+
+        public async Task LoadBookingWithCustomerAndVehicleInfoAsync(int? BookingID)
+        {
+            this.Cursor = Cursors.WaitCursor;
+
+            try
+            {
+                await ucBookingCard1.LoadBookingInfoAsync(BookingID);
+
+                if (BookingInfo == null)
+                {
+                    ucSelectedCustomerAndVehicleCard1.Clear();
+                    return;
+                }
+
+                await ucSelectedCustomerAndVehicleCard1.LoadCustomerVehicleInfoAsync(BookingInfo.CustomerID, BookingInfo.VehicleID);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải dữ liệu từ máy chủ. Vui lòng kiểm tra kết nối mạng.\nChi tiết: {ex.Message}",
+                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
         }
 
     }

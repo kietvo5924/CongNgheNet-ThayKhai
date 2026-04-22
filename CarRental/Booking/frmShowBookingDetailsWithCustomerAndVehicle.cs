@@ -12,11 +12,18 @@ namespace CarRental.Booking
 {
     public partial class frmShowBookingDetailsWithCustomerAndVehicle : Form
     {
+        private readonly int? _bookingID;
+
         public frmShowBookingDetailsWithCustomerAndVehicle(int? BookingID)
         {
             InitializeComponent();
+            _bookingID = BookingID;
+            this.Load += frmShowBookingDetailsWithCustomerAndVehicle_Load;
+        }
 
-            ucBookingCardWithCustomerAndVehicle1.LoadBookingWithCustomerAndVehicleInfo(BookingID);
+        private async void frmShowBookingDetailsWithCustomerAndVehicle_Load(object sender, EventArgs e)
+        {
+            await ucBookingCardWithCustomerAndVehicle1.LoadBookingWithCustomerAndVehicleInfoAsync(_bookingID);
         }
 
         private void btnClose_Click(object sender, EventArgs e)

@@ -79,8 +79,13 @@ namespace CarRental.Booking.UserControls
         public int? BookingID => ucBookingCard1.BookingID;
         public clsBooking SelectedBookingInfo => ucBookingCard1.BookingInfo;
 
-        private void btnFind_Click(object sender, EventArgs e)
+        private async void btnFind_Click(object sender, EventArgs e)
         {
+            this.Cursor = Cursors.WaitCursor;
+            btnFind.Enabled = false;
+
+            try
+            {
             if (!this.ValidateChildren())
             {
                 //Here we don't continue because the form is not valid
@@ -92,6 +97,8 @@ namespace CarRental.Booking.UserControls
 
             if (_defaultAutoCompleteSource != null)
                 txtFilterValue.AutoCompleteCustomSource = _defaultAutoCompleteSource;
+
+            await _EnsureBookingSourceLoadedAsync();
 
             string filterValue = txtFilterValue.Text.Trim();
 
@@ -111,7 +118,18 @@ namespace CarRental.Booking.UserControls
 
             _HideSuggestionsDropDown();
 
-            LoadBookingInfo(bookingID);
+            await LoadBookingInfoAsync(bookingID);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải dữ liệu từ máy chủ. Vui lòng kiểm tra kết nối mạng.\nChi tiết: {ex.Message}",
+                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+                btnFind.Enabled = true;
+            }
         }
 
         private void txtFilterValue_Validating(object sender, CancelEventArgs e)
@@ -119,16 +137,38 @@ namespace CarRental.Booking.UserControls
             clsValidation.ValidateRequired(txtFilterValue, errorProvider1, e);
         }
 
-        private void ucBookingCardWithFilter_Load(object sender, EventArgs e)
+        private async void ucBookingCardWithFilter_Load(object sender, EventArgs e)
         {
-            _LoadBookingAutoComplete();
-            cbSearchBy.SelectedIndex = 0;
-            txtFilterValue.Focus();
+            this.Cursor = Cursors.WaitCursor;
+            btnFind.Enabled = false;
+
+            try
+            {
+                await _LoadBookingAutoCompleteAsync();
+                cbSearchBy.SelectedIndex = 0;
+                txtFilterValue.Focus();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải dữ liệu từ máy chủ. Vui lòng kiểm tra kết nối mạng.\nChi tiết: {ex.Message}",
+                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+                btnFind.Enabled = true;
+            }
         }
 
-        private void _LoadBookingAutoComplete()
+        private async Task _EnsureBookingSourceLoadedAsync()
         {
-            _dtBookingSource = clsBooking.GetAllRentalBooking();
+            if (_dtBookingSource == null)
+                _dtBookingSource = await Task.Run(() => clsBooking.GetAllRentalBooking());
+        }
+
+        private async Task _LoadBookingAutoCompleteAsync()
+        {
+            await _EnsureBookingSourceLoadedAsync();
             _autoCompleteValues.Clear();
 
             AutoCompleteStringCollection source = new AutoCompleteStringCollection();
@@ -187,9 +227,6 @@ namespace CarRental.Booking.UserControls
             if (!allowByName)
                 return false;
 
-            if (_dtBookingSource == null)
-                _dtBookingSource = clsBooking.GetAllRentalBooking();
-
             if (_dtBookingSource == null || !_dtBookingSource.Columns.Contains("BookingID") || !_dtBookingSource.Columns.Contains("CustomerName"))
                 return false;
 
@@ -208,9 +245,6 @@ namespace CarRental.Booking.UserControls
 
             if (string.IsNullOrWhiteSpace(input))
                 return false;
-
-            if (_dtBookingSource == null)
-                _dtBookingSource = clsBooking.GetAllRentalBooking();
 
             if (_dtBookingSource == null || !_dtBookingSource.Columns.Contains("BookingID") || !_dtBookingSource.Columns.Contains("CustomerName"))
                 return false;
@@ -299,16 +333,34 @@ namespace CarRental.Booking.UserControls
             return inputParts.All(inputPart => nameParts.Any(namePart => namePart.Contains(inputPart)));
         }
 
-        public void LoadBookingInfo(int? BookingID)
+        public async Task LoadBookingInfoAsync(int? BookingID)
         {
-            txtFilterValue.Text = BookingID.ToString();
-            ucBookingCard1.LoadBookingInfo(BookingID);
+            this.Cursor = Cursors.WaitCursor;
+            btnFind.Enabled = false;
 
-            if (OnBookingSelected != null)
+            try
             {
-                // Raise the event with a parameter
-                RaiseOnBookingSelected(ucBookingCard1.BookingID);
+                txtFilterValue.Text = BookingID.ToString();
+                await ucBookingCard1.LoadBookingInfoAsync(BookingID);
+
+                if (OnBookingSelected != null)
+                    RaiseOnBookingSelected(ucBookingCard1.BookingID);
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể tải dữ liệu từ máy chủ. Vui lòng kiểm tra kết nối mạng.\nChi tiết: {ex.Message}",
+                    "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+                btnFind.Enabled = true;
+            }
+        }
+
+        public async void LoadBookingInfo(int? BookingID)
+        {
+            await LoadBookingInfoAsync(BookingID);
         }
 
         private void _InitializeSuggestionsDropDown()
