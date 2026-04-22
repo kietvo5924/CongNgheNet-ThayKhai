@@ -1,15 +1,49 @@
-# Car Rental System
+# Car Rental Management System
 
-Lightweight WinForms app for running a car rental desk. Highlights:
+?ng d?ng qu?n lý cho thuê xe vi?t b?ng `C# WinForms` theo mô hình nhi?u l?p:
 
-- Unified screens for customers, vehicles, bookings, transactions, maintenance, and returns.
-- SQL Server + ADO.NET data layer with a dedicated business layer separating UI concerns.
-- Bilingual labels, dashboard stats, and role-aware menus for day-to-day operations.
+- `CarRental` (UI WinForms)
+- `CarRental_Business` (Business Logic)
+- `CarRental_DataAccess` (ADO.NET / SQL Server)
 
-## Setup
+## Tính n?ng chính
 
-1. Apply the SQL scripts under `DatabaseScripts` and update the connection string in `CarRental_DataAccess/clsDataAccessSettings.cs`.
-2. Open `CarRental/CarRental.sln` in Visual Studio 2022, restore NuGet packages if prompted, then build (Any CPU | Debug).
-3. Run the `CarRental` project and sign in with the seeded admin user to explore the features.
+- Qu?n lý xe, khách hàng, ng??i dùng.
+- T?o l?ch ??t xe, theo dõi giao d?ch, tr? xe.
+- Theo dõi b?o trì xe.
+- Dashboard th?ng kê nhanh.
+- T?i ?u t?i d? li?u v?i b?t ??ng b? và cache cho danh sách chính.
 
-Bug reports and improvements are welcome via issues or pull requests.
+## C?u trúc th? m?c
+
+- `CarRental/` - ?ng d?ng WinForms chính.
+- `CarRental_Business/` - l?p nghi?p v?.
+- `CarRental_DataAccess/` - truy c?p d? li?u SQL Server.
+- `Database/` - script database.
+
+## Yêu c?u môi tr??ng
+
+- Visual Studio 2022 (khuy?n ngh?).
+- .NET Framework `4.8`.
+- SQL Server (local ho?c cloud).
+
+## H??ng d?n ch?y d? án
+
+1. Kh?i t?o database b?ng script trong th? m?c `Database/`.
+2. C?u hình chu?i k?t n?i SQL Server t?i:
+   - `CarRental_DataAccess/clsDataAccessSettings.cs`
+3. M? solution:
+   - `CarRental/CarRental.sln`
+4. Restore NuGet packages (n?u Visual Studio yêu c?u).
+5. Build solution v?i c?u hình `Debug` ho?c `Release`.
+6. Ch?y project `CarRental`.
+
+## Ghi chú k? thu?t
+
+- D? án dùng `ADO.NET` (không dùng EF).
+- Lu?ng d? li?u theo h??ng: `UI -> Business -> DataAccess`.
+- M?t s? màn hình t?i d? li?u l?n ?ã ???c x? lý b?t ??ng b? ?? tránh ?? UI.
+
+## ?óng góp
+
+B?n có th? m? `Issue` ho?c t?o `Pull Request` ?? ?óng góp c?i ti?n.
